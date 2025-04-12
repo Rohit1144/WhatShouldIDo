@@ -40,7 +40,9 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.androidx.navigation.compose) // Android navigation
+    implementation(libs.androidx.material)  // Android material
+    implementation(libs.font.awesome) // Font-Awesome Icons
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
