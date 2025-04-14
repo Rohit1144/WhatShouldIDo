@@ -41,6 +41,7 @@ fun Main(){
         NavRoute("askai", FontAwesomeIcons.Solid.Microchip, "Ask AI"),
         NavRoute("home", FontAwesomeIcons.Solid.Home, "Home"),
         NavRoute("report", FontAwesomeIcons.Solid.ChartBar, "Report")
+        
     )
 
     Scaffold(
