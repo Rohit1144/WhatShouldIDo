@@ -5,9 +5,16 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.fit5046_g4_whatshouldido.ui.screens.AIResponse
+import com.example.fit5046_g4_whatshouldido.ui.screens.AddTask
 import com.example.fit5046_g4_whatshouldido.ui.screens.AskAI
+import com.example.fit5046_g4_whatshouldido.ui.screens.ChangePassword
 import com.example.fit5046_g4_whatshouldido.ui.screens.Home
+import com.example.fit5046_g4_whatshouldido.ui.screens.OnBoarding
+import com.example.fit5046_g4_whatshouldido.ui.screens.Profile
 import com.example.fit5046_g4_whatshouldido.ui.screens.Report
+import com.example.fit5046_g4_whatshouldido.ui.screens.SignIn
+import com.example.fit5046_g4_whatshouldido.ui.screens.SignUp
 
 @Composable
 fun NavGraph(
@@ -16,11 +23,18 @@ fun NavGraph(
 ){
     NavHost(
         navController = navController,
-        startDestination = "home",
+        startDestination = "sign_in",
         modifier = modifier
     ) {
-        composable("askai"){ AskAI() }
-        composable("home"){ Home() }
-        composable("report"){ Report() }
+        composable("sign_in"){ SignIn(navController) }
+        composable("sign_up"){ SignUp(navController) }
+        composable("on_boarding"){ OnBoarding(navController) }
+        composable("home"){ Home(navController) }
+        composable("add_task"){ AddTask(navController) }
+        composable("report"){ Report(navController) }
+        composable("ask_ai"){ AskAI(navController) }
+        composable("ai_response"){ AIResponse(navController) }
+        composable("profile"){ Profile(navController) }
+        composable("change_password"){ ChangePassword(navController) }
     }
 }

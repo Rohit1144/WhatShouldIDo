@@ -18,24 +18,25 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 
 @Composable
-fun SignUp(navController: NavController) {
+fun OnBoarding(navController: NavController) {
     Column (
         modifier = Modifier.fillMaxSize().padding(24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Continue button to on boarding
-        Text("Sign Up Screen")
+        // OK (finishing signing up) button
+        Text("On Boarding Screen")
         Button (
             onClick ={
-                // Navigate to on boarding page
-                navController.navigate("on_boarding") {
-                    popUpTo("sign_up") { inclusive = true }
+                // Navigate to home after clicking the OK button
+                navController.navigate("home") {
+                    popUpTo("on_boarding") { inclusive = true }
                 }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Continue")
+            Text("OK")
         }
+
     }
 }
