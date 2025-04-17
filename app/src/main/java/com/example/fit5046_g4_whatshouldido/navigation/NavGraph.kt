@@ -15,6 +15,7 @@ import com.example.fit5046_g4_whatshouldido.ui.screens.Profile
 import com.example.fit5046_g4_whatshouldido.ui.screens.Report
 import com.example.fit5046_g4_whatshouldido.ui.screens.SignIn
 import com.example.fit5046_g4_whatshouldido.ui.screens.SignUp
+import com.example.fit5046_g4_whatshouldido.ui.screens.TaskDetail
 
 @Composable
 fun NavGraph(
@@ -31,6 +32,7 @@ fun NavGraph(
         composable("on_boarding"){ OnBoarding(navController) }
         composable("home"){ Home(navController) }
         composable("add_task"){ AddTask(navController) }
+        composable("task_detail"){ TaskDetail(navController) }
         composable("report"){ Report(navController) }
         composable("ask_ai"){ AskAI(navController) }
         composable("ai_response"){ AIResponse(navController) }

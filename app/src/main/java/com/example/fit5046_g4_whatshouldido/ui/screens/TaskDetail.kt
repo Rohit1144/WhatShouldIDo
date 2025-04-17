@@ -1,5 +1,7 @@
 package com.example.fit5046_g4_whatshouldido.ui.screens
 
+import androidx.compose.material.icons.filled.Delete
+
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,21 +16,16 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.loginpagetutorial.components.BottomNavBar
-import com.example.loginpagetutorial.components.TopBar
 
 @Composable
-fun Home(navController: NavController) {
+fun TaskDetail(navController: NavController) {
     Scaffold(
-        topBar = { TopBar(navController = navController, showProfileIcon = true) },
-        bottomBar = { BottomNavBar(navController) }
     ) { paddingValues ->
         Box(
             modifier = Modifier.fillMaxSize().padding(paddingValues).padding(16.dp),
@@ -36,29 +33,42 @@ fun Home(navController: NavController) {
         )
         {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = "Home", style = MaterialTheme.typography.headlineMedium)
+                Text(text = "Task Detail", style = MaterialTheme.typography.headlineMedium)
                 Spacer(modifier = Modifier.height(16.dp))
-                Text("Home Screen. (To-do List)", style=MaterialTheme.typography.bodyLarge)
+                Text("Task Detail Screen. You can Edit, Remove or press Cancel", style= MaterialTheme.typography.bodyLarge)
                 Spacer(modifier = Modifier.height(16.dp))
-                TextButton( onClick = {
-                    navController.navigate("task_detail")
-                }) {
-                    Text("Task e.g., Do Cleaning")
+                Button (
+                    onClick ={
+                        // delete
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(Icons.Default.Delete, contentDescription = "Delete", tint = Color.LightGray)
                 }
-                Spacer(modifier = Modifier.height(40.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 Button (
                     onClick ={
                         // Navigate to home after clicking the sign in button
-                        navController.navigate("add_task") {
-                            popUpTo("home") { inclusive = true }
+                        navController.navigate("home") {
+                            popUpTo("task_detail") { inclusive = true }
                         }
                     },
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    Text("Add Task")
+                    Text("OK")
+                }
+                Button (
+                    onClick ={
+                        // Navigate to home after clicking the sign in button
+                        navController.navigate("home") {
+                            popUpTo("task_detail") { inclusive = true }
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Cancel")
                 }
             }
-
         }
     }
 }
