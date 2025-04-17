@@ -1,9 +1,9 @@
 # What Should I Do – AI-Powered Productivity App
 ## FIT5046 Group 4 
-### Hyung Yeon Ji
-### Rohit Chowdary Kanagala
-### Yiheng Cai
-### Kyriaki Darioti
+### Hyung Yeon Ji (34650431)
+### Rohit Chowdary Kanagala (34669167)
+### Yiheng Cai (34531181)
+### Kyriaki Darioti (34339736)
 
 **"What Should I Do"** is a mobile-based productivity application designed to help users efficiently manage daily tasks through AI-powered suggestions and intuitive task organization. Built using Kotlin and Jetpack Compose, this Android app integrates smart scheduling, contextual task recommendations, and visual progress tracking to reduce decision fatigue and improve day-to-day productivity.
 
@@ -12,6 +12,11 @@
 ## Project Overview
 
 This app uses **Google's Gemini Nano AI model** and **Firebase Cloud Services** to deliver personalized, proactive, and reactive task recommendations. Users can interact with a minimalistic interface to manage tasks, sync with Google Calendar, and track their progress through insightful reports.
+
+---
+## Project Design
+
+Refer to https://drive.google.com/drive/folders/1SXxe_7o91yQ9zX8VB3Y5OlVajYjKYbM-?usp=drive_link
 
 ---
 
