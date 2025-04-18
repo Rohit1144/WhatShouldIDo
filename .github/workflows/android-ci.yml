@@ -35,7 +35,11 @@ jobs:
       - name: Run Unit Tests
         run: ./gradlew testDebugUnitTest
 
+      - name: List APK folder contents
+        run: ls -R app/build/outputs/apk/debug/
+
       - name: Upload Debug APK
+        if: success()
         uses: actions/upload-artifact@v3
         with:
           name: debug-apk
