@@ -1,9 +1,6 @@
 # What Should I Do – AI-Powered Productivity App
 
----
-
-## Authors
-
+### Group & Members
 - Group 4 from FIT5046 – Monash University
 - Project for **Assessment 3 & 4: Android App Proposal & Development**
 - Hyung Yeon Ji (34650431)
@@ -17,18 +14,18 @@
 
 ---
 
-## Project Overview
+### Project Overview
 
 This app uses **Google's Gemini Nano AI model** , **Room DB** and **Firebase Cloud Services** to deliver personalized, proactive, and reactive task recommendations both online and offline. Users can interact with a minimalistic interface to manage tasks, and track their progress through insightful reports.
 
 ---
-## Project Design
+### Project Design
 
 Refer to https://drive.google.com/drive/folders/1SXxe_7o91yQ9zX8VB3Y5OlVajYjKYbM-?usp=drive_link
 
 ---
 
-## Key Features
+### Key Features
 
 - **Secure Authentication**
     - Google sign-in via Firebase Authentication
@@ -49,7 +46,7 @@ Refer to https://drive.google.com/drive/folders/1SXxe_7o91yQ9zX8VB3Y5OlVajYjKYbM
 
 ---
 
-## Tech Stack
+### Tech Stack
 
 | Area               | Technology                           |
 |--------------------|--------------------------------------|
@@ -60,7 +57,24 @@ Refer to https://drive.google.com/drive/folders/1SXxe_7o91yQ9zX8VB3Y5OlVajYjKYbM
 
 ---
 
-## License
+### Manual Pull Request & Main Branch Protection Policy
+
+Due to branch protection rules are not enforced on private organization repositories under GitHub Free, our team follows this manual process to maintain code quality and project safety:
+
+1. All development must happen on personal branches (e.g., `yeonji`, `kyriaki`, `rohit`, `yiheng`)
+2. No one should push directly to the `main` branch
+3. To merge code into `main`, team members must:
+   - Open a **Pull Request**
+   - Let **CI/CD (Android CI)** complete and pass
+   - Get at least **1 team member to approve** the Pull Request
+4. After all checks pass, the Pull Request can be merged using **GitHub's UI**.
+
+This approach simulates GitHub's team-protected workflow without requiring a paid plan. 
+
+---
+
+### License
 
 This project is developed for academic purposes under Monash University guidelines. Do not distribute or reproduce without permission.
 
+---
