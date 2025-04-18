@@ -45,6 +45,15 @@ jobs:
       - name: Run Unit Tests
         run: ./gradlew testDebugUnitTest
 
+      - name: Generate code coverage report
+        run: ./gradlew koverXmlReport
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        with:
+          name: code-coverage-report
+          path: build/reports/kover/report.xml
+
       - name: List APK folder contents
         run: ls -R app/build/outputs/apk/debug/
 
