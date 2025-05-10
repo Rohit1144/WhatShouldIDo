@@ -21,22 +21,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-//@Composable
-//fun Main(){
-//    val navController = rememberNavController()
-//    val navRoutes = listOf(
-//        NavRoute("askai", FontAwesomeIcons.Solid.Microchip, "Ask AI"),
-//        NavRoute("home", FontAwesomeIcons.Solid.Home, "Home"),
-//        NavRoute("report", FontAwesomeIcons.Solid.ChartBar, "Report")
-//
-//    )
-//
-//    Scaffold(
-//        bottomBar = {
-//            BottomNavigationBar(navController = navController, navRoutes = navRoutes)
-//        }
-//    ){ paddingValues ->
-//        NavGraph(navController = navController, modifier = Modifier.padding(paddingValues))
-//    }
-//}

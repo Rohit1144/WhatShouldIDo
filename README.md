@@ -73,6 +73,67 @@ This approach simulates GitHub's team-protected workflow without requiring a pai
 
 ---
 
+### Git Command Quick Guide
+
+Initial Setup (Clone & Branching)
+`git clone <https://username:token@repo-url>`
+
+Create and switch to your personal branch
+`git checkout -b <personal branch>`
+
+Push your new branch to GitHub
+`git push -u origin <personal branch>`
+
+Check current status
+`git status`
+
+Pull latest updates from main branch (to stay sync to latest)
+`git checkout main`
+`git pull origin main`
+
+Merge master into your personal branch (to resolve conflicts)
+`git checkout <personal branch>`
+`git merge main`
+
+Stage and commit your work 
+`git add .`
+`git commit -m "write comments inside the quotation"`
+
+Push your changes to your personal branch 
+`git push origin <personal branch>`
+
+Merging to main (After your work is finished)
+`git checkout main` 
+`git pull origin main`
+`git merge <personal branch>`
+`git push origin main`
+
+Undo local uncommitted changes (soft reset)
+`git restore .`
+
+Undo the last commit (keep changes in working directory)
+`git reset --soft Head~1`
+
+Hard reset to a previous commit (discards any changes made)
+`git reset --hard <commit-hash>`
+
+Revert a specific commit (RECOMMENDED: safest way)
+`git revert <commit-hash>`
+
+Check commit history
+`git log --oneline`
+
+List of branches
+`git branch -a`
+
+Switch between branches
+`git checkout <branch name>`
+
+Delete a local branch
+`git branch -d <branch name>`
+
+---
+
 ### License
 
 This project is developed for academic purposes under Monash University guidelines. Do not distribute or reproduce without permission.
