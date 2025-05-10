@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -40,6 +41,19 @@ android {
 }
 
 dependencies {
+    implementation(libs.generativeai) // generative ai v0.9.0
+    implementation(platform(libs.firebase.bom)) // Firebase BOM(manages compatible versions)
+    implementation(libs.firebase.ml.modeldownloader) // Firebase - ML Downloader Service
+    implementation(libs.tensorflow.lite) // Tensorflow - 2.3.0
+    implementation(libs.firebase.analytics) // Firebase - Analytics Service
+    implementation(libs.firebase.auth.ktx) // Firebase - Authentication Services
+    implementation(libs.firebase.firestore.ktx) // Firebase - FireStore DB services
+    implementation(libs.retrofit) // Retrofit
+    implementation(libs.converter.gson) // Retrofit - GSON converter
+    implementation(libs.gson) // Retrofit - Gson
+    ksp(libs.androidx.room.compiler) // Room compiler
+    implementation(libs.androidx.room.runtime) // Room runtime
+    implementation(libs.androidx.room.ktx) // Room ktx?
     implementation(libs.androidx.navigation.compose) // Android navigation
     implementation(libs.androidx.material)  // Android material
     implementation(libs.font.awesome) // Font-Awesome Icons
