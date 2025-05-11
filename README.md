@@ -57,22 +57,6 @@ Refer to https://drive.google.com/drive/folders/1SXxe_7o91yQ9zX8VB3Y5OlVajYjKYbM
 
 ---
 
-### Manual Pull Request & Main Branch Protection Policy
-
-Due to branch protection rules are not enforced on private organization repositories under GitHub Free, our team follows this manual process to maintain code quality and project safety:
-
-1. All development must happen on personal branches (e.g., `yeonji`, `kyriaki`, `rohit`, `yiheng`)
-2. No one should push directly to the `main` branch
-3. To merge code into `main`, team members must:
-   - Open a **Pull Request**
-   - Let **CI/CD (Android CI)** complete and pass
-   - Get at least **1 team member to approve** the Pull Request
-4. After all checks pass, the Pull Request can be merged using **GitHub's UI**.
-
-This approach simulates GitHub's team-protected workflow without requiring a paid plan. 
-
----
-
 ### Git Command Quick Guide
 
 Initial Setup (Clone & Branching)
@@ -131,6 +115,31 @@ Switch between branches
 
 Delete a local branch
 `git branch -d <branch name>`
+
+---
+
+### Manual Pull Request & Main Branch Protection Policy
+
+Due to branch protection rules are not enforced on private organization repositories under GitHub Free, our team follows this manual process to maintain code quality and project safety:
+
+1. All development must happen on personal branches (e.g., `yeonji`, `kyriaki`, `rohit`, `yiheng`)
+2. No one should push directly to the `main` branch
+3. To merge code into `main`, team members must:
+    - Open a **Pull Request**
+    - Let **CI/CD (Android CI)** complete and pass
+    - Get at least **1 team member to approve** the Pull Request
+4. After all checks pass, the Pull Request can be merged using **GitHub's UI**.
+
+This approach simulates GitHub's team-protected workflow without requiring a paid plan.
+
+---
+
+### Git Commit Message Guidelines
+
+- "start: [section name] - [additional comments]" (when starting the section)
+- "wip: [section name] - [additional comments]" (optional work-in-progress commit)
+- "fix: [section name] - [additional comments]" (any fixes or intermediate commits)
+- "end: [section name] - [additional comments]" (when finished with the section)
 
 ---
 
