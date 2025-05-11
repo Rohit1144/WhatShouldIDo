@@ -41,6 +41,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.material.icons.extended)
     implementation(libs.generativeai) // generative ai v0.9.0
     implementation(platform(libs.firebase.bom.v33130)) // Firebase BOM(manages compatible versions)
     implementation(libs.firebase.ml.modeldownloader) // Firebase - ML Downloader Service

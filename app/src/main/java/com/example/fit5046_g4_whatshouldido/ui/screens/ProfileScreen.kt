@@ -1,5 +1,5 @@
 package com.example.fit5046_g4_whatshouldido.ui.screens
-
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -7,31 +7,136 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.fit5046_g4_whatshouldido.R
 import com.example.loginpagetutorial.components.TopBar
 
 @Composable
-fun Profile(navController: NavController) {
+fun Profile(
+    navController: NavController,
+    isGoogleSignIn: Boolean,
+    userEmail: String,
+    userPassword: String) {
+
+    var passwordVisible by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = { TopBar(navController = navController, showProfileIcon = false) },
     ) { paddingValues ->
-        Box(
-            modifier = Modifier.fillMaxSize().padding(paddingValues).padding(16.dp),
-            contentAlignment = Alignment.Center
+        Column(
+            modifier = Modifier.fillMaxSize().padding(paddingValues).padding(40.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
         )
         {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = "Profile", style = MaterialTheme.typography.headlineMedium)
-                Spacer(modifier = Modifier.height(16.dp))
-                Text("Profile Screen.", style= MaterialTheme.typography.bodyLarge)
+            // Profile Icon
+            Icon(
+                imageVector = Icons.Default.Person,
+                contentDescription = "Profile",
+                modifier = Modifier.size(80.dp)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = "Profile",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+                color = Color.DarkGray,
+                fontFamily = FontFamily.Monospace
+            )
+
+            Spacer(modifier = Modifier.height(30.dp))
+
+            // Email Field (disabled Text Field)
+            OutlinedTextField(
+                value = userEmail,
+                onValueChange = {},
+                readOnly = true,
+                label = { Text("Email") },
+                leadingIcon = {
+                    Icon(imageVector = Icons.Default.Email, contentDescription = "Email")
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Transparent,
+                    unfocusedContainerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    errorContainerColor = Color.Transparent
+                )
+            )
+
+            // Password Field
+            if(!isGoogleSignIn) {
+                Spacer(Modifier.height(30.dp))
+                OutlinedTextField(
+                    value = userPassword,
+                    onValueChange = {},
+                    label = { Text("Password") },
+                    readOnly = true,
+                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    trailingIcon = {
+
+                        IconButton(
+                            onClick = {passwordVisible = !passwordVisible}
+                        ) {
+                            Icon(
+                                painter = painterResource(if(passwordVisible) R.drawable.eye_slash else R.drawable.eye),
+                                contentDescription = if(passwordVisible) "Hide password" else "Show password",
+                                modifier = Modifier.size(20.dp)
+                            )
+                        }
+
+
+                    },
+                    leadingIcon = {
+                        Icon(imageVector = Icons.Default.Lock, contentDescription = "Password")
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color.Transparent,
+                        unfocusedContainerColor = Color.Transparent,
+                        disabledContainerColor = Color.Transparent,
+                        errorContainerColor = Color.Transparent
+                    )
+                )
+            }
+
+            // Retrofit API. TODO: implement retrofit api response
+            Spacer(Modifier.height(30.dp))
+
+            // Update Profile Button based on the method of login
+            if(!isGoogleSignIn) {
                 Button (
                     onClick ={
                         // Navigate to home after clicking the sign in button
@@ -39,21 +144,40 @@ fun Profile(navController: NavController) {
                             popUpTo("profile") { inclusive = true }
                         }
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(R.color.light_red),
+                        disabledContainerColor = colorResource(R.color.light_red)
+                    )
                 ) {
                     Text("Update Password")
                 }
-                Button (
-                    onClick ={
-                        // Navigate to home after clicking the sign in button
-                        navController.navigate("sign_in") {
-                            popUpTo("profile") { inclusive = true }
-                        }
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Log Out")
-                }
+            } else {
+                Text(
+                    text = "Logged in via Google",
+                    color = colorResource(R.color.light_red),
+                    style = MaterialTheme.typography.bodyMedium,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Logout Button
+            Button (
+                onClick ={
+                    // Navigate to home after clicking the logout button
+                    navController.navigate("sign_in") {
+                        popUpTo("profile") { inclusive = true }
+                    }
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorResource(R.color.light_red),
+                    disabledContainerColor = colorResource(R.color.light_red)
+                )
+            ) {
+                Text("Log Out")
             }
         }
     }
