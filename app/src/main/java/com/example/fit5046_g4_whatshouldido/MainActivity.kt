@@ -14,7 +14,6 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             FIT5046_G4_WhatShouldIDoTheme {
-//                Main()
                 val navController = rememberNavController()
                 NavGraph(navController = navController)
             }
