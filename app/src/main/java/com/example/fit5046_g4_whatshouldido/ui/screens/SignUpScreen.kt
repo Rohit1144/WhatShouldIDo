@@ -205,13 +205,12 @@ fun SignUp(navController: NavController) {
         Button(
             onClick = {
                 // TODO: perform sign-up
-                navController.navigate("home") {
+                navController.navigate("on_boarding") {
                     popUpTo("sign_up") { inclusive = true }
                 }
             },
             modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp),
+                .fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
                 containerColor = colorResource(R.color.light_red),
                 disabledContainerColor = colorResource(R.color.light_red)

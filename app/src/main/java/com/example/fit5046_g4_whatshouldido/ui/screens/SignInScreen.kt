@@ -144,7 +144,7 @@ fun SignIn(navController: NavController) {
             )
         )
 
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(30.dp))
 
         Button (
             onClick ={
