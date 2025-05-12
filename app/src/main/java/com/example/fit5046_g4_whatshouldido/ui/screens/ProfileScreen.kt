@@ -51,7 +51,7 @@ fun Profile(
     var passwordVisible by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar(navController = navController, showProfileIcon = false) },
+        topBar = { TopBar(navController = navController, showProfileIcon = false, showBackButton = true) },
     ) { paddingValues ->
         Column(
             modifier = Modifier.fillMaxSize().padding(paddingValues).padding(40.dp),

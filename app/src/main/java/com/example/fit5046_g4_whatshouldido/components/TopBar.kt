@@ -11,6 +11,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -24,6 +28,8 @@ fun TopBar(
     onBackClick: (() -> Unit)? = { navController?.popBackStack() },
     onProfileClick: (() -> Unit)? = { navController?.navigate("profile") }
 ) {
+    var isBackSelected by remember { mutableStateOf(false) }
+    var isProfileSelected by remember { mutableStateOf(false) }
     TopAppBar(
         modifier = Modifier.statusBarsPadding().padding(top = 10.dp),
         title = { Text(text ="") },
@@ -31,24 +37,33 @@ fun TopBar(
         elevation = 0.dp, // no shadow
         navigationIcon = {
             if (showBackButton) {
-                IconButton(onClick = { onBackClick?.invoke() }) {
+                IconButton(onClick = {
+                    isBackSelected = !isBackSelected
+                    onBackClick?.invoke()
+                    }
+                ) {
                     Icon(
                         imageVector = Icons.Default.ArrowBackIosNew,
                         contentDescription = "Back",
-                        modifier = Modifier.size(50.dp),
-                        tint = Color.LightGray
+                        modifier = Modifier.size(35.dp),
+                        tint = if(isBackSelected) Color.Red else Color.LightGray,
                     )
                 }
             }
         },
         actions = {
             if (showProfileIcon) {
-                IconButton(onClick = { onProfileClick?.invoke() }, modifier = Modifier.padding(end = 20.dp)) {
+                IconButton(onClick = {
+                    isProfileSelected = !isProfileSelected
+                    onProfileClick?.invoke()
+                    },
+                    modifier = Modifier.padding(end = 20.dp)
+                ) {
                     Icon(
                         imageVector = Icons.Default.AccountCircle,
                         contentDescription =  "Profile",
                         modifier = Modifier.size(50.dp),
-                        tint = Color.LightGray
+                        tint = if(isProfileSelected) Color.Red else Color.LightGray,
                     )
                 }
             }
