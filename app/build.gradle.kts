@@ -51,7 +51,8 @@ dependencies {
     implementation(libs.firebase.firestore.ktx) // Firebase - FireStore DB services
     implementation(libs.retrofit) // Retrofit
     implementation(libs.converter.gson) // Retrofit - GSON converter
-    implementation(libs.gson) // Retrofit - Gson
+    implementation(libs.gson)
+    implementation(libs.identity.jvm) // Retrofit - Gson
     ksp(libs.androidx.room.compiler) // Room compiler
     implementation(libs.androidx.room.runtime) // Room runtime
     implementation(libs.androidx.room.ktx) // Room ktx?
