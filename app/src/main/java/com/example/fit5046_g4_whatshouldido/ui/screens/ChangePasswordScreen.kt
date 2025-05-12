@@ -57,7 +57,6 @@ fun ChangePassword(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-//                .padding(horizontal = 24.dp, vertical = 16.dp),
                 .padding(40.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
