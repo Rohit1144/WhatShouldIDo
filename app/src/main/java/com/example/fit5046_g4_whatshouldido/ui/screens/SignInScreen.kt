@@ -27,10 +27,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.drawBehind
@@ -66,11 +64,10 @@ fun SignIn(navController: NavController) {
     ) {
 
         Icon(
-            painter = painterResource(R.drawable.app_logo),
-            contentDescription = "App Logo"
+            painter = painterResource(R.drawable.app_logo_think),
+            contentDescription = "App Logo",
+            modifier = Modifier.size(120.dp)
         )
-
-        Spacer(Modifier.height(8.dp))
 
 //        Text(
 //            text = "What Should I Do?",
@@ -79,11 +76,9 @@ fun SignIn(navController: NavController) {
 //            color = colorResource(R.color.mid_gray)
 //        )
 
-        Spacer(Modifier.height(50.dp))
+        Spacer(Modifier.height(30.dp))
 
-        Column(
-
-        ) {
+        Column{
             Text(
                 text = "Sign In",
                 fontWeight = FontWeight.Bold,
@@ -201,7 +196,7 @@ fun SignIn(navController: NavController) {
             Text(text = "Don't have an account? Sign Up",
                 style = MaterialTheme.typography.bodySmall,
                 color = colorResource(R.color.light_red),
-                modifier = Modifier.drawBehind() {
+                modifier = Modifier.drawBehind{
                     val strokeWidthPx = 1.dp.toPx()
                     val verticalOffset = size.height - 2.sp.toPx()
                     drawLine(
@@ -216,8 +211,3 @@ fun SignIn(navController: NavController) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun showSignIn() {
-    SignIn(rememberNavController())
-}
