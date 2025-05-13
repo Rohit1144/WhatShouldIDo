@@ -64,9 +64,9 @@ fun SignIn(navController: NavController) {
     ) {
 
         Icon(
-            painter = painterResource(R.drawable.app_logo_think),
+            painter = painterResource(R.drawable.app_final),
             contentDescription = "App Logo",
-            modifier = Modifier.size(120.dp)
+            modifier = Modifier.size(170.dp)
         )
 
 //        Text(
@@ -76,7 +76,7 @@ fun SignIn(navController: NavController) {
 //            color = colorResource(R.color.mid_gray)
 //        )
 
-        Spacer(Modifier.height(30.dp))
+        Spacer(Modifier.height(5.dp))
 
         Column{
             Text(
