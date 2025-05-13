@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import com.android.identity.util.UUID
 
 @Entity
-data class TaskEntity(
+data class Task(
     @PrimaryKey val id: String = UUID.randomUUID().toString(),
     val title: String,
     val description: String? = null,
