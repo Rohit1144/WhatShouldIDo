@@ -64,7 +64,11 @@ fun Home(
             TaskItem("Example 2 Task",0),
             TaskItem("Example 3 Task",1),
             TaskItem("Example 4 Task",2),
-            TaskItem("Example 5 Task",1)
+            TaskItem("Example 5 Task",1),
+            TaskItem("Example 6 Task",0),
+            TaskItem("Example 7 Task",0),
+            TaskItem("Example 8 Task",1),
+            TaskItem("Example 9 Task",1),
         )
     }
 

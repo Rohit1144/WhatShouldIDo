@@ -19,6 +19,23 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.loginpagetutorial.components.BottomNavBar
 import com.example.loginpagetutorial.components.TopBar
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.*
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.sp
+
+
 
 @Composable
 fun AskAI(navController: NavController) {
@@ -26,25 +43,51 @@ fun AskAI(navController: NavController) {
         topBar = { TopBar(navController = navController, showProfileIcon = true) },
         bottomBar = { BottomNavBar(navController) }
     ) { paddingValues ->
-        Box(
-            modifier = Modifier.fillMaxSize().padding(paddingValues).padding(16.dp),
-            contentAlignment = Alignment.Center
-        )
-        {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(text = "Ask AI", style = MaterialTheme.typography.headlineMedium)
-                Spacer(modifier = Modifier.height(16.dp))
-                Text("Ask AI Screen. 'What Should I Do Now?'", style=MaterialTheme.typography.bodyLarge)
-                Button (
-                    onClick ={
+
+        Column(
+            modifier = Modifier.fillMaxSize().padding(paddingValues),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            // Title Heading
+            Text(
+                text = "Ask AI",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+                color = Color.DarkGray,
+                fontFamily = FontFamily.Monospace
+            )
+            Spacer(modifier = Modifier.height(50.dp))
+
+            // Big Red Button
+            Box(
+                modifier = Modifier
+                    .size(250.dp)
+                    .align(Alignment.CenterHorizontally)
+                    .shadow(elevation = 16.dp, shape = CircleShape)
+                    .background(
+                        brush = Brush.radialGradient(
+                            colors = listOf(
+                                Color(0xFFFF7F7F),
+                                Color(0xFFFF4D4D)
+                            ),
+                            radius = 500f
+                        ),
+                        shape = CircleShape
+                    )
+                    .clickable {
                         navController.navigate("ai_response") {
                             popUpTo("ask_ai") { inclusive = true }
                         }
                     },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text("Ask")
-                }
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "What Should I Do?",
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    style = MaterialTheme.typography.bodyLarge
+                )
             }
         }
     }

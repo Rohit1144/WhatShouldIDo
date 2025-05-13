@@ -43,9 +43,16 @@ android {
             excludes += "META-INF/versions/9/OSGI-INF/MANIFEST.MF"
         }
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.1" // or higher
+    }
 }
 
 dependencies {
+    implementation (libs.androidx.compose.ui.ui)
+    implementation (libs.material3)
+    implementation (libs.androidx.navigation.compose.v271)
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.generativeai) // generative ai v0.9.0
     implementation(platform(libs.firebase.bom.v33130)) // Firebase BOM(manages compatible versions)
