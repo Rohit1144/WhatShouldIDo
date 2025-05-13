@@ -64,7 +64,7 @@ fun SignIn(navController: NavController) {
     ) {
 
         Icon(
-            painter = painterResource(R.drawable.app_final),
+            painter = painterResource(R.drawable.app_logo_final),
             contentDescription = "App Logo",
             modifier = Modifier.size(170.dp)
         )
