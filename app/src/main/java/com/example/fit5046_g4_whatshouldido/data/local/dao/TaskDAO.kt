@@ -26,7 +26,7 @@ interface TaskDAO {
     fun getAll(uid: String): Flow<List<Task>>
 
     @Query("SELECT * FROM task WHERE pendingSync = 1 AND ownerUid = :uid")
-    suspend fun getAllPendingSyncTasks(uid: String): Flow<List<Task>>
+    suspend fun getAllPendingSyncTasks(uid: String): List<Task>
 
     @Query("UPDATE task SET pendingSync = 0 WHERE id IN(:ids)")
     suspend fun markAsSynced(ids: List<String>)
