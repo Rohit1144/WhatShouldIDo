@@ -2,6 +2,7 @@ package com.example.fit5046_g4_whatshouldido.ui.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import androidx.navigation.NavController
 import com.example.loginpagetutorial.components.TopBar
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.RectangleShape
 
 @Composable
 fun AIResponse(navController: NavController) {
@@ -83,15 +85,20 @@ fun AIResponse(navController: NavController) {
                             .clip(RoundedCornerShape(12.dp))
                             .background(Color(0xFFF9F9F9))
                             .padding(16.dp)
+                            .border(1.dp, Color.DarkGray, RoundedCornerShape(15.dp))
                     ) {
                         Column {
                             aiMessages.forEach { message ->
-                                Text(
-                                    text = message,
-                                    fontSize = 16.sp,
-                                    color = Color.Black,
-                                    modifier = Modifier.padding(vertical = 4.dp)
-                                )
+                                Box(
+                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 20.dp)
+                                ){
+                                    Text(
+                                        text = message,
+                                        fontSize = 16.sp,
+                                        color = Color.Black,
+                                        modifier = Modifier.padding(vertical = 4.dp)
+                                    )
+                                }
                             }
                         }
                     }
