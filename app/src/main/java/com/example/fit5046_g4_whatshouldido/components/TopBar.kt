@@ -25,7 +25,9 @@ fun TopBar(
     navController: NavController? = null,
     showBackButton: Boolean = false,
     showProfileIcon: Boolean = false,
-    onBackClick: (() -> Unit)? = { navController?.popBackStack() },
+    onBackClick: (() -> Unit)? = { navController?.navigate("home") {
+        popUpTo("add_task") { inclusive = true }
+    } },
     onProfileClick: (() -> Unit)? = { navController?.navigate("profile") }
 ) {
     var isBackSelected by remember { mutableStateOf(false) }
