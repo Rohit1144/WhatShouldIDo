@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -62,6 +63,11 @@ dependencies {
     implementation(libs.firebase.analytics) // Firebase - Analytics Service
     implementation(libs.firebase.auth.ktx) // Firebase - Authentication Services
     implementation(libs.firebase.firestore.ktx) // Firebase - FireStore DB services
+    val credentialManagerVersion = "1.5.0"
+    implementation("androidx.credentials:credentials:$credentialManagerVersion")
+    implementation("androidx.credentials:credentials-play-services-auth:$credentialManagerVersion")
+    implementation(libs.googleid)
+    implementation(libs.play.services.auth)
     implementation(libs.retrofit) // Retrofit
     implementation(libs.converter.gson) // Retrofit - GSON converter
     implementation(libs.gson)
