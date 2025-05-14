@@ -119,30 +119,17 @@ class AuthenticationManager (val context: Context) {
         }
     }
 
-    private suspend fun ensureGoogleUserExists(user: FirebaseUser) {
-        val db = Firebase.firestore
-        val userDoc = db.collection("Users").document(user.uid).get().await()
 
-        if (!userDoc.exists()) {
-            val userData = hashMapOf(
-                "email" to user.email,
-                "id" to user.uid,
-                "createdAt" to FieldValue.serverTimestamp(),
-                "password" to "",
-                "dateOfBirth" to "",
-                "isOnboarded" to false
-            )
 
-            db.collection("Users").document(user.uid).set(userData).await()
-        }
-    }
-
-    suspend fun MarkOnboardingComplete() {
+    suspend fun markOnboardingComplete(onboardingValues: Map<String, String>) {
         val user = Firebase.auth.currentUser
+
         Firebase.firestore.collection("Users")
             .document(user!!.uid)
             .update("isOnboarded", true)
             .await()
+
+
     }
 
 }

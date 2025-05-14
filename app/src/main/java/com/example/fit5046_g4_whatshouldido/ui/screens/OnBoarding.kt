@@ -224,11 +224,17 @@ fun OnBoarding(navController: NavController) {
 
         Spacer(Modifier.height(17.dp))
 
+        val onboardingValues = mapOf(
+            "profession" to profession,
+            "focusArea" to focusTime,
+            "preference" to startPreference
+        )
+
         Button(
             onClick ={
-                scope.launch(Dispatchers.Main) {
-                    authenticationManager.MarkOnboardingComplete()
-                }
+//                scope.launch(Dispatchers.Main) {
+//                    authenticationManager.markOnboardingComplete(onboardingValues)
+//                }
 
                 // Navigate to home after clicking the OK button
                 navController.navigate("home") {
