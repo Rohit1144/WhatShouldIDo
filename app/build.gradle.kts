@@ -50,6 +50,7 @@ android {
 }
 
 dependencies {
+    implementation (libs.mpandroidchart) // MP Android Chart - for Report & Analysis
     implementation (libs.androidx.compose.ui.ui)
     implementation (libs.material3)
     implementation (libs.androidx.navigation.compose.v271)

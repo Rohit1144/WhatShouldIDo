@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 
 @Composable
@@ -48,7 +49,7 @@ fun TopBar(
                         imageVector = Icons.Default.ArrowBackIosNew,
                         contentDescription = "Back",
                         modifier = Modifier.size(35.dp),
-                        tint = if(isBackSelected) Color.Red else Color.LightGray,
+                        tint = if(isBackSelected) Color("#F85F6A".toColorInt()) else Color.LightGray,
                     )
                 }
             }
@@ -65,7 +66,7 @@ fun TopBar(
                         imageVector = Icons.Default.AccountCircle,
                         contentDescription =  "Profile",
                         modifier = Modifier.size(50.dp),
-                        tint = if(isProfileSelected) Color.Red else Color.LightGray,
+                        tint = if(isProfileSelected) Color("#F85F6A".toColorInt()) else Color.LightGray,
                     )
                 }
             }

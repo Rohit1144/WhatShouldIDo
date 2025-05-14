@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.toColorInt
 
 data class BottomNavItem(val route: String, val icon: ImageVector, val label: String)
 
@@ -48,11 +49,11 @@ fun BottomNavBar(navController: NavController){
                         Icon(
                             imageVector = item.icon,
                             contentDescription = item.label,
-                            tint = if(isSelected) Color.Red else Color.DarkGray,
+                            tint = if(isSelected) Color("#F85F6A".toColorInt()) else Color.DarkGray,
                             modifier = Modifier.padding(top = 10.dp)
                         )
                         Spacer(modifier = Modifier.height(4.dp))
-                        Text( text = item.label, color = if(isSelected) Color.Red else Color.DarkGray)
+                        Text( text = item.label, color = if(isSelected) Color("#F85F6A".toColorInt()) else Color.DarkGray)
                     }
                 },
                 selected = isSelected,
