@@ -36,6 +36,8 @@ import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import android.graphics.Color as AndroidColor
 import androidx.core.graphics.toColorInt
+import com.example.fit5046_g4_whatshouldido.ui.components.DonutChart
+import com.example.fit5046_g4_whatshouldido.ui.components.MonthlyBarChart
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -161,94 +163,5 @@ fun Report(navController: NavController) {
     }
 }
 
-@Composable
-fun DonutChart(
-    modifier: Modifier = Modifier,
-    label: String,
-    percentage: Float,
-    colorHex: String
-) {
-    AndroidView(
-        factory = { context ->
-            PieChart(context).apply {
 
-                // Data Setup for Chart
-                val pieEntries = listOf(
-                    PieEntry(percentage, label),
-                    PieEntry(100f - percentage, "")
-                )
 
-                val dataSet = PieDataSet(pieEntries, "").apply {
-                    colors = listOf(
-                        colorHex.toColorInt(),
-                        AndroidColor.LTGRAY
-                    )
-                    valueTextColor = AndroidColor.TRANSPARENT
-                    sliceSpace = 2f
-                }
-
-                data = PieData(dataSet)
-
-                // Style chart
-                isDrawHoleEnabled = true
-                holeRadius = 70f
-                transparentCircleRadius = 75f
-                setUsePercentValues(true)
-                description.isEnabled = false
-                legend.isEnabled = false
-                setDrawEntryLabels(false)
-
-                setCenterText("${percentage.toInt()}%")
-                setCenterTextSize(14f)
-
-                invalidate()
-            }
-        },
-        modifier = modifier.width(100.dp).height(100.dp)
-    )
-}
-
-@Composable
-fun MonthlyBarChart(
-    modifier: Modifier = Modifier,
-    barValues: List<Float>,
-){
-    AndroidView(
-        modifier = modifier,
-        factory = { context ->
-            BarChart(context).apply {
-                val entries = barValues.mapIndexed { index, value -> BarEntry(index.toFloat(), value) }
-
-                val dataSet = BarDataSet(entries, "").apply {
-                    colors = listOf("#F85F6A".toColorInt())
-                    valueTextColor = AndroidColor.TRANSPARENT
-                    barShadowColor = AndroidColor.LTGRAY
-                }
-
-                data = BarData(dataSet).apply{
-                    barWidth = 0.4f
-                }
-
-                setTouchEnabled(false)
-                setDrawGridBackground(false)
-                description.isEnabled = false
-                legend.isEnabled = false
-                setDrawValueAboveBar(false)
-
-                // Axis Setup
-                xAxis.position = XAxis.XAxisPosition.BOTTOM
-                xAxis.setDrawGridLines(false)
-                xAxis.setDrawAxisLine(false)
-                xAxis.setDrawLabels(false)
-
-                axisLeft.setDrawGridLines(false)
-                axisLeft.setDrawAxisLine(false)
-                axisLeft.setDrawLabels(false)
-
-                axisRight.isEnabled = false
-
-                invalidate()
-            }
-        }
-    )
-}

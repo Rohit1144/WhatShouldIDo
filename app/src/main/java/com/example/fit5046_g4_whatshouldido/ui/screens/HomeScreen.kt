@@ -47,11 +47,12 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import com.example.fit5046_g4_whatshouldido.R
+import com.example.fit5046_g4_whatshouldido.data.local.entity.TaskStatus
 import okhttp3.internal.concurrent.Task
 
 data class TaskItem (
     val title: String,
-    val status: Int
+    val status: TaskStatus
 )
 
 @Composable
@@ -60,15 +61,15 @@ fun Home(
 ) {
     val taskList = remember {
         mutableStateListOf(
-            TaskItem("Example 1 Task",0),
-            TaskItem("Example 2 Task",0),
-            TaskItem("Example 3 Task",1),
-            TaskItem("Example 4 Task",2),
-            TaskItem("Example 5 Task",1),
-            TaskItem("Example 6 Task",0),
-            TaskItem("Example 7 Task",0),
-            TaskItem("Example 8 Task",1),
-            TaskItem("Example 9 Task",1),
+            TaskItem("Example 1 Task",TaskStatus.DONE),
+            TaskItem("Example 2 Task",TaskStatus.DONE),
+            TaskItem("Example 3 Task",TaskStatus.PENDING),
+            TaskItem("Example 4 Task",TaskStatus.CANCELLED),
+            TaskItem("Example 5 Task",TaskStatus.CANCELLED),
+            TaskItem("Example 6 Task",TaskStatus.DONE),
+            TaskItem("Example 7 Task",TaskStatus.DONE),
+            TaskItem("Example 8 Task",TaskStatus.CANCELLED),
+            TaskItem("Example 9 Task",TaskStatus.PENDING),
         )
     }
 
@@ -104,7 +105,7 @@ fun Home(
                         task,
                         navController,
                         onStatusToggle = {
-                            taskList[index] = task.copy(status = if(task.status != 1) 1 else 0)
+                            taskList[index] = task.copy(status = if(task.status != TaskStatus.DONE) TaskStatus.DONE else TaskStatus.PENDING)
                         }
                     )
                     Divider(modifier = Modifier.padding(vertical = 4.dp))
@@ -145,9 +146,9 @@ fun TaskItemRow(item: TaskItem, navController: NavController, onStatusToggle: ()
                 onClick = onStatusToggle
             ) {
                 Icon(
-                    imageVector = if (item.status == 1) Icons.Default.RadioButtonChecked else Icons.Default.RadioButtonUnchecked,
+                    imageVector = if (item.status == TaskStatus.DONE) Icons.Default.RadioButtonChecked else Icons.Default.RadioButtonUnchecked,
                     contentDescription = "Toggle Status",
-                    tint = if(item.status == 1) Color.Blue else Color.DarkGray,
+                    tint = if(item.status == TaskStatus.DONE) Color.Blue else Color.DarkGray,
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -157,8 +158,10 @@ fun TaskItemRow(item: TaskItem, navController: NavController, onStatusToggle: ()
             Text(
                 text = item.title,
                 modifier = Modifier.weight(1f).padding(start = 4.dp).clickable { navController.navigate("task_detail") },
-                style = MaterialTheme.typography.bodyLarge,
-                color = if(item.status == 1) Color.LightGray else Color.DarkGray,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    textDecoration = if(item.status == TaskStatus.CANCELLED) TextDecoration.LineThrough else TextDecoration.None
+                ),
+                color = if(item.status == TaskStatus.DONE) Color.LightGray else Color.DarkGray,
             )
     }
 }
