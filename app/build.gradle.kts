@@ -62,7 +62,7 @@ dependencies {
     implementation(libs.tensorflow.lite) // Tensorflow - 2.3.0
     implementation(libs.firebase.analytics) // Firebase - Analytics Service
     implementation(libs.firebase.auth) // Firebase - Authentication Services
-    implementation(libs.google.firebase.firestore.ktx) // Firebase - FireStore DB services
+    implementation(libs.firebase.firestore) // Firebase - FireStore DB services
     val credentialManagerVersion = "1.5.0"
     implementation("androidx.credentials:credentials:$credentialManagerVersion")
     implementation("androidx.credentials:credentials-play-services-auth:$credentialManagerVersion")
