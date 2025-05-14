@@ -37,7 +37,7 @@ fun TopBar(
     var isBackSelected by remember { mutableStateOf(false) }
     var isProfileSelected by remember { mutableStateOf(false) }
     var isBinSelected by remember { mutableStateOf(false) }
-    val openDeleteSheet = remember { mutableStateOf(false) } // To open bottom sheet for removing tasks
+    var openDeleteSheet by remember { mutableStateOf(false) } // To open bottom sheet for removing tasks
 
     TopAppBar(
         modifier = Modifier.statusBarsPadding().padding(top = 10.dp),
@@ -79,7 +79,7 @@ fun TopBar(
                 IconButton(onClick = {
                     isBinSelected = !isBinSelected
                     // Opens deletion bottom sheet to ask if the user wants to really delete it or not
-                    openDeleteSheet.value = true
+                    openDeleteSheet = true
                     },
                     modifier = Modifier.padding(end = 20.dp)
                 ){
@@ -94,13 +94,13 @@ fun TopBar(
         }
     )
     // Opens up bottom sheet for deletion asking user again to delete the task or not
-    if(openDeleteSheet.value) {
+    if(openDeleteSheet) {
         DeleteConfirmationBottomSheet(
             onConfirmDelete = {
                 // TODO: Implement Delete Logic Here
-                openDeleteSheet.value = false
+                openDeleteSheet = false
             },
-            onDismiss = { openDeleteSheet.value = false }
+            onDismiss = { openDeleteSheet = false }
         )
     }
 }
