@@ -137,6 +137,14 @@ class AuthenticationManager (val context: Context) {
         }
     }
 
+    suspend fun MarkOnboardingComplete() {
+        val user = Firebase.auth.currentUser
+        Firebase.firestore.collection("Users")
+            .document(user!!.uid)
+            .update("isOnboarded", true)
+            .await()
+    }
+
 }
 
 sealed interface AuthResponse {

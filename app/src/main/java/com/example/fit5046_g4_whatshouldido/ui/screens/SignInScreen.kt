@@ -2,7 +2,6 @@ package com.example.fit5046_g4_whatshouldido.ui.screens
 
 
 
-import android.util.Log
 import android.widget.Toast
 import com.example.fit5046_g4_whatshouldido.R
 import androidx.compose.foundation.layout.Arrangement
@@ -48,8 +47,6 @@ import androidx.compose.ui.unit.sp
 import com.example.fit5046_g4_whatshouldido.models.AuthResponse
 import com.example.fit5046_g4_whatshouldido.models.AuthenticationManager
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 

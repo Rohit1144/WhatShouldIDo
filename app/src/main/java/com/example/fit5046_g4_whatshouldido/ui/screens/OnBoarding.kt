@@ -32,10 +32,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import com.example.fit5046_g4_whatshouldido.models.AuthenticationManager
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
@@ -61,6 +63,8 @@ fun OnBoarding(navController: NavController) {
     var startExpanded by remember { mutableStateOf(false) }
 
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val authenticationManager = remember { AuthenticationManager(context) }
 
     Column (
         modifier = Modifier.fillMaxSize().padding(40.dp),
@@ -223,11 +227,7 @@ fun OnBoarding(navController: NavController) {
         Button(
             onClick ={
                 scope.launch(Dispatchers.Main) {
-                    val user = Firebase.auth.currentUser
-                    Firebase.firestore.collection("Users")
-                        .document(user!!.uid)
-                        .update("isOnboarded", true)
-                        .await()
+                    authenticationManager.MarkOnboardingComplete()
                 }
 
                 // Navigate to home after clicking the OK button
