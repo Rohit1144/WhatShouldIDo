@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "204177449743",
+    "project_id": "whatshouldido-a90a5",
+    "storage_bucket": "whatshouldido-a90a5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:204177449743:android:3beb8a2e819baa04db547a",
+        "android_client_info": {
+          "package_name": "com.example.fit5046_g4_whatshouldido"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "204177449743-fqesmpljirqvhmt7qmj24dbjssvodpc2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.fit5046_g4_whatshouldido",
+            "certificate_hash": "a1050bbaa43442e7357506d221ccc39a6341099f"
+          }
+        },
+        {
+          "client_id": "204177449743-73ufcggg5mf5qibv24g07vtnft4a22i6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzNIryk8Z-quWGOcBXUVSV--LV3pAb2Zk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "204177449743-73ufcggg5mf5qibv24g07vtnft4a22i6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
