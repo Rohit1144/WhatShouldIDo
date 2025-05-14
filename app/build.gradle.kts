@@ -51,7 +51,7 @@ android {
 }
 
 dependencies {
-    implementation (libs.mpandroidchart) // MP Android Chart - for Report & Analysis
+    implementation (libs.mpandroidchart)
     implementation (libs.androidx.compose.ui.ui)
     implementation (libs.material3)
     implementation (libs.androidx.navigation.compose.v271)
@@ -61,8 +61,8 @@ dependencies {
     implementation(libs.firebase.ml.modeldownloader) // Firebase - ML Downloader Service
     implementation(libs.tensorflow.lite) // Tensorflow - 2.3.0
     implementation(libs.firebase.analytics) // Firebase - Analytics Service
-    implementation(libs.firebase.auth.ktx) // Firebase - Authentication Services
-    implementation(libs.firebase.firestore.ktx) // Firebase - FireStore DB services
+    implementation(libs.firebase.auth) // Firebase - Authentication Services
+    implementation(libs.firebase.firestore) // Firebase - FireStore DB services
     val credentialManagerVersion = "1.5.0"
     implementation("androidx.credentials:credentials:$credentialManagerVersion")
     implementation("androidx.credentials:credentials-play-services-auth:$credentialManagerVersion")
