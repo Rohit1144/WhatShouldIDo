@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.Delete
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -39,6 +40,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.fit5046_g4_whatshouldido.R
+import com.example.fit5046_g4_whatshouldido.data.local.entity.TaskStatus
 import com.example.loginpagetutorial.components.TopBar
 
 @Composable
@@ -46,8 +48,7 @@ fun TaskDetail(navController: NavController) {
 
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("")}
-    var isCancelled by remember { mutableStateOf(false)}
-
+    var taskStatus by remember { mutableStateOf(TaskStatus.PENDING)} // TODO: this is hardcoded needs to receive task status from the task selected.
 
     Scaffold(
         topBar = { TopBar(navController = null, showBinIcon = true) }
@@ -91,37 +92,41 @@ fun TaskDetail(navController: NavController) {
                     .height(120.dp),
                 maxLines = 8
             )
-            Spacer(Modifier.height(12.dp))
+            if(taskStatus != TaskStatus.DONE) {
+                Spacer(Modifier.height(12.dp))
 
-            TextButton(
-                onClick = {
-                    isCancelled = !isCancelled
-                    navController.navigate("home")
-                }
-            ) {
-                Text(
-                    text = if(isCancelled) "Click to cancel task" else "Click to uncancel task",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = colorResource(R.color.light_red),
-                    modifier = Modifier.drawBehind{
-                        val strokeWidthPx = 1.dp.toPx()
-                        val verticalOffset = size.height - 2.sp.toPx()
-                        drawLine(
-                            color = Color.Red,
-                            strokeWidth = strokeWidthPx,
-                            start = Offset(0f, verticalOffset),
-                            end = Offset(size.width, verticalOffset)
-                        )
+                TextButton(
+                    onClick = {
+                        // TODO: Implement Cancel Task
+                        navController.navigate("home")
                     }
-                )
+                ) {
+                    Text(
+                        text = if(taskStatus != TaskStatus.CANCELLED) "Cancel Task" else "Uncancel Task",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = colorResource(R.color.light_red),
+                        modifier = Modifier.drawBehind{
+                            val strokeWidthPx = 1.dp.toPx()
+                            val verticalOffset = size.height - 2.sp.toPx()
+                            drawLine(
+                                color = Color.Red,
+                                strokeWidth = strokeWidthPx,
+                                start = Offset(0f, verticalOffset),
+                                end = Offset(size.width, verticalOffset)
+                            )
+                        }
+                    )
+                }
             }
 
-            Spacer(Modifier.height(120.dp))
+
+
+            Spacer(Modifier.height(50.dp))
 
             Button (
                 onClick ={
                     // TODO: Implement Task Update Logic Here
-
+                    navController.navigate("home")
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
@@ -129,25 +134,9 @@ fun TaskDetail(navController: NavController) {
                     disabledContainerColor = colorResource(R.color.light_red)
                 )
             ) {
-                Text("Update")
+                Text("OK")
             }
             Spacer(Modifier.height(16.dp))
-//            Button (
-//                onClick ={
-//                    // Navigate to home after clicking the Cancel button
-//                    navController.navigate("home") {
-//                        popUpTo("task_detail") { inclusive = true }
-//                    }
-//                },
-//                modifier = Modifier.fillMaxWidth(),
-//                border = BorderStroke(1.dp, color = Color.DarkGray),
-//                colors = ButtonDefaults.buttonColors(
-//                    containerColor = Color.Transparent,
-//                    disabledContainerColor = Color.Transparent
-//                )
-//            ) {
-//                Text("Cancel", color = Color.DarkGray)
-//            }
         }
     }
 }
