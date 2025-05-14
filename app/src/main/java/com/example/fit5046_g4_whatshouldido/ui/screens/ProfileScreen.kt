@@ -21,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,9 +35,12 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.fit5046_g4_whatshouldido.R
+import com.example.fit5046_g4_whatshouldido.viewmodel.ProfileViewModel
 import com.example.loginpagetutorial.components.TopBar
 
 @Composable
@@ -44,10 +48,12 @@ fun Profile(
     navController: NavController,
     isGoogleSignIn: Boolean,
     userEmail: String,
-    userPassword: String
+    userPassword: String,
+    viewModel: ProfileViewModel = viewModel()
 ) {
 
     var passwordVisible by remember { mutableStateOf(false) }
+    val quote by viewModel.quote.collectAsState()
 
     Scaffold(
         topBar = { TopBar(navController = navController, showProfileIcon = false, showBackButton = true) },
@@ -132,6 +138,13 @@ fun Profile(
             }
 
             // Retrofit API. TODO: implement retrofit api response
+            Spacer(Modifier.height(30.dp))
+            Text(
+                text = quote,
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.DarkGray,
+                textAlign = TextAlign.Center
+            )
             Spacer(Modifier.height(30.dp))
 
             // Update Profile Button based on the method of login
