@@ -2,6 +2,7 @@ package com.example.fit5046_g4_whatshouldido.ui.screens
 
 
 
+import android.util.Log
 import android.widget.Toast
 import com.example.fit5046_g4_whatshouldido.R
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
@@ -43,6 +45,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.sp
+import com.example.fit5046_g4_whatshouldido.models.AuthResponse
+import com.example.fit5046_g4_whatshouldido.models.AuthenticationManager
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -53,6 +60,9 @@ fun SignIn(navController: NavController) {
     var passwordVisible by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
+    val authenticationManager = remember { AuthenticationManager(context) }
 
 
 
@@ -169,7 +179,19 @@ fun SignIn(navController: NavController) {
         Spacer(Modifier.height(24.dp))
 
         Button(
-            onClick = {},
+            onClick = {
+                scope.launch {
+                    val response = authenticationManager.signInWithGoogle()
+                    if (response is AuthResponse.Success) {
+                        navController.navigate("home") {
+                            popUpTo("sign_in") { inclusive = true }
+                        }
+                    } else if (response is AuthResponse.Error) {
+                        // Handle error
+                        Toast.makeText(context, response.message, Toast.LENGTH_LONG).show()
+                    }
+                }
+            },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.LightGray,
