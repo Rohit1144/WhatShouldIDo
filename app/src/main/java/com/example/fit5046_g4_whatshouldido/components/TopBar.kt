@@ -7,6 +7,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -20,12 +21,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
+import com.example.fit5046_g4_whatshouldido.ui.components.DeleteConfirmationBottomSheet
 
 @Composable
 fun TopBar(
     navController: NavController? = null,
     showBackButton: Boolean = false,
     showProfileIcon: Boolean = false,
+    showBinIcon: Boolean = false,
     onBackClick: (() -> Unit)? = { navController?.navigate("home") {
         popUpTo("add_task") { inclusive = true }
     } },
@@ -33,6 +36,9 @@ fun TopBar(
 ) {
     var isBackSelected by remember { mutableStateOf(false) }
     var isProfileSelected by remember { mutableStateOf(false) }
+    var isBinSelected by remember { mutableStateOf(false) }
+    val openDeleteSheet = remember { mutableStateOf(false) } // To open bottom sheet for removing tasks
+
     TopAppBar(
         modifier = Modifier.statusBarsPadding().padding(top = 10.dp),
         title = { Text(text ="") },
@@ -69,7 +75,32 @@ fun TopBar(
                         tint = if(isProfileSelected) Color("#F85F6A".toColorInt()) else Color.LightGray,
                     )
                 }
+            } else if (showBinIcon) {
+                IconButton(onClick = {
+                    isBinSelected = !isBinSelected
+                    // Opens deletion bottom sheet to ask if the user wants to really delete it or not
+                    openDeleteSheet.value = true
+                    },
+                    modifier = Modifier.padding(end = 20.dp)
+                ){
+                    Icon(
+                        imageVector = Icons.Default.Delete,
+                        contentDescription = "Remove",
+                        modifier = Modifier.size(30.dp),
+                        tint = if(isBinSelected) Color("#F85F6A".toColorInt()) else Color.LightGray,
+                    )
+                }
             }
         }
     )
+    // Opens up bottom sheet for deletion asking user again to delete the task or not
+    if(openDeleteSheet.value) {
+        DeleteConfirmationBottomSheet(
+            onConfirmDelete = {
+                // TODO: Implement Delete Logic Here
+                openDeleteSheet.value = false
+            },
+            onDismiss = { openDeleteSheet.value = false }
+        )
+    }
 }
