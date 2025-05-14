@@ -29,12 +29,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 
 @Composable
@@ -52,6 +59,8 @@ fun OnBoarding(navController: NavController) {
 
     var startPreference by remember { mutableStateOf(startPreferences[0]) }
     var startExpanded by remember { mutableStateOf(false) }
+
+    val scope = rememberCoroutineScope()
 
     Column (
         modifier = Modifier.fillMaxSize().padding(40.dp),
@@ -213,6 +222,14 @@ fun OnBoarding(navController: NavController) {
 
         Button(
             onClick ={
+                scope.launch(Dispatchers.Main) {
+                    val user = Firebase.auth.currentUser
+                    Firebase.firestore.collection("Users")
+                        .document(user!!.uid)
+                        .update("isOnboarded", true)
+                        .await()
+                }
+
                 // Navigate to home after clicking the OK button
                 navController.navigate("home") {
                     popUpTo("on_boarding") { inclusive = true }

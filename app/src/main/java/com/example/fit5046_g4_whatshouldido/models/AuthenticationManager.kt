@@ -13,7 +13,10 @@ import java.security.MessageDigest
 import java.util.UUID
 import com.example.fit5046_g4_whatshouldido.R
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.tasks.await
@@ -25,7 +28,7 @@ class AuthenticationManager (val context: Context) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful){
-                    trySend(AuthResponse.Success)
+//                    trySend(AuthResponse.Success)
                 } else {
                     trySend(AuthResponse.Error(message = task.exception?.message ?: ""))
                 }
@@ -37,7 +40,7 @@ class AuthenticationManager (val context: Context) {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if(task.isSuccessful){
-                    trySend(AuthResponse.Success)
+//                    trySend(AuthResponse.Success)
                 } else {
                     trySend(AuthResponse.Error(message = task.exception?.message ?: ""))
                 }
@@ -82,8 +85,29 @@ class AuthenticationManager (val context: Context) {
                         googleIdTokenCredential.idToken, null
                     )
 
-                    val authResult = auth.signInWithCredential(firebaseCredential).await()
-                    AuthResponse.Success
+                    Firebase.auth.signInWithCredential(firebaseCredential).await()
+
+                    val user = Firebase.auth.currentUser ?: return AuthResponse.Error("No user found")
+
+                    val db = Firebase.firestore
+                    val userRef = db.collection("Users").document(user.uid)
+                    val userDoc = userRef.get().await()
+
+                    val isOnboarded = userDoc.getBoolean("isOnboarded") ?: false
+
+                    if (!userDoc.exists()) {
+                        val userData = hashMapOf(
+                            "email" to user.email,
+                            "id" to user.uid,
+                            "name" to user.displayName,
+                            "createdAt" to FieldValue.serverTimestamp(),
+                            "isOnboarded" to false,
+                            "dateOfBirth" to ""
+                        )
+                        userRef.set(userData).await()
+                    }
+
+                    AuthResponse.Success(isOnboarded)
                 } catch (e: Exception) {
                     AuthResponse.Error(e.message ?: "Failed to sign in with Google")
                 }
@@ -94,9 +118,28 @@ class AuthenticationManager (val context: Context) {
             AuthResponse.Error(e.message ?: "Google sign-in failed")
         }
     }
+
+    private suspend fun ensureGoogleUserExists(user: FirebaseUser) {
+        val db = Firebase.firestore
+        val userDoc = db.collection("Users").document(user.uid).get().await()
+
+        if (!userDoc.exists()) {
+            val userData = hashMapOf(
+                "email" to user.email,
+                "id" to user.uid,
+                "createdAt" to FieldValue.serverTimestamp(),
+                "password" to "",
+                "dateOfBirth" to "",
+                "isOnboarded" to false
+            )
+
+            db.collection("Users").document(user.uid).set(userData).await()
+        }
+    }
+
 }
 
-interface AuthResponse {
-    data object Success: AuthResponse
+sealed interface AuthResponse {
+    data class Success(val isOnboarded: Boolean): AuthResponse
     data class Error(val message: String): AuthResponse
 }

@@ -47,6 +47,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.sp
 import com.example.fit5046_g4_whatshouldido.models.AuthResponse
 import com.example.fit5046_g4_whatshouldido.models.AuthenticationManager
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -180,15 +181,22 @@ fun SignIn(navController: NavController) {
 
         Button(
             onClick = {
-                scope.launch {
-                    val response = authenticationManager.signInWithGoogle()
-                    if (response is AuthResponse.Success) {
-                        navController.navigate("home") {
-                            popUpTo("sign_in") { inclusive = true }
+                scope.launch(Dispatchers.Main) {
+                    when (val response = authenticationManager.signInWithGoogle()) {
+                        is AuthResponse.Success -> {
+                            if (response.isOnboarded) {
+                                navController.navigate("home") {
+                                    popUpTo("sign_in") { inclusive = true }
+                                }
+                            } else {
+                                navController.navigate("on_boarding") {
+                                    popUpTo("sign_in") { inclusive = true }
+                                }
+                            }
                         }
-                    } else if (response is AuthResponse.Error) {
-                        // Handle error
-                        Toast.makeText(context, response.message, Toast.LENGTH_LONG).show()
+                        is AuthResponse.Error -> {
+                            Toast.makeText(context, response.message, Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             },
