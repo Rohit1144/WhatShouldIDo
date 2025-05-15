@@ -41,17 +41,20 @@ import com.example.loginpagetutorial.components.TopBar
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
 import com.example.fit5046_g4_whatshouldido.R
 import com.example.fit5046_g4_whatshouldido.data.local.entity.TaskStatus
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import okhttp3.internal.concurrent.Task
 import java.time.LocalDateTime
@@ -68,17 +71,21 @@ fun Home(
 ) {
     val taskList = remember { mutableStateListOf<Map<String, Any?>>() }
     val user = Firebase.auth.currentUser
+    val scope = rememberCoroutineScope()
+    val taskManager = remember { TaskManager() }
 
     LaunchedEffect(user) {
         if (user != null) {
-            val snapshot = Firebase.firestore
-                .collection("Users")
-                .document(user.uid)
-                .collection("tasks")
-                .get()
-                .await()
 
-            val tasks = snapshot.documents.mapNotNull { it.data }
+//            val snapshot = Firebase.firestore
+//                .collection("Users")
+//                .document(user.uid)
+//                .collection("tasks")
+//                .get()
+//                .await()
+//
+//            val tasks = snapshot.documents.mapNotNull { it.data }
+            val tasks = taskManager.getTaskList()
             taskList.clear()
             taskList.addAll(tasks)
         }
@@ -117,31 +124,48 @@ fun Home(
                         navController,
                         onStatusToggle = {
                             val updatedStatus = if (task["status"] != "DONE") "DONE" else "PENDING"
+                            val taskId = task["id"] as String
+
 //                            val updatedAt = System.currentTimeMillis()
 
                             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
                             val updatedAt = LocalDateTime.now().format(formatter)
+//
+//                            val completedAt = if (updatedStatus == "DONE") updatedAt else null
+//
+//                            val updatedTask = task.toMutableMap().apply {
+//                                this["status"] = updatedStatus
+//                                this["updatedAt"] = updatedAt
+//                                this["completedAt"] = updatedAt
+//                            }
+//                            taskList[index] = updatedTask
 
-                            val completedAt = if (updatedStatus == "DONE") updatedAt else null
+                            scope.launch {
+                                taskManager.updateTaskStatusToDone(updatedStatus, taskId, updatedAt) // Due to data discrepancy, needs to pass it as an argument
 
-                            val updatedTask = task.toMutableMap().apply {
-                                this["status"] = updatedStatus
-                                this["updatedAt"] = updatedAt
-                                this["completedAt"] = updatedAt
+                                // Update local state for better UX
+                                val updatedTask = task.toMutableMap().apply {
+                                    this["status"] = updatedStatus
+                                    this["updatedAt"] = updatedAt
+                                    this["completedAt"] = if(updatedStatus == "DONE") updatedAt else null
+                                }
+                                taskList[index] = updatedTask
                             }
-                            taskList[index] = updatedTask
 
-                            Firebase.firestore.collection("Users")
-                                .document(user!!.uid)
-                                .collection("tasks")
-                                .document(task["id"] as String)
-                                .update(
-                                    mapOf(
-                                        "status" to updatedStatus,
-                                        "updatedAt" to updatedAt,
-                                        "completedAt" to completedAt
-                                    )
-                                )
+
+
+//                            Firebase.firestore.collection("Users")
+//                                .document(user!!.uid)
+//                                .collection("tasks")
+//                                .document(task["id"] as String)
+//                                .update(
+//                                    mapOf(
+//                                        "status" to updatedStatus,
+//                                        "updatedAt" to updatedAt,
+//                                        "completedAt" to completedAt
+//                                    )
+//                                )
+
                         }
                     )
                     Divider(modifier = Modifier.padding(vertical = 4.dp))

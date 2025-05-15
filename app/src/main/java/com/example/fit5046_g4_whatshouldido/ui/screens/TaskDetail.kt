@@ -130,7 +130,7 @@ fun TaskDetail(navController: NavController, taskId: String) {
                         val toggleCancel = if (taskStatus == "CANCELED") "PENDING" else "CANCELED"
                         // Cancel Task
                         scope.launch {
-                            taskManager.updateTaskStatus(toggleCancel, taskId)
+                            taskManager.updateTaskStatusToCancel(toggleCancel, taskId)
                         }
 
                         navController.navigate("home")

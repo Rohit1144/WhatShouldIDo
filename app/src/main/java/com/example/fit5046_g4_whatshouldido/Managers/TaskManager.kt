@@ -17,9 +17,6 @@ class TaskManager {
 
     suspend fun createExampleTasks(navController: NavController, profession: String) {
 
-//        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-//        val current = LocalDateTime.now().format(formatter)
-
         val tasksRef = db.collection("Users").document(user!!.uid).collection("tasks")
 
         // Define example tasks
@@ -100,7 +97,7 @@ class TaskManager {
             .await()
     }
 
-    suspend fun updateTaskStatus(toggleCancel: String, taskId: String) {
+    suspend fun updateTaskStatusToCancel(toggleCancel: String, taskId: String) {
 
         val cancelledAt = if (toggleCancel == "CANCELED") taskDate else null
 
@@ -118,6 +115,23 @@ class TaskManager {
             .await()
     }
 
+    suspend fun updateTaskStatusToDone(toggleStatus: String, taskId: String, updatedAt: String) {
+        val completedAt = if(toggleStatus == "DONE") updatedAt else null
+
+        db.collection("Users")
+            .document(user!!.uid)
+            .collection("tasks")
+            .document(taskId)
+            .update(
+                mapOf(
+                    "status" to toggleStatus,
+                    "updatedAt" to updatedAt,
+                    "completedAt" to completedAt
+                )
+            ).await()
+
+    }
+
     suspend fun updateTaskDetails(title: String, description: String, taskId: String) {
 
         db.collection("Users")
@@ -132,6 +146,19 @@ class TaskManager {
                 )
             )
             .await()
+    }
+
+    suspend fun getTaskList(): List<Map<String, Any?>> {
+        if(user == null) return emptyList()
+
+        val snapshot = db.collection("Users")
+            .document(user.uid)
+            .collection("tasks")
+            .orderBy("createdAt", com.google.firebase.firestore.Query.Direction.DESCENDING)
+            .get()
+            .await()
+
+        return snapshot.documents.mapNotNull { it.data }
     }
 
 }
