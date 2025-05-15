@@ -139,7 +139,7 @@ fun Profile(
 //                )
 //            }
 
-            // Retrofit API. TODO: implement retrofit api response
+            // Retrofit API.
             Spacer(Modifier.height(30.dp))
             Text(
                 text = quote,

@@ -1,5 +1,6 @@
 package com.example.fit5046_g4_whatshouldido.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,9 +27,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
@@ -40,15 +43,24 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.fit5046_g4_whatshouldido.R
 import com.example.loginpagetutorial.components.TopBar
+import com.google.firebase.Firebase
+import com.google.firebase.auth.EmailAuthCredential
+import com.google.firebase.auth.EmailAuthProvider
+import com.google.firebase.auth.auth
+import kotlinx.coroutines.launch
 
 @Composable
 fun ChangePassword(navController: NavController) {
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+    val user = Firebase.auth.currentUser
     var currentPassword by remember{ mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var currentPasswordVisible by remember { mutableStateOf(false) }
     var newPasswordVisible by remember { mutableStateOf(false) }
     var newConfirmPasswordVisible by remember { mutableStateOf(false)}
+
 
     Scaffold(
         topBar = { TopBar(navController = navController, showProfileIcon = false, showBackButton = false) },
@@ -165,10 +177,40 @@ fun ChangePassword(navController: NavController) {
             ) {
                 Button (
                     onClick ={
-                        // TODO: Implement update backend (1. retrieve user password and compare then add)
-                        // TODO: If success - Navigate to home after clicking the sign in button
-                        navController.navigate("home") {
-                            popUpTo("change_password") { inclusive = true }
+                        if(user != null) {
+
+                            if(newPassword != confirmPassword) {
+                                Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
+                                return@Button
+                            }
+
+                            if(newPassword == currentPassword) {
+                                Toast.makeText(context, "New password cannot be same as current password", Toast.LENGTH_SHORT).show()
+                                return@Button
+                            }
+
+                            // Retrieve user
+                            val credential = EmailAuthProvider.getCredential(user.email!!, currentPassword)
+                            scope.launch {
+                                user.reauthenticate(credential).addOnCompleteListener{ authResult ->
+                                    if(authResult.isSuccessful) {
+                                        // update password
+                                        user.updatePassword(newPassword)
+                                            .addOnCompleteListener { updateTask ->
+                                                if(updateTask.isSuccessful) {
+                                                    Toast.makeText(context, "Password updated successfully", Toast.LENGTH_SHORT).show()
+                                                    navController.navigate("profile") {
+                                                        popUpTo("change_password") { inclusive = true }
+                                                    }
+                                                } else {
+                                                    Toast.makeText(context, "ERROR: Failed to update password", Toast.LENGTH_SHORT).show()
+                                                }
+                                            }
+                                    } else {
+                                        Toast.makeText(context, "Current password is incorrect", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
                         }
                     },
                     colors = ButtonDefaults.buttonColors(
