@@ -37,13 +37,10 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import com.example.fit5046_g4_whatshouldido.models.AuthenticationManager
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
-import com.google.firebase.firestore.firestore
+import com.example.fit5046_g4_whatshouldido.Managers.AuthenticationManager
+import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 
 
 @Composable
@@ -65,6 +62,7 @@ fun OnBoarding(navController: NavController) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val authenticationManager = remember { AuthenticationManager(context) }
+    val taskManager = remember { TaskManager() }
 
     Column (
         modifier = Modifier.fillMaxSize().padding(40.dp),
@@ -224,17 +222,13 @@ fun OnBoarding(navController: NavController) {
 
         Spacer(Modifier.height(17.dp))
 
-        val onboardingValues = mapOf(
-            "profession" to profession,
-            "focusArea" to focusTime,
-            "preference" to startPreference
-        )
 
         Button(
             onClick ={
-//                scope.launch(Dispatchers.Main) {
-//                    authenticationManager.markOnboardingComplete(onboardingValues)
-//                }
+                scope.launch(Dispatchers.Main) {
+                    authenticationManager.markOnboardingComplete(profession, focusTime, startPreference)
+                    taskManager.createExampleTasks()
+                }
 
                 // Navigate to home after clicking the OK button
                 navController.navigate("home") {

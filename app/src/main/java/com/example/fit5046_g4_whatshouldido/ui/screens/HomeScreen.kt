@@ -31,6 +31,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -48,29 +49,37 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import com.example.fit5046_g4_whatshouldido.R
 import com.example.fit5046_g4_whatshouldido.data.local.entity.TaskStatus
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.tasks.await
 import okhttp3.internal.concurrent.Task
 
-data class TaskItem (
-    val title: String,
-    val status: TaskStatus
-)
+//data class TaskItem (
+//    val title: String,
+//    val status: TaskStatus
+//)
 
 @Composable
 fun Home(
     navController: NavController
 ) {
-    val taskList = remember {
-        mutableStateListOf(
-            TaskItem("Example 1 Task",TaskStatus.DONE),
-            TaskItem("Example 2 Task",TaskStatus.DONE),
-            TaskItem("Example 3 Task",TaskStatus.PENDING),
-            TaskItem("Example 4 Task",TaskStatus.CANCELLED),
-            TaskItem("Example 5 Task",TaskStatus.CANCELLED),
-            TaskItem("Example 6 Task",TaskStatus.DONE),
-            TaskItem("Example 7 Task",TaskStatus.DONE),
-            TaskItem("Example 8 Task",TaskStatus.CANCELLED),
-            TaskItem("Example 9 Task",TaskStatus.PENDING),
-        )
+    val taskList = remember { mutableStateListOf<Map<String, Any?>>() }
+    val user = Firebase.auth.currentUser
+
+    LaunchedEffect(user) {
+        if (user != null) {
+            val snapshot = Firebase.firestore
+                .collection("Users")
+                .document(user.uid)
+                .collection("tasks")
+                .get()
+                .await()
+
+            val tasks = snapshot.documents.mapNotNull { it.data }
+            taskList.clear()
+            taskList.addAll(tasks)
+        }
     }
 
     Scaffold(
@@ -105,7 +114,25 @@ fun Home(
                         task,
                         navController,
                         onStatusToggle = {
-                            taskList[index] = task.copy(status = if(task.status != TaskStatus.DONE) TaskStatus.DONE else TaskStatus.PENDING)
+                            val updatedStatus = if (task["status"] != "DONE") "DONE" else "PENDING"
+                            val updatedAt = System.currentTimeMillis()
+
+                            val updatedTask = task.toMutableMap().apply {
+                                this["status"] = updatedStatus
+                                this["updatedAt"] = updatedAt
+                            }
+                            taskList[index] = updatedTask
+
+                            Firebase.firestore.collection("Users")
+                                .document(user!!.uid)
+                                .collection("tasks")
+                                .document(task["id"] as String)
+                                .update(
+                                    mapOf(
+                                        "status" to updatedStatus,
+                                        "updatedAt" to updatedAt
+                                    )
+                                )
                         }
                     )
                     Divider(modifier = Modifier.padding(vertical = 4.dp))
@@ -135,7 +162,10 @@ fun Home(
 }
 
 @Composable
-fun TaskItemRow(item: TaskItem, navController: NavController, onStatusToggle: () -> Unit) {
+fun TaskItemRow(item: Map<String, Any?>, navController: NavController, onStatusToggle: () -> Unit) {
+
+    val title = item["title"] as? String ?: ""
+    val status = item["status"] as? String ?: "PENDING"
 
     Row(
        modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
@@ -146,9 +176,9 @@ fun TaskItemRow(item: TaskItem, navController: NavController, onStatusToggle: ()
                 onClick = onStatusToggle
             ) {
                 Icon(
-                    imageVector = if (item.status == TaskStatus.DONE) Icons.Default.RadioButtonChecked else Icons.Default.RadioButtonUnchecked,
+                    imageVector = if (status == "DONE") Icons.Default.RadioButtonChecked else Icons.Default.RadioButtonUnchecked,
                     contentDescription = "Toggle Status",
-                    tint = if(item.status == TaskStatus.DONE) Color.Blue else Color.DarkGray,
+                    tint = if(status == "DONE") Color.Blue else Color.DarkGray,
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -156,12 +186,12 @@ fun TaskItemRow(item: TaskItem, navController: NavController, onStatusToggle: ()
             Spacer(modifier = Modifier.width(8.dp))
 
             Text(
-                text = item.title,
+                text = title,
                 modifier = Modifier.weight(1f).padding(start = 4.dp).clickable { navController.navigate("task_detail") },
                 style = MaterialTheme.typography.bodyLarge.copy(
-                    textDecoration = if(item.status == TaskStatus.CANCELLED) TextDecoration.LineThrough else TextDecoration.None
+                    textDecoration = if(status == "CANCELED") TextDecoration.LineThrough else TextDecoration.None
                 ),
-                color = if(item.status == TaskStatus.DONE) Color.LightGray else Color.DarkGray,
+                color = if(status == "DONE") Color.LightGray else Color.DarkGray,
             )
     }
 }

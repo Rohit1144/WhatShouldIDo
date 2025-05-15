@@ -1,4 +1,4 @@
-package com.example.fit5046_g4_whatshouldido.models
+package com.example.fit5046_g4_whatshouldido.Managers
 
 import android.content.Context
 import androidx.credentials.CredentialManager
@@ -13,11 +13,9 @@ import java.security.MessageDigest
 import java.util.UUID
 import com.example.fit5046_g4_whatshouldido.R
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.tasks.await
 
@@ -121,15 +119,62 @@ class AuthenticationManager (val context: Context) {
 
 
 
-    suspend fun markOnboardingComplete(onboardingValues: Map<String, String>) {
+    suspend fun markOnboardingComplete(profession: String, focus: String, preference: String) {
         val user = Firebase.auth.currentUser
+        val db = Firebase.firestore
 
-        Firebase.firestore.collection("Users")
+        val onboardingValues = mapOf(
+            "profession" to profession,
+            "focusArea" to focus,
+            "preference" to preference
+        )
+
+        db.collection("Users")
             .document(user!!.uid)
-            .update("isOnboarded", true)
+            .update(
+                mapOf(
+                    "onboardingValues" to onboardingValues,
+                    "isOnboarded" to true
+                )
+            )
             .await()
+    }
 
+    suspend fun createExampleTasks() {
+        val user = Firebase.auth.currentUser ?: return
+        val db = Firebase.firestore
 
+        // Fetch profession from onboardingValues
+        val doc = db.collection("Users").document(user.uid).get().await()
+        val profession = doc.get("onboardingValues.profession") as? String ?: return
+
+        val now = System.currentTimeMillis()
+
+        val tasksRef = db.collection("Users").document(user.uid).collection("tasks")
+
+        // Define example tasks
+        val exampleTitles = when (profession) {
+            "Student" -> listOf("Review lecture notes", "Submit assignment draft", "Join study group")
+            "Professional" -> listOf("Prepare for team meeting", "Review project proposal", "Send weekly report")
+            "Freelancer" -> listOf("Email client proposal", "Update portfolio", "Schedule invoice reminders")
+            else -> emptyList()
+        }
+
+        // Write each task as a map
+        for (title in exampleTitles) {
+            val taskId = db.collection("tmp").document().id // generate unique ID
+            val task = mapOf(
+                "id" to taskId,
+                "title" to title,
+                "description" to "",
+                "status" to "PENDING",
+                "createdAt" to now,
+                "updatedAt" to now,
+                "completedAt" to null,
+                "cancelledAt" to null
+            )
+            tasksRef.document(taskId).set(task).await()
+        }
     }
 
 }
