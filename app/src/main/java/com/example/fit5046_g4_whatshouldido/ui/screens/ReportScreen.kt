@@ -134,7 +134,6 @@ fun Report(navController: NavController) {
                                     Text("Cancelled", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
                                 }
                             }
-
                         }
                     }
 
