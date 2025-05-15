@@ -22,14 +22,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
 import com.example.fit5046_g4_whatshouldido.R
 import com.example.loginpagetutorial.components.TopBar
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.launch
 
 @Composable
 fun AddTask(navController: NavController) {
@@ -37,6 +43,9 @@ fun AddTask(navController: NavController) {
     val context = LocalContext.current
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
+
+    val scope = rememberCoroutineScope()
+    val taskManager = remember { TaskManager() }
 
     Scaffold(
         topBar = { TopBar(navController = navController, showProfileIcon = false, showBackButton = true) },
@@ -88,6 +97,9 @@ fun AddTask(navController: NavController) {
             Button(
                 onClick = {
                     if(title.isNotEmpty() && description.isNotEmpty()){
+                        scope.launch {
+                            taskManager.addTask(title, description)
+                        }
                         // Navigate to home after clicking the sign in button
                         navController.navigate("home") {
                             popUpTo("add_task") { inclusive = true }

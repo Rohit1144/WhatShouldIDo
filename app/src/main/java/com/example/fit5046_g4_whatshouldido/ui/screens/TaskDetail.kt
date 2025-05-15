@@ -23,6 +23,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -32,6 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
@@ -42,13 +44,39 @@ import androidx.compose.ui.unit.sp
 import com.example.fit5046_g4_whatshouldido.R
 import com.example.fit5046_g4_whatshouldido.data.local.entity.TaskStatus
 import com.example.loginpagetutorial.components.TopBar
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
+import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 @Composable
-fun TaskDetail(navController: NavController) {
+fun TaskDetail(navController: NavController, taskId: String) {
 
+    val user = Firebase.auth.currentUser
+    val db = Firebase.firestore
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("")}
-    var taskStatus by remember { mutableStateOf(TaskStatus.PENDING)} // TODO: this is hardcoded needs to receive task status from the task selected.
+    var taskStatus by remember { mutableStateOf("")} // TODO: this is hardcoded needs to receive task status from the task selected.
+
+    val scope = rememberCoroutineScope()
+
+    LaunchedEffect(taskId) {
+        if (user != null) {
+            val doc = Firebase.firestore
+                .collection("Users")
+                .document(user.uid)
+                .collection("tasks")
+                .document(taskId)
+                .get()
+                .await()
+
+            title = doc.getString("title") ?: ""
+            description = doc.getString("description") ?: ""
+            taskStatus = doc.getString("status") ?: ""
+        }
+    }
+
 
     Scaffold(
         topBar = { TopBar(navController = null, showBinIcon = true) }
@@ -92,17 +120,27 @@ fun TaskDetail(navController: NavController) {
                     .height(120.dp),
                 maxLines = 8
             )
-            if(taskStatus != TaskStatus.DONE) {
+            if(taskStatus != "DONE") {
                 Spacer(Modifier.height(12.dp))
 
                 TextButton(
                     onClick = {
+                        val toggleCancel = if (taskStatus == "CANCELED") "PENDING" else "CANCELED"
                         // TODO: Implement Cancel Task
+                        scope.launch {
+                            db.collection("Users")
+                                .document(user!!.uid)
+                                .collection("tasks")
+                                .document(taskId)
+                                .update("status", toggleCancel)
+                                .await()
+                        }
+
                         navController.navigate("home")
                     }
                 ) {
                     Text(
-                        text = if(taskStatus != TaskStatus.CANCELLED) "Cancel Task" else "Uncancel Task",
+                        text = if(taskStatus != "CANCELED") "Cancel Task" else "Uncancel Task",
                         style = MaterialTheme.typography.bodyMedium,
                         color = colorResource(R.color.light_red),
                         modifier = Modifier.drawBehind{

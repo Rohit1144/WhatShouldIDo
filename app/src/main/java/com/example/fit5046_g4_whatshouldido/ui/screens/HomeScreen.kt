@@ -187,7 +187,7 @@ fun TaskItemRow(item: Map<String, Any?>, navController: NavController, onStatusT
 
             Text(
                 text = title,
-                modifier = Modifier.weight(1f).padding(start = 4.dp).clickable { navController.navigate("task_detail") },
+                modifier = Modifier.weight(1f).padding(start = 4.dp).clickable { navController.navigate("task_detail/${item["id"]}") },
                 style = MaterialTheme.typography.bodyLarge.copy(
                     textDecoration = if(status == "CANCELED") TextDecoration.LineThrough else TextDecoration.None
                 ),
