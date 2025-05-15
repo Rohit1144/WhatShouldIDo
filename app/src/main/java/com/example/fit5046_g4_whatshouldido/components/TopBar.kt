@@ -1,5 +1,6 @@
 package com.example.loginpagetutorial.components
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
@@ -15,13 +16,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
+import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
 import com.example.fit5046_g4_whatshouldido.ui.components.DeleteConfirmationBottomSheet
+import kotlinx.coroutines.launch
 
 @Composable
 fun TopBar(
@@ -29,6 +34,7 @@ fun TopBar(
     showBackButton: Boolean = false,
     showProfileIcon: Boolean = false,
     showBinIcon: Boolean = false,
+    taskId: String? = null,
     onBackClick: (() -> Unit)? = { navController?.navigate("home") {
         popUpTo("add_task") { inclusive = true }
     } },
@@ -95,10 +101,29 @@ fun TopBar(
     )
     // Opens up bottom sheet for deletion asking user again to delete the task or not
     if(openDeleteSheet) {
+        val coroutineScope = rememberCoroutineScope()
+        val taskManager = remember { TaskManager() }
+        val context = LocalContext.current
         DeleteConfirmationBottomSheet(
             onConfirmDelete = {
-                // TODO: Implement Delete Logic Here
-                openDeleteSheet = false
+                try{
+                    if(taskId != null) {
+                        coroutineScope.launch {
+                            taskManager.deleteTask(taskId)
+                            kotlinx.coroutines.delay(3000)
+                        }
+                    }
+
+                    openDeleteSheet = false
+
+                    navController?.navigate("home") {
+                        popUpTo("task_detail/{$taskId}") { inclusive = true }
+                    }
+                } catch (e: Exception) {
+                    Toast.makeText(context, e.message, Toast.LENGTH_LONG).show()
+                }
+
+
             },
             onDismiss = { openDeleteSheet = false }
         )

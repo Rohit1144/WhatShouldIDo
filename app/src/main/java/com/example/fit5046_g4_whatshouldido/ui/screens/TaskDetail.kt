@@ -79,7 +79,7 @@ fun TaskDetail(navController: NavController, taskId: String) {
 
 
     Scaffold(
-        topBar = { TopBar(navController = null, showBinIcon = true) }
+        topBar = { TopBar(navController = navController, showBinIcon = true, taskId = taskId) }
     ) { paddingValues ->
         Column(
             modifier = Modifier.fillMaxSize().padding(paddingValues).padding(40.dp),

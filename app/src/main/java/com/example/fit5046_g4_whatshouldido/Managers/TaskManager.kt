@@ -93,4 +93,14 @@ class TaskManager {
 
         }
     }
+
+    suspend fun deleteTask(taskId: String) {
+        db.collection("Users")
+            .document(user!!.uid)
+            .collection("tasks")
+            .document(taskId)
+            .delete()
+            .await()
+    }
+
 }
