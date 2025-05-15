@@ -13,16 +13,14 @@ class TaskManager {
     val user = Firebase.auth.currentUser
     val db = Firebase.firestore
 
-    suspend fun createExampleTasks() {
+    suspend fun createExampleTasks(navController: NavController, profession: String) {
 
 
-        // Fetch profession from onboardingValues
-        val doc = db.collection("Users").document(user!!.uid).get().await()
-        val profession = doc.get("onboardingValues.profession") as? String ?: return
+
 
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         val current = LocalDateTime.now().format(formatter)
-        val tasksRef = db.collection("Users").document(user.uid).collection("tasks")
+        val tasksRef = db.collection("Users").document(user!!.uid).collection("tasks")
 
         // Define example tasks
         val exampleTitles = when (profession) {
@@ -61,6 +59,10 @@ class TaskManager {
                 "cancelledAt" to null
             )
             tasksRef.document(taskId).set(task).await()
+        }
+
+        navController.navigate("home") {
+            popUpTo("on_boarding") { inclusive = true }
         }
     }
 
