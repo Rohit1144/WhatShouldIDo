@@ -42,17 +42,19 @@ import androidx.navigation.NavController
 import com.example.fit5046_g4_whatshouldido.R
 import com.example.fit5046_g4_whatshouldido.viewmodel.ProfileViewModel
 import com.example.loginpagetutorial.components.TopBar
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 @Composable
 fun Profile(
     navController: NavController,
-    isGoogleSignIn: Boolean,
-    userEmail: String,
-    userPassword: String,
     viewModel: ProfileViewModel = viewModel()
 ) {
 
-    var passwordVisible by remember { mutableStateOf(false) }
+//    var passwordVisible by remember { mutableStateOf(false) }
+    val user = Firebase.auth.currentUser
+    val email = user?.email ?: ""
+    val isGoogleSignIn = user?.providerData?.any { it.providerId == "google.com" } == true
     val quote by viewModel.quote.collectAsState()
 
     Scaffold(
@@ -60,7 +62,7 @@ fun Profile(
     ) { paddingValues ->
         Column(
             modifier = Modifier.fillMaxSize().padding(paddingValues).padding(40.dp),
-            verticalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
         )
         {
@@ -85,7 +87,7 @@ fun Profile(
 
             // Email Field (disabled Text Field)
             OutlinedTextField(
-                value = userEmail,
+                value = email,
                 onValueChange = {},
                 readOnly = true,
                 label = { Text("Email") },
@@ -101,41 +103,41 @@ fun Profile(
                 )
             )
 
-            // Password Field
-            if(!isGoogleSignIn) {
-                Spacer(Modifier.height(30.dp))
-                OutlinedTextField(
-                    value = userPassword,
-                    onValueChange = {},
-                    label = { Text("Password") },
-                    readOnly = true,
-                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    trailingIcon = {
-
-                        IconButton(
-                            onClick = {passwordVisible = !passwordVisible}
-                        ) {
-                            Icon(
-                                painter = painterResource(if(passwordVisible) R.drawable.eye_slash else R.drawable.eye),
-                                contentDescription = if(passwordVisible) "Hide password" else "Show password",
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
-
-
-                    },
-                    leadingIcon = {
-                        Icon(imageVector = Icons.Default.Lock, contentDescription = "Password")
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent,
-                        disabledContainerColor = Color.Transparent,
-                        errorContainerColor = Color.Transparent
-                    )
-                )
-            }
+//            // Password Field
+//            if(!isGoogleSignIn) {
+//                Spacer(Modifier.height(30.dp))
+//                OutlinedTextField(
+//                    value = userPassword,
+//                    onValueChange = {},
+//                    label = { Text("Password") },
+//                    readOnly = true,
+//                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+//                    trailingIcon = {
+//
+//                        IconButton(
+//                            onClick = {passwordVisible = !passwordVisible}
+//                        ) {
+//                            Icon(
+//                                painter = painterResource(if(passwordVisible) R.drawable.eye_slash else R.drawable.eye),
+//                                contentDescription = if(passwordVisible) "Hide password" else "Show password",
+//                                modifier = Modifier.size(20.dp)
+//                            )
+//                        }
+//
+//
+//                    },
+//                    leadingIcon = {
+//                        Icon(imageVector = Icons.Default.Lock, contentDescription = "Password")
+//                    },
+//                    modifier = Modifier.fillMaxWidth(),
+//                    colors = TextFieldDefaults.colors(
+//                        focusedContainerColor = Color.Transparent,
+//                        unfocusedContainerColor = Color.Transparent,
+//                        disabledContainerColor = Color.Transparent,
+//                        errorContainerColor = Color.Transparent
+//                    )
+//                )
+//            }
 
             // Retrofit API. TODO: implement retrofit api response
             Spacer(Modifier.height(30.dp))
@@ -178,9 +180,10 @@ fun Profile(
             // Logout Button
             Button (
                 onClick ={
+                    Firebase.auth.signOut()
                     // Navigate to home after clicking the logout button
                     navController.navigate("sign_in") {
-                        popUpTo("profile") { inclusive = true }
+                        popUpTo(0) { inclusive = true }
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),

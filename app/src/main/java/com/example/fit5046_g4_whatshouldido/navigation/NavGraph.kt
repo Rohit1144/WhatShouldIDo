@@ -39,7 +39,7 @@ fun NavGraph(
         composable("report"){ Report(navController) }
         composable("ask_ai"){ AskAI(navController) }
         composable("ai_response"){ AIResponse(navController) }
-        composable("profile"){ Profile(navController, false, "example@test.com", "password") }
+        composable("profile"){ Profile(navController) }
         composable("change_password"){ ChangePassword(navController) }
     }
 }
