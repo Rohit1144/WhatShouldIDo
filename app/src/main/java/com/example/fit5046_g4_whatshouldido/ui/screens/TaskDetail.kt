@@ -58,7 +58,7 @@ fun TaskDetail(navController: NavController, taskId: String) {
     val db = Firebase.firestore
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("")}
-    var taskStatus by remember { mutableStateOf("")} // TODO: this is hardcoded needs to receive task status from the task selected.
+    var taskStatus by remember { mutableStateOf("")}
 
     val scope = rememberCoroutineScope()
     val taskManager = remember { TaskManager() }

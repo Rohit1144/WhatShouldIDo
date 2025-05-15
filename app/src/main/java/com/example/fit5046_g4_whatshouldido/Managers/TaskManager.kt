@@ -8,6 +8,18 @@ import kotlinx.coroutines.tasks.await
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
+data class TaskSummary(
+    val completed: Int,
+    val pending: Int,
+    val cancelled: Int
+) {
+    val total: Int get() = completed + pending + cancelled
+
+    fun percentageOfCompleted(): Float = (completed.toFloat() / total) * 100f
+    fun percentageOfPending(): Float = (pending.toFloat() / total) * 100f
+    fun percentageOfCancelled(): Float = (cancelled.toFloat() / total) * 100f
+}
+
 class TaskManager {
 
     val user = Firebase.auth.currentUser
@@ -161,4 +173,23 @@ class TaskManager {
         return snapshot.documents.mapNotNull { it.data }
     }
 
+    //TODO: refactor and create getTaskDetail()
+
+    suspend fun getTaskSummary(): TaskSummary {
+        if(user == null) return TaskSummary(0,0,0)
+
+        val snapshot = db.collection("Users")
+            .document(user.uid)
+            .collection("tasks")
+            .get()
+            .await()
+
+        val tasks = snapshot.documents.mapNotNull { it.data }
+
+        return TaskSummary(
+            completed = tasks.count { it["status"] == "DONE" },
+            pending = tasks.count { it["status"] == "PENDING" },
+            cancelled = tasks.count { it["status"] == "CANCELED" }
+        )
+    }
 }
