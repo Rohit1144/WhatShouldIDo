@@ -225,10 +225,10 @@ fun OnBoarding(navController: NavController) {
 
         Button(
             onClick ={
-                scope.launch(Dispatchers.Main) {
-                    authenticationManager.markOnboardingComplete(profession, focusTime, startPreference)
-                    taskManager.createExampleTasks()
-                }
+//                scope.launch(Dispatchers.Main) {
+//                    authenticationManager.markOnboardingComplete(profession, focusTime, startPreference)
+//                    taskManager.createExampleTasks()
+//                }
 
                 // Navigate to home after clicking the OK button
                 navController.navigate("home") {
