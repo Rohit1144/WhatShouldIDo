@@ -152,9 +152,24 @@ fun SignIn(navController: NavController) {
         Button (
             onClick ={
                 if(email.isNotEmpty() && password.isNotEmpty()){
-                    // Navigate to home after clicking the sign in button
-                    navController.navigate("home") {
-                        popUpTo("sign_in") { inclusive = true }
+                    scope.launch {
+                        when (val response = authenticationManager.loginWithEmail(email, password)) {
+                            is AuthResponse.Success -> {
+                                if (response.isOnboarded) {
+                                    // Navigate to home after clicking the sign in button
+                                    navController.navigate("home") {
+                                        popUpTo("sign_in") { inclusive = true }
+                                    }
+                                } else {
+                                    navController.navigate("on_boarding") {
+                                        popUpTo("sign_in") { inclusive = true }
+                                    }
+                                }
+                            }
+                            is AuthResponse.Error -> {
+                                Toast.makeText(context, response.message, Toast.LENGTH_LONG).show()
+                            }
+                        }
                     }
                 } else {
                     Toast.makeText(context, "Invalid email or password", Toast.LENGTH_LONG).show()

@@ -22,28 +22,47 @@ import kotlinx.coroutines.tasks.await
 class AuthenticationManager (val context: Context) {
     private val auth = Firebase.auth
 
-    fun createAccountWithEmail(email: String, password: String): Flow<AuthResponse> = callbackFlow {
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful){
-//                    trySend(AuthResponse.Success)
-                } else {
-                    trySend(AuthResponse.Error(message = task.exception?.message ?: ""))
-                }
-            }
-        awaitClose()
+    suspend fun createAccountWithEmail(email: String, password: String): AuthResponse {
+        return try {
+            auth.createUserWithEmailAndPassword(email, password).await()
+            val user = auth.currentUser ?: return AuthResponse.Error("User creation failed")
+
+            // Optional: Create Firestore entry for this user
+            val userData = hashMapOf(
+                "id" to user.uid,
+                "email" to user.email,
+                "name" to "",
+                "dateOfBirth" to "",
+                "createdAt" to FieldValue.serverTimestamp(),
+                "isOnboarded" to false
+            )
+
+            Firebase.firestore.collection("Users")
+                .document(user.uid)
+                .set(userData)
+                .await()
+
+            AuthResponse.Success(isOnboarded = false) // Always false after signup
+        } catch (e: Exception) {
+            AuthResponse.Error(e.message ?: "Account creation failed")
+        }
     }
 
-    fun loginWithEmail(email: String, password: String) : Flow<AuthResponse> = callbackFlow {
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if(task.isSuccessful){
-//                    trySend(AuthResponse.Success)
-                } else {
-                    trySend(AuthResponse.Error(message = task.exception?.message ?: ""))
-                }
-            }
-        awaitClose()
+    suspend fun loginWithEmail(email: String, password: String) : AuthResponse{
+        return try {
+            auth.signInWithEmailAndPassword(email, password).await()
+            val user = auth.currentUser ?: return AuthResponse.Error("User not found")
+
+            val doc = Firebase.firestore.collection("Users")
+                .document(user.uid)
+                .get()
+                .await()
+
+            val isOnboarded = doc.getBoolean("isOnboarded") ?: false
+            AuthResponse.Success(isOnboarded)
+        } catch (e: Exception) {
+            AuthResponse.Error(e.message ?: "Login failed")
+        }
     }
 
     private fun createNonce(): String {
