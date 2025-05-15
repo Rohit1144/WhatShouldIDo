@@ -41,6 +41,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
 import com.example.fit5046_g4_whatshouldido.R
 import com.example.fit5046_g4_whatshouldido.data.local.entity.TaskStatus
 import com.example.loginpagetutorial.components.TopBar
@@ -60,6 +61,7 @@ fun TaskDetail(navController: NavController, taskId: String) {
     var taskStatus by remember { mutableStateOf("")} // TODO: this is hardcoded needs to receive task status from the task selected.
 
     val scope = rememberCoroutineScope()
+    val taskManager = remember { TaskManager() }
 
     LaunchedEffect(taskId) {
         if (user != null) {
@@ -128,12 +130,7 @@ fun TaskDetail(navController: NavController, taskId: String) {
                         val toggleCancel = if (taskStatus == "CANCELED") "PENDING" else "CANCELED"
                         // TODO: Implement Cancel Task
                         scope.launch {
-                            db.collection("Users")
-                                .document(user!!.uid)
-                                .collection("tasks")
-                                .document(taskId)
-                                .update("status", toggleCancel)
-                                .await()
+                            taskManager.updateTaskStatus(toggleCancel, taskId)
                         }
 
                         navController.navigate("home")
@@ -164,6 +161,9 @@ fun TaskDetail(navController: NavController, taskId: String) {
             Button (
                 onClick ={
                     // TODO: Implement Task Update Logic Here
+                    scope.launch {
+                        taskManager.updateTaskDetails(title, description, taskId)
+                    }
                     navController.navigate("home")
                 },
                 modifier = Modifier.fillMaxWidth(),

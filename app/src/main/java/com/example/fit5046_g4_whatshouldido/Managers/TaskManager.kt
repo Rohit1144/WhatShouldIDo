@@ -15,9 +15,6 @@ class TaskManager {
 
     suspend fun createExampleTasks(navController: NavController, profession: String) {
 
-
-
-
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
         val current = LocalDateTime.now().format(formatter)
         val tasksRef = db.collection("Users").document(user!!.uid).collection("tasks")
@@ -100,6 +97,31 @@ class TaskManager {
             .collection("tasks")
             .document(taskId)
             .delete()
+            .await()
+    }
+
+    suspend fun updateTaskStatus(toggleCancel: String, taskId: String) {
+
+
+        db.collection("Users")
+            .document(user!!.uid)
+            .collection("tasks")
+            .document(taskId)
+            .update("status", toggleCancel)
+            .await()
+    }
+
+    suspend fun updateTaskDetails(title: String, description: String, taskId: String) {
+        db.collection("Users")
+            .document(user!!.uid)
+            .collection("tasks")
+            .document(taskId)
+            .update(
+                mapOf(
+                    "title" to title,
+                    "description" to description
+                )
+            )
             .await()
     }
 
