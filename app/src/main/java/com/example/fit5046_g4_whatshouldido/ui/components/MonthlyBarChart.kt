@@ -50,6 +50,8 @@ fun MonthlyBarChart(
 
                 axisRight.isEnabled = false
 
+                animateY(4000)
+
                 invalidate()
             }
         }

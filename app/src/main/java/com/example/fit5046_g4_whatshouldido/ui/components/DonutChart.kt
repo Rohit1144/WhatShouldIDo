@@ -53,6 +53,8 @@ fun DonutChart(
                 setCenterText("${percentage.toInt()}%")
                 setCenterTextSize(14f)
 
+                animateY(4000)
+
                 invalidate()
             }
         },
