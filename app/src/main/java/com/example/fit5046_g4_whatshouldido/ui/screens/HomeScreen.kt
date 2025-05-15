@@ -54,6 +54,8 @@ import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.tasks.await
 import okhttp3.internal.concurrent.Task
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 //data class TaskItem (
 //    val title: String,
@@ -115,11 +117,17 @@ fun Home(
                         navController,
                         onStatusToggle = {
                             val updatedStatus = if (task["status"] != "DONE") "DONE" else "PENDING"
-                            val updatedAt = System.currentTimeMillis()
+//                            val updatedAt = System.currentTimeMillis()
+
+                            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                            val updatedAt = LocalDateTime.now().format(formatter)
+
+                            val completedAt = if (updatedStatus == "DONE") updatedAt else null
 
                             val updatedTask = task.toMutableMap().apply {
                                 this["status"] = updatedStatus
                                 this["updatedAt"] = updatedAt
+                                this["completedAt"] = updatedAt
                             }
                             taskList[index] = updatedTask
 
@@ -130,7 +138,8 @@ fun Home(
                                 .update(
                                     mapOf(
                                         "status" to updatedStatus,
-                                        "updatedAt" to updatedAt
+                                        "updatedAt" to updatedAt,
+                                        "completedAt" to completedAt
                                     )
                                 )
                         }

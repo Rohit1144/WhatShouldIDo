@@ -1,7 +1,6 @@
 package com.example.fit5046_g4_whatshouldido.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,23 +26,11 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import com.example.loginpagetutorial.components.BottomNavBar
 import com.example.loginpagetutorial.components.TopBar
-import com.github.mikephil.charting.charts.PieChart
-import com.github.mikephil.charting.data.PieDataSet
-import com.github.mikephil.charting.data.PieEntry
-import android.graphics.Color as AndroidColor
-import androidx.core.graphics.toColorInt
 import com.example.fit5046_g4_whatshouldido.ui.components.DonutChart
 import com.example.fit5046_g4_whatshouldido.ui.components.MonthlyBarChart
-import com.github.mikephil.charting.charts.BarChart
-import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
-import com.github.mikephil.charting.data.PieData
 
 @Composable
 fun Report(navController: NavController) {
@@ -143,7 +130,6 @@ fun Report(navController: NavController) {
                             )
                         }
                     }
-//                    Spacer(modifier = Modifier.height(12.dp))
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()

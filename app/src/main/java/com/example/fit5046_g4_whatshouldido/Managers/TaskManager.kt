@@ -12,11 +12,14 @@ class TaskManager {
 
     val user = Firebase.auth.currentUser
     val db = Firebase.firestore
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    val taskDate = LocalDateTime.now().format(formatter)
 
     suspend fun createExampleTasks(navController: NavController, profession: String) {
 
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        val current = LocalDateTime.now().format(formatter)
+//        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+//        val current = LocalDateTime.now().format(formatter)
+
         val tasksRef = db.collection("Users").document(user!!.uid).collection("tasks")
 
         // Define example tasks
@@ -50,8 +53,8 @@ class TaskManager {
                 "title" to title,
                 "description" to "",
                 "status" to "PENDING",
-                "createdAt" to current,
-                "updatedAt" to current,
+                "createdAt" to taskDate,
+                "updatedAt" to taskDate,
                 "completedAt" to null,
                 "cancelledAt" to null
             )
@@ -67,16 +70,13 @@ class TaskManager {
         if (user != null) {
             val taskId = db.collection("tmp").document().id
 
-            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-            val current = LocalDateTime.now().format(formatter)
-
             val task = mapOf(
                 "id" to taskId,
                 "title" to title,
                 "description" to description,
                 "status" to "PENDING",
-                "createdAt" to current,
-                "updatedAt" to current,
+                "createdAt" to taskDate,
+                "updatedAt" to taskDate,
                 "completedAt" to null,
                 "cancelledAt" to null
             )
@@ -102,16 +102,24 @@ class TaskManager {
 
     suspend fun updateTaskStatus(toggleCancel: String, taskId: String) {
 
+        val cancelledAt = if (toggleCancel == "CANCELED") taskDate else null
 
         db.collection("Users")
             .document(user!!.uid)
             .collection("tasks")
             .document(taskId)
-            .update("status", toggleCancel)
+            .update(
+                mapOf(
+                    "status" to toggleCancel,
+                    "updatedAt" to taskDate,
+                    "cancelledAt" to cancelledAt
+                )
+            )
             .await()
     }
 
     suspend fun updateTaskDetails(title: String, description: String, taskId: String) {
+
         db.collection("Users")
             .document(user!!.uid)
             .collection("tasks")
@@ -119,7 +127,8 @@ class TaskManager {
             .update(
                 mapOf(
                     "title" to title,
-                    "description" to description
+                    "description" to description,
+                    "updatedAt" to taskDate
                 )
             )
             .await()

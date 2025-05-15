@@ -128,7 +128,7 @@ fun TaskDetail(navController: NavController, taskId: String) {
                 TextButton(
                     onClick = {
                         val toggleCancel = if (taskStatus == "CANCELED") "PENDING" else "CANCELED"
-                        // TODO: Implement Cancel Task
+                        // Cancel Task
                         scope.launch {
                             taskManager.updateTaskStatus(toggleCancel, taskId)
                         }
