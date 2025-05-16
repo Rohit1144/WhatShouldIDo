@@ -257,7 +257,7 @@ fun SignUp(navController: NavController) {
 
         Button(
             onClick = {
-                val message = formValidation.validateSignUpForm(password, confirmPassword)
+                val message = formValidation.validateSignUpForm(email, password, confirmPassword)
                 if(message.isEmpty()) {
                     // TODO: perform sign-up
                     scope.launch {
