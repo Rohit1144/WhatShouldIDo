@@ -51,6 +51,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.material3.v121)
     implementation (libs.mpandroidchart)
     implementation (libs.androidx.compose.ui.ui)
     implementation (libs.material3)

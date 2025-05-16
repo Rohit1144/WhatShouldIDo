@@ -1,6 +1,11 @@
 package com.example.fit5046_g4_whatshouldido.ui.screens
 
-import android.app.DatePickerDialog
+import android.annotation.SuppressLint
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.rememberDatePickerState
+import java.time.Instant
+import java.time.ZoneId
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -16,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -48,37 +54,59 @@ import androidx.compose.ui.unit.sp
 import com.example.fit5046_g4_whatshouldido.Managers.AuthResponse
 import com.example.fit5046_g4_whatshouldido.Managers.AuthenticationManager
 import com.example.fit5046_g4_whatshouldido.R
+import com.example.fit5046_g4_whatshouldido.validations.FormValidation
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
+@SuppressLint("DefaultLocale")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUp(navController: NavController) {
 
+    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
+    val datePickerState = rememberDatePickerState()
+    var showDatePicker by remember { mutableStateOf(false) }
     var birthDate by remember { mutableStateOf("") }
-//    var agreedToTerms by remember { mutableStateOf(false) }
+
 
 
 
     // DatePicker setup
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    showDatePicker = false
+                    datePickerState.selectedDateMillis?.let { millis ->
+                        val date = Instant.ofEpochMilli(millis)
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate()
+                        birthDate = String.format("%02d/%02d/%04d", date.dayOfMonth, date.monthValue, date.year)
+                    }
+                }) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text("Cancel")
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+
     val context = LocalContext.current
-    val calendar = Calendar.getInstance()
-    val year = calendar.get(Calendar.YEAR)
-    val month = calendar.get(Calendar.MONTH)
-    val day = calendar.get(Calendar.DAY_OF_MONTH)
-    val datePicker = DatePickerDialog(
-        context,
-        { _, y, m, d ->
-            birthDate = String.format("%02d/%02d/%04d", d, m + 1, y)
-        },
-        year, month, day
-    )
     val scope = rememberCoroutineScope()
     val authenticationManager = remember { AuthenticationManager(context) }
+    val formValidation = remember { FormValidation() }
 
 
     Column (
@@ -93,6 +121,24 @@ fun SignUp(navController: NavController) {
             style = MaterialTheme.typography.headlineMedium,
             color = Color.DarkGray,
             fontFamily = FontFamily.Monospace
+        )
+
+        Spacer(Modifier.height(30.dp))
+
+        TextField(
+            value = name,
+            onValueChange = { name = it },
+            label = { Text("Name *") },
+            placeholder = { Text("Your full name") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent
+            )
         )
 
         Spacer(Modifier.height(30.dp))
@@ -188,10 +234,10 @@ fun SignUp(navController: NavController) {
             readOnly = true,
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable { datePicker.show() },
+                .clickable { showDatePicker = true },
             trailingIcon = {
                 IconButton (
-                    onClick = { datePicker.show() }
+                    onClick = { showDatePicker = true }
                 )  {
                     Icon(
                         imageVector = Icons.Default.DateRange,
@@ -211,20 +257,27 @@ fun SignUp(navController: NavController) {
 
         Button(
             onClick = {
-                // TODO: perform sign-up
-                scope.launch {
-                    val response = authenticationManager.createAccountWithEmail(email, password)
-                    when (response) {
-                        is AuthResponse.Success -> {
-                            navController.navigate("on_boarding") {
-                                popUpTo("sign_up") { inclusive = true }
+                val message = formValidation.validateSignUpForm(password, confirmPassword)
+                if(message.isEmpty()) {
+                    // TODO: perform sign-up
+                    scope.launch {
+                        val response = authenticationManager.createAccountWithEmail(email, password)
+                        when (response) {
+                            is AuthResponse.Success -> {
+                                navController.navigate("on_boarding") {
+                                    popUpTo("sign_up") { inclusive = true }
+                                }
+                            }
+                            is AuthResponse.Error -> {
+                                Toast.makeText(context, response.message, Toast.LENGTH_LONG).show()
                             }
                         }
-                        is AuthResponse.Error -> {
-                            Toast.makeText(context, response.message, Toast.LENGTH_LONG).show()
-                        }
                     }
+                } else {
+                    Toast.makeText(context, message, Toast.LENGTH_LONG).show()
                 }
+
+
             },
             modifier = Modifier
                 .fillMaxWidth(),
@@ -232,9 +285,10 @@ fun SignUp(navController: NavController) {
                 containerColor = colorResource(R.color.light_red),
                 disabledContainerColor = colorResource(R.color.light_red)
             ),
-            enabled = email.isNotBlank()
-                    && password.length >= 6
-                    && password == confirmPassword
+            enabled = name.isNotBlank()
+                    && email.isNotBlank()
+                    && password.isNotBlank()
+                    && confirmPassword.isNotBlank()
                     && birthDate.isNotBlank()
         ) {
             Text("Sign Up")

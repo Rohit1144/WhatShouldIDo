@@ -31,7 +31,7 @@ class AuthenticationManager (val context: Context) {
             val userData = hashMapOf(
                 "id" to user.uid,
                 "email" to user.email,
-                "name" to "",
+                "name" to user.displayName,
                 "dateOfBirth" to "",
                 "createdAt" to FieldValue.serverTimestamp(),
                 "isOnboarded" to false
