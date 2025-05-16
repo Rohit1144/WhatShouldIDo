@@ -174,6 +174,8 @@ fun Profile(
                         scope.launch {
                             if (isStarred.value) {
                                 viewModel.saveQuote(quote)
+                            } else {
+                                viewModel.deleteQuote(quote)
                             }
                         }
                     }
