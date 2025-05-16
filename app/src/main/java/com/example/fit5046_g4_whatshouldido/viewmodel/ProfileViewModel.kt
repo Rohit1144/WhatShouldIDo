@@ -25,4 +25,10 @@ class ProfileViewModel : ViewModel() {
                 ?: "Could not load quote. Try again later."
         }
     }
+
+    fun saveQuote(quote: QuoteModel) {
+        viewModelScope.launch {
+            repository.saveQuote(quote)
+        }
+    }
 }
