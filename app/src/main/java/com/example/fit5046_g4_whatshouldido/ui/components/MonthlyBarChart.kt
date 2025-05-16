@@ -1,8 +1,11 @@
 package com.example.fit5046_g4_whatshouldido.ui.components
 
 import android.graphics.Color
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.toColorInt
 import com.example.fit5046_g4_whatshouldido.Managers.MonthlyTaskStatus
@@ -19,7 +22,7 @@ fun MonthlyBarChart(
     monthlyData: List<MonthlyTaskStatus>,
 ){
     AndroidView(
-        modifier = modifier,
+        modifier = modifier.fillMaxWidth().height(700.dp),
         factory = { context ->
             HorizontalBarChart(context).apply {
                 // Stack bar entries setup
@@ -34,7 +37,7 @@ fun MonthlyBarChart(
                 }
 
                 // Create single stacked dataset
-                val dataSet = BarDataSet(entries, "Tasks").apply {
+                val dataSet = BarDataSet(entries, "").apply {
                     setColors(
                         "#7FE1AD".toColorInt(), // Completed
                         "#F85F6A".toColorInt(), // Pending
@@ -46,7 +49,7 @@ fun MonthlyBarChart(
 
                 // Create BarData and assign
                 val barData = BarData(dataSet).apply{
-                    barWidth = 0.6f
+                    barWidth = 0.4f
                 }
 
                 data = barData
@@ -65,6 +68,8 @@ fun MonthlyBarChart(
                     isEnabled = true
                     textSize = 12f
                     yOffset = 12f
+                    xEntrySpace = 20f
+                    formToTextSpace = 8f
                 }
 
                 // Step 6: X Axis = Months
