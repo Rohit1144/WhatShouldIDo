@@ -159,6 +159,8 @@ fun Profile(
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
+
+                // Todo: Put a spacer between the quote and author
                 Text(
                     text = quote.let { "\"${it.q}\"\n– ${it.a}" },
                     style = MaterialTheme.typography.bodySmall,
