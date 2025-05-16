@@ -16,6 +16,7 @@ import com.example.fit5046_g4_whatshouldido.ui.screens.Report
 import com.example.fit5046_g4_whatshouldido.ui.screens.SavedQuotesScreen
 import com.example.fit5046_g4_whatshouldido.ui.screens.SignIn
 import com.example.fit5046_g4_whatshouldido.ui.screens.SignUp
+import com.example.fit5046_g4_whatshouldido.ui.screens.SplashScreen
 import com.example.fit5046_g4_whatshouldido.ui.screens.TaskDetail
 
 @Composable
@@ -25,7 +26,7 @@ fun NavGraph(
 ){
     NavHost(
         navController = navController,
-        startDestination = "sign_in",
+        startDestination = "splash",
         modifier = modifier
     ) {
         composable("sign_in"){ SignIn(navController) }
@@ -43,5 +44,6 @@ fun NavGraph(
         composable("profile"){ Profile(navController) }
         composable("change_password"){ ChangePassword(navController) }
         composable("saved_quotes") { SavedQuotesScreen(navController) }
+        composable("splash") { SplashScreen(navController) }
     }
 }
