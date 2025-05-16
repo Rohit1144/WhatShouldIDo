@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Quote (
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0L,
     val author: String,
     val text: String
 )
