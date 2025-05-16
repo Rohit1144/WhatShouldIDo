@@ -2,7 +2,7 @@ package com.example.fit5046_g4_whatshouldido.ui.components
 
 import com.github.mikephil.charting.formatter.ValueFormatter
 
-class MonthAxisFormatter : ValueFormatter() {
+class yjMonthAxisFormatter : ValueFormatter() {
     private val months = listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun",
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 

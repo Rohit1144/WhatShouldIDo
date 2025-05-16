@@ -7,6 +7,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.toColorInt
 import com.example.fit5046_g4_whatshouldido.Managers.MonthlyTaskStatus
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -20,64 +21,72 @@ fun MonthlyBarChart(
     AndroidView(
         modifier = modifier,
         factory = { context ->
-            BarChart(context).apply {
-                val completedEntries = mutableListOf<BarEntry>()
-                val pendingEntries = mutableListOf<BarEntry>()
-                val cancelledEntries = mutableListOf<BarEntry>()
-
-                monthlyData.forEachIndexed{ index, status ->
-                    completedEntries.add(BarEntry(index.toFloat(), status.completed.toFloat()))
-                    pendingEntries.add(BarEntry(index.toFloat(), status.pending.toFloat()))
-                    cancelledEntries.add(BarEntry(index.toFloat(), status.cancelled.toFloat()))
+            HorizontalBarChart(context).apply {
+                // Stack bar entries setup
+                val entries = monthlyData.mapIndexed { index, month ->
+                    BarEntry(
+                        index.toFloat(), floatArrayOf(
+                            month.completed.toFloat(),
+                            month.pending.toFloat(),
+                            month.cancelled.toFloat()
+                        )
+                    )
                 }
 
-                val completedSet = BarDataSet(completedEntries, "Completed").apply {
-                    color = "#7FE1AD".toColorInt()
-                }
-                val pendingSet = BarDataSet(pendingEntries, "Pending").apply {
-                    color = "#F85F6A".toColorInt()
-                }
-                val cancelledSet = BarDataSet(cancelledEntries, "Cancelled").apply {
-                    color = "#5F6AF8".toColorInt()
+                // Create single stacked dataset
+                val dataSet = BarDataSet(entries, "Tasks").apply {
+                    setColors(
+                        "#7FE1AD".toColorInt(), // Completed
+                        "#F85F6A".toColorInt(), // Pending
+                        "#5F6AF8".toColorInt()  // Cancelled
+                    )
+                    stackLabels = arrayOf("Completed", "Pending", "Cancelled")
+                    setDrawValues(false)
                 }
 
-                val barData = BarData(completedSet, pendingSet, cancelledSet).apply {
-                    barWidth = 0.2f
-                    groupBars(0f, 0.2f, 0.05f) // group start, group spacing, bar spacing
+                // Create BarData and assign
+                val barData = BarData(dataSet).apply{
+                    barWidth = 0.6f
                 }
 
                 data = barData
 
-                // Chart setup
-                setTouchEnabled(false)
+                // Chart Styling
                 setDrawGridBackground(false)
+                setTouchEnabled(false)
                 description.isEnabled = false
+                setDrawValueAboveBar(false)
+                extraBottomOffset = 16f
+                extraTopOffset = 16f
+                animateY(4000)
+
+                // Setting up legend
                 legend.apply {
                     isEnabled = true
-                    yOffset = 20f
                     textSize = 12f
+                    yOffset = 12f
                 }
-                setDrawValueAboveBar(false)
-                completedSet.setDrawValues(false)
-                pendingSet.setDrawValues(false)
-                cancelledSet.setDrawValues(false)
 
-                // X-Axis setup
-                xAxis.position = XAxis.XAxisPosition.BOTTOM
-                xAxis.setDrawGridLines(false)
-                xAxis.axisMinimum = 0f
-                xAxis.granularity = 1f
-                xAxis.labelCount = 12
-                xAxis.valueFormatter = MonthAxisFormatter()
+                // Step 6: X Axis = Months
+                xAxis.apply {
+                    position = XAxis.XAxisPosition.BOTTOM
+                    granularity = 1f
+                    setDrawGridLines(false)
+                    valueFormatter = MonthAxisFormatter()
+                    textSize = 10f
+                    setLabelCount(12, true)
+                }
 
-                axisLeft.setDrawGridLines(false)
-                axisRight.isEnabled = false
-
-
-                animateY(4000)
+                // Step 7: Y Axes
+                axisLeft.isEnabled = false
+                axisRight.apply {
+                    axisMinimum = 0f
+                    setDrawGridLines(false)
+                }
 
                 invalidate()
             }
+
         }
     )
 }
