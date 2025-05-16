@@ -18,6 +18,13 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        val geminiApiKey = project.rootProject.file("local.properties")
+            .readLines()
+            .find { it.startsWith("gemini_api_key") }
+            ?.split("=")?.get(1)?.trim() ?: ""
+
+        buildConfigField("String", "GEMINI_API_KEY", "\"$geminiApiKey\"")
+
     }
 
     buildTypes {
@@ -38,6 +45,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     packaging {
         resources {
@@ -51,6 +59,11 @@ android {
 }
 
 dependencies {
+    implementation("androidx.compose.ui:ui:1.7.0")
+    implementation("androidx.compose.material3:material3:1.2.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+    implementation("androidx.activity:activity-compose:1.8.0")
+    implementation("dev.shreyaspatil.generativeai:generativeai-google:0.9.0-1.1.0")
     implementation(libs.androidx.material3.v121)
     implementation (libs.mpandroidchart)
     implementation (libs.androidx.compose.ui.ui)

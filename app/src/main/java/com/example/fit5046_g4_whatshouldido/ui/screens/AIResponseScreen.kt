@@ -1,5 +1,6 @@
 package com.example.fit5046_g4_whatshouldido.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -20,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -34,10 +36,20 @@ import androidx.navigation.NavController
 import com.example.loginpagetutorial.components.TopBar
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.RectangleShape
+import dev.shreyaspatil.ai.client.generativeai.BuildConfig
+import dev.shreyaspatil.ai.client.generativeai.GenerativeModel
+import dev.shreyaspatil.ai.client.generativeai.type.content
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @Composable
 fun AIResponse(navController: NavController) {
+
+    val words = listOf("Math Assignment", "Take dog for a walk", "Eat lunch")
+    var responseText by remember { mutableStateOf("Waiting for response...") }
+    val coroutineScope = rememberCoroutineScope()
 
     // dummy data
     val aiMessages = listOf(
@@ -52,6 +64,12 @@ fun AIResponse(navController: NavController) {
 
     var isYesSelected by remember { mutableStateOf(false) }
     var isNoSelected by remember { mutableStateOf(false)}
+
+    LaunchedEffect(Unit) {
+        coroutineScope.launch(Dispatchers.IO) {
+            responseText = generateTask(words)
+        }
+    }
     Scaffold(
         topBar = { TopBar(navController = navController, showProfileIcon = true) },
     ) { paddingValues ->
@@ -88,18 +106,18 @@ fun AIResponse(navController: NavController) {
                             .border(1.dp, Color.DarkGray, RoundedCornerShape(15.dp))
                     ) {
                         Column {
-                            aiMessages.forEach { message ->
-                                Box(
-                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 20.dp)
-                                ){
-                                    Text(
-                                        text = message,
-                                        fontSize = 16.sp,
-                                        color = Color.Black,
-                                        modifier = Modifier.padding(vertical = 4.dp)
-                                    )
-                                }
+
+                            Box(
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 20.dp)
+                            ){
+                                Text(
+                                    text = responseText,
+                                    fontSize = 16.sp,
+                                    color = Color.Black,
+                                    modifier = Modifier.padding(vertical = 4.dp)
+                                )
                             }
+
                         }
                     }
                 }
@@ -128,7 +146,15 @@ fun AIResponse(navController: NavController) {
                 Button(
                     onClick = {
                         isNoSelected = !isNoSelected
-                        // TODO: implement generating new suggestion
+                        Toast.makeText(
+                            navController.context,
+                            "Oh, generating a new answer...",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        coroutineScope.launch(Dispatchers.IO) {
+                            responseText =
+                                generateDifferentResponse(words)
+                        }
                     },
                     border = BorderStroke(1.dp, color = if(isNoSelected) Color.Red else Color.DarkGray),
                     colors = ButtonDefaults.buttonColors(
@@ -137,8 +163,48 @@ fun AIResponse(navController: NavController) {
                     )
                 ) {
                     Text("No",color = if(isNoSelected) Color.Red else Color.DarkGray)
+
                 }
             }
         }
+    }
+}
+
+suspend fun generateTask(tasks: List<String>): String {
+    return try {
+        val apiKey = com.example.fit5046_g4_whatshouldido.BuildConfig.GEMINI_API_KEY
+
+        val generativeModel = GenerativeModel(
+            modelName = "gemini-2.0-flash",
+            apiKey = apiKey
+        )
+
+        val inputContent = content {
+            text("Can you recommend me which task to do first based on ${tasks.joinToString(", ")} I have")
+        }
+
+        val response = generativeModel.generateContent(inputContent)
+        response.text ?: "No response from AI."
+    } catch (e: Exception) {
+        "Error: ${e.localizedMessage}"
+    }
+}
+
+suspend fun generateDifferentResponse(tasks: List<String>): String {
+    return try {
+        val apiKey = com.example.fit5046_g4_whatshouldido.BuildConfig.GEMINI_API_KEY
+        val generativeModel = GenerativeModel(
+            modelName = "gemini-2.0-flash",
+            apiKey = apiKey
+        )
+
+        val inputContent = content {
+            text("I want a different answer. Can you recommend me which task to do first based on ${tasks.joinToString(", ")} I have")
+        }
+
+        val response = generativeModel.generateContent(inputContent)
+        response.text ?: "No response from AI."
+    } catch (e: Exception) {
+        "Error: ${e.localizedMessage}"
     }
 }
