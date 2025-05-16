@@ -4,6 +4,7 @@ import com.example.fit5046_g4_whatshouldido.data.local.dao.QuoteDAO
 import com.example.fit5046_g4_whatshouldido.data.local.entity.Quote
 import com.example.fit5046_g4_whatshouldido.data.network.RetrofitObject
 import com.example.fit5046_g4_whatshouldido.models.QuoteModel
+import kotlinx.coroutines.flow.Flow
 
 class QuotesRepository  (private val dao: QuoteDAO)
 {
@@ -23,4 +24,6 @@ class QuotesRepository  (private val dao: QuoteDAO)
     suspend fun deleteQuote(quote: QuoteModel) {
         dao.deleteByTextAndAuthor(text = quote.q, author = quote.a)
     }
+
+    fun observeAllQuotes(): Flow<List<Quote>> = dao.observeAllQuotes()
 }

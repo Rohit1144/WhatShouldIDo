@@ -5,6 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import com.example.fit5046_g4_whatshouldido.data.local.entity.Quote
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface QuoteDAO {
@@ -20,5 +21,6 @@ interface QuoteDAO {
     @Query("DELETE FROM quote WHERE text = :text AND author = :author")
     suspend fun deleteByTextAndAuthor(text: String, author: String)
 
-
+    @Query("SELECT * FROM quote")
+    fun observeAllQuotes() : Flow<List<Quote>>
 }
