@@ -44,6 +44,10 @@ import com.example.fit5046_g4_whatshouldido.viewmodel.ProfileViewModel
 import com.example.loginpagetutorial.components.TopBar
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.width
+import androidx.compose.runtime.rememberCoroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun Profile(
@@ -56,12 +60,16 @@ fun Profile(
     val email = user?.email ?: ""
     val isGoogleSignIn = user?.providerData?.any { it.providerId == "google.com" } == true
     val quote by viewModel.quote.collectAsState()
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = { TopBar(navController = navController, showProfileIcon = false, showBackButton = true) },
     ) { paddingValues ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(paddingValues).padding(40.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(40.dp),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally,
         )
@@ -141,12 +149,29 @@ fun Profile(
 
             // Retrofit API.
             Spacer(Modifier.height(30.dp))
-            Text(
-                text = quote,
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.DarkGray,
-                textAlign = TextAlign.Center
-            )
+            Row (
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = quote.let { "\"${it.q}\"\n– ${it.a}" },
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color.DarkGray,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(Modifier.width(8.dp))
+                Button(
+                    onClick = { scope.launch { viewModel.saveQuote(quote) } },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(R.color.light_red),
+                        disabledContainerColor = colorResource(R.color.light_red)
+                    )
+                ) {
+                    Text("Save")
+                }
+            }
             Spacer(Modifier.height(30.dp))
 
             // Update Profile Button based on the method of login
