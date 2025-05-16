@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
+import com.android.identity.documenttype.DocumentAttributeType
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
@@ -22,7 +23,7 @@ import kotlinx.coroutines.tasks.await
 class AuthenticationManager (val context: Context) {
     private val auth = Firebase.auth
 
-    suspend fun createAccountWithEmail(email: String, password: String): AuthResponse {
+    suspend fun createAccountWithEmail(email: String, password: String, name: String, birthDate: String): AuthResponse {
         return try {
             auth.createUserWithEmailAndPassword(email, password).await()
             val user = auth.currentUser ?: return AuthResponse.Error("User creation failed")
@@ -31,8 +32,8 @@ class AuthenticationManager (val context: Context) {
             val userData = hashMapOf(
                 "id" to user.uid,
                 "email" to user.email,
-                "name" to user.displayName,
-                "dateOfBirth" to "",
+                "name" to name,
+                "dateOfBirth" to birthDate,
                 "createdAt" to FieldValue.serverTimestamp(),
                 "isOnboarded" to false
             )
@@ -157,6 +158,18 @@ class AuthenticationManager (val context: Context) {
                 )
             )
             .await()
+    }
+
+    suspend fun getName(): String {
+        val user = Firebase.auth.currentUser
+        val db = Firebase.firestore
+
+        val userRef = db.collection("Users").document(user!!.uid)
+        val userDoc = userRef.get().await()
+
+        val name = userDoc.getString("name") ?: "User" // fallback if name is null
+
+        return name
     }
 
 }
