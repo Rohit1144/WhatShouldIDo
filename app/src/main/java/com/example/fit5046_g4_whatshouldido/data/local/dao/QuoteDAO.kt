@@ -15,6 +15,6 @@ interface QuoteDAO {
     suspend fun delete(quote: Quote)
 
     @Query("SELECT * FROM quote")
-    fun getQuotes() : List<Quote>
+    suspend fun getQuotes() : List<Quote>
 
 }
