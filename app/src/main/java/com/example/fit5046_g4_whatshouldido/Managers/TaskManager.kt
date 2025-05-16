@@ -28,6 +28,12 @@ data class MonthlyTaskStatus(
     val cancelled: Int
 )
 
+data class TaskDetail(
+    val title:String,
+    val description:String,
+    val status:String
+)
+
 class TaskManager {
 
     val user = Firebase.auth.currentUser
@@ -181,7 +187,23 @@ class TaskManager {
         return snapshot.documents.mapNotNull { it.data }
     }
 
-    //TODO: refactor and create getTaskDetail()
+    suspend fun getTaskDetail(taskId: String):TaskDetail?{
+        if(user == null) return null
+
+        val doc = db.collection("Users")
+            .document(user.uid)
+            .collection("tasks")
+            .document(taskId)
+            .get()
+            .await()
+
+        return TaskDetail (
+            title = doc.getString("title") ?: "",
+            description = doc.getString("description") ?: "",
+            status = doc.getString("status") ?: ""
+        )
+
+    }
 
     suspend fun getTaskSummary(): TaskSummary {
         if(user == null) return TaskSummary(0,0,0)

@@ -65,17 +65,23 @@ fun TaskDetail(navController: NavController, taskId: String) {
 
     LaunchedEffect(taskId) {
         if (user != null) {
-            val doc = Firebase.firestore
-                .collection("Users")
-                .document(user.uid)
-                .collection("tasks")
-                .document(taskId)
-                .get()
-                .await()
-
-            title = doc.getString("title") ?: ""
-            description = doc.getString("description") ?: ""
-            taskStatus = doc.getString("status") ?: ""
+//            val doc = Firebase.firestore
+//                .collection("Users")
+//                .document(user.uid)
+//                .collection("tasks")
+//                .document(taskId)
+//                .get()
+//                .await()
+//
+//            title = doc.getString("title") ?: ""
+//            description = doc.getString("description") ?: ""
+//            taskStatus = doc.getString("status") ?: ""
+            val result = taskManager.getTaskDetail(taskId)
+            result?.let {
+                title = it.title
+                description = it.description
+                taskStatus = it.status
+            }
         }
     }
 
