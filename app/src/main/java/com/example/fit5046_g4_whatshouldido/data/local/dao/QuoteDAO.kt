@@ -17,4 +17,8 @@ interface QuoteDAO {
     @Query("SELECT * FROM quote")
     suspend fun getQuotes() : List<Quote>
 
+    @Query("DELETE FROM quote WHERE text = :text AND author = :author")
+    suspend fun deleteByTextAndAuthor(text: String, author: String)
+
+
 }
