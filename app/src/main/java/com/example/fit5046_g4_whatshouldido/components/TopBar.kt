@@ -93,7 +93,7 @@ fun TopBar(
                         imageVector = Icons.Default.Delete,
                         contentDescription = "Remove",
                         modifier = Modifier.size(30.dp),
-                        tint = if(isBinSelected) Color("#F85F6A".toColorInt()) else Color.LightGray,
+                        tint = Color("#F85F6A".toColorInt()),
                     )
                 }
             }

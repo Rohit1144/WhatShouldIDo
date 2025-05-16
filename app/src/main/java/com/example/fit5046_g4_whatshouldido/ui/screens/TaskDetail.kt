@@ -59,6 +59,8 @@ fun TaskDetail(navController: NavController, taskId: String) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("")}
     var taskStatus by remember { mutableStateOf("")}
+    var originalTitle by remember { mutableStateOf("") }
+    var originalDescription by remember { mutableStateOf("") }
 
     val scope = rememberCoroutineScope()
     val taskManager = remember { TaskManager() }
@@ -81,6 +83,10 @@ fun TaskDetail(navController: NavController, taskId: String) {
                 title = it.title
                 description = it.description
                 taskStatus = it.status
+
+                // save initial state
+                originalTitle = it.title
+                originalDescription = it.description
             }
         }
     }
@@ -164,23 +170,45 @@ fun TaskDetail(navController: NavController, taskId: String) {
 
             Spacer(Modifier.height(50.dp))
 
-            Button (
-                onClick ={
-                    // TODO: Implement Task Update Logic Here
-                    scope.launch {
-                        taskManager.updateTaskDetails(title, description, taskId)
-                    }
-                    navController.navigate("home")
+            val hasChanged = title != originalTitle || description != originalDescription
+
+                Button (
+                    onClick ={
+                        // update Task Detail
+                        scope.launch {
+                            taskManager.updateTaskDetails(title, description, taskId)
+                        }
+                        navController.navigate("home")
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(R.color.light_red),
+                        disabledContainerColor = colorResource(R.color.light_red)
+                    )
+                ) {
+                    Text("OK")
+                }
+
+                Spacer(Modifier.height(16.dp))
+
+            Button(
+                onClick = {
+                    // Reset values and go back
+                    title = originalTitle
+                    description = originalDescription
+                    navController.popBackStack()
                 },
                 modifier = Modifier.fillMaxWidth(),
+                enabled = hasChanged, // Enable only when fields have changed
+                border = BorderStroke(1.dp, color = Color.DarkGray),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = colorResource(R.color.light_red),
-                    disabledContainerColor = colorResource(R.color.light_red)
+                    containerColor = Color.Transparent,
+                    disabledContainerColor = Color.Transparent,
+                    contentColor = if (hasChanged) Color.DarkGray else Color.LightGray // Optional styling
                 )
             ) {
-                Text("OK")
+                Text("Discard")
             }
-            Spacer(Modifier.height(16.dp))
         }
     }
 }

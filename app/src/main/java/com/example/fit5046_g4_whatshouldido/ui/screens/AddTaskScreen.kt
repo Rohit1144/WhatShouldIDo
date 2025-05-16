@@ -120,6 +120,4 @@ fun AddTask(navController: NavController) {
         }
 
     }
-
-
 }

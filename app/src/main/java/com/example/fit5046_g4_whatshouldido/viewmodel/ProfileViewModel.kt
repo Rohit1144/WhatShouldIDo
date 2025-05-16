@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
+//TODO: change the name to quoteviewmodel
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
     private val repository = QuotesRepository(AppDatabase.getDatabase(application).quoteDao())
