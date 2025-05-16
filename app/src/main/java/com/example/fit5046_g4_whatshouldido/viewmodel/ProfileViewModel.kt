@@ -2,7 +2,6 @@ package com.example.fit5046_g4_whatshouldido.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.fit5046_g4_whatshouldido.data.network.RetrofitObject
 import com.example.fit5046_g4_whatshouldido.data.repository.QuotesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,7 +20,7 @@ class ProfileViewModel : ViewModel() {
 
     private fun fetchQuote() {
         viewModelScope.launch {
-            val result = repository.getRandomQuote()
+            val result = repository.getNewQuote()
             _quote.value = result?.let { "\"${it.q}\"\n– ${it.a}" }
                 ?: "Could not load quote. Try again later."
         }
