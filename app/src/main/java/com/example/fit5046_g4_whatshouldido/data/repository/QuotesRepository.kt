@@ -20,7 +20,7 @@ class QuotesRepository  (private val dao: QuoteDAO)
         dao.insert(Quote(text = quote.q, author = quote.a))
     }
 
-    suspend fun deleteQuote(quote: Quote) {
-        dao.delete(quote)
+    suspend fun deleteQuote(quote: QuoteModel) {
+        dao.deleteByTextAndAuthor(text = quote.q, author = quote.a)
     }
 }

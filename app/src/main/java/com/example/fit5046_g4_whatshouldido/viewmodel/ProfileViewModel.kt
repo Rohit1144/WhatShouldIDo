@@ -33,4 +33,10 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
             repository.saveQuote(quote)
         }
     }
+
+    fun deleteQuote(quote: QuoteModel) {
+        viewModelScope.launch {
+            repository.deleteQuote(quote)
+        }
+    }
 }
