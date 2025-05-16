@@ -4,12 +4,14 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.example.fit5046_g4_whatshouldido.data.local.dao.QuoteDAO
 import com.example.fit5046_g4_whatshouldido.data.local.dao.TaskDAO
 import com.example.fit5046_g4_whatshouldido.data.local.entity.*
 
 @Database(
     entities = [
-        Task::class
+        Task::class,
+        Quote::class
     ],
     version = 1,
     exportSchema = false
@@ -17,6 +19,7 @@ import com.example.fit5046_g4_whatshouldido.data.local.entity.*
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun taskDao(): TaskDAO
+    abstract fun quoteDao(): QuoteDAO
 
     companion object {
 
