@@ -40,19 +40,26 @@ import com.example.fit5046_g4_whatshouldido.ui.components.DonutChart
 import com.example.fit5046_g4_whatshouldido.ui.components.MonthlyBarChart
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import com.example.fit5046_g4_whatshouldido.Managers.MonthlyTaskStatus
 
 @Composable
 fun Report(navController: NavController) {
     val taskManager = remember { TaskManager() }
     var taskSummary by remember { mutableStateOf<TaskSummary?>(null) }
+    var monthlyReport by remember { mutableStateOf<List<MonthlyTaskStatus>>(emptyList()) }
 
+    // Get data for the graphs
     LaunchedEffect(Unit) {
         try {
             taskSummary = taskManager.getTaskSummary()
+            monthlyReport = taskManager.getMonthlyTaskStatus()
+            taskManager.seedTestTasksForMonthlyReport()
         } catch (e: Exception) {
             Log.e("ReportScreen", "Failed to load task summary", e)
         }
     }
+
+
     Scaffold(
         topBar = { TopBar(navController = navController, showProfileIcon = true) },
         bottomBar = { BottomNavBar(navController) }
@@ -160,18 +167,22 @@ fun Report(navController: NavController) {
                             )
                         }
                     }
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp)
-                            .clip(RoundedCornerShape(12.dp))
-                            .background(Color(0xFFF9F9F9))
-                    ) {
-                        // TODO: refactor this
+                    if (monthlyReport.isNotEmpty()) {
                         MonthlyBarChart(
-                            modifier = Modifier.fillMaxWidth().height(200.dp),
-                            barValues = listOf(3f,5f,4f,7f,2f,6f,4f,5f,8f,7f,4f,3f,6f)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(250.dp),
+                            monthlyData = monthlyReport
                         )
+                    } else {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
+                        }
                     }
                 }
             }
