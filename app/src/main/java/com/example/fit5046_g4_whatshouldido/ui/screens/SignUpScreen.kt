@@ -261,7 +261,7 @@ fun SignUp(navController: NavController) {
                 if(message.isEmpty()) {
                     // TODO: perform sign-up
                     scope.launch {
-                        val response = authenticationManager.createAccountWithEmail(email, password)
+                        val response = authenticationManager.createAccountWithEmail(email, password, name, birthDate)
                         when (response) {
                             is AuthResponse.Success -> {
                                 navController.navigate("on_boarding") {

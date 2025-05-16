@@ -40,14 +40,17 @@ import com.example.loginpagetutorial.components.BottomNavBar
 import com.example.loginpagetutorial.components.TopBar
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import com.example.fit5046_g4_whatshouldido.Managers.AuthenticationManager
 import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
 import com.example.fit5046_g4_whatshouldido.R
 import com.example.fit5046_g4_whatshouldido.data.local.entity.TaskStatus
@@ -72,19 +75,20 @@ fun Home(
     val taskList = remember { mutableStateListOf<Map<String, Any?>>() }
     val user = Firebase.auth.currentUser
     val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+    val authenticationManager = remember { AuthenticationManager(context) }
     val taskManager = remember { TaskManager() }
+    var name by remember { mutableStateOf("") }
+
+    LaunchedEffect("getName") {
+        scope.launch {
+            name = authenticationManager.getName()
+        }
+    }
 
     LaunchedEffect(user) {
         if (user != null) {
 
-//            val snapshot = Firebase.firestore
-//                .collection("Users")
-//                .document(user.uid)
-//                .collection("tasks")
-//                .get()
-//                .await()
-//
-//            val tasks = snapshot.documents.mapNotNull { it.data }
             val tasks = taskManager.getTaskList()
             taskList.clear()
             taskList.addAll(tasks)
@@ -111,6 +115,16 @@ fun Home(
                 color = Color.DarkGray,
                 fontFamily = FontFamily.Monospace
             )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Text(
+                text = "Welcome $name!",
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold,
+                color = Color.DarkGray,
+                fontFamily = FontFamily.Serif
+            )
+
             Spacer(modifier = Modifier.height(32.dp))
 
             // Implement Lazy Column for infinite scroll
