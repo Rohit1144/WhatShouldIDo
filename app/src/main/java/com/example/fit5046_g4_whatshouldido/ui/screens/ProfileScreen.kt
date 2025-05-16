@@ -46,7 +46,10 @@ import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import kotlinx.coroutines.launch
 
 @Composable
@@ -61,6 +64,7 @@ fun Profile(
     val isGoogleSignIn = user?.providerData?.any { it.providerId == "google.com" } == true
     val quote by viewModel.quote.collectAsState()
     val scope = rememberCoroutineScope()
+    val isStarred = rememberSaveable { mutableStateOf(false) }
 
     Scaffold(
         topBar = { TopBar(navController = navController, showProfileIcon = false, showBackButton = true) },
@@ -150,26 +154,38 @@ fun Profile(
             // Retrofit API.
             Spacer(Modifier.height(30.dp))
             Row (
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
                     text = quote.let { "\"${it.q}\"\n– ${it.a}" },
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.DarkGray,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Start,
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp)
                 )
-                Spacer(Modifier.width(8.dp))
-                Button(
-                    onClick = { scope.launch { viewModel.saveQuote(quote) } },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = colorResource(R.color.light_red),
-                        disabledContainerColor = colorResource(R.color.light_red)
-                    )
+                IconButton(
+                    onClick = {
+                        isStarred.value = !isStarred.value
+                        scope.launch {
+                            if (isStarred.value) {
+                                viewModel.saveQuote(quote)
+                            }
+                        }
+                    }
+
                 ) {
-                    Text("Save")
+                    Icon(
+                        imageVector = if (isStarred.value)
+                            Icons.Filled.Star else Icons.Outlined.StarBorder,
+                        contentDescription = null,
+                        tint = if (isStarred.value)
+                            Color(0xFFFFC107) else Color.Gray
+                    )
                 }
             }
             Spacer(Modifier.height(30.dp))
