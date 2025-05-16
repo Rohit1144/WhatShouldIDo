@@ -78,7 +78,7 @@ fun AddTask(navController: NavController) {
 
             Spacer(Modifier.height(16.dp))
 
-            // 4️⃣ Task Description (multi-line)
+            // Task Description (multi-line)
             OutlinedTextField(
                 value = description,
                 onValueChange = { description = it },
@@ -96,7 +96,8 @@ fun AddTask(navController: NavController) {
 
             Button(
                 onClick = {
-                    if(title.isNotEmpty() && description.isNotEmpty()){
+//                    if(title.isNotEmpty() && description.isNotEmpty()){
+                    if(title.isNotEmpty()){
                         scope.launch {
                             taskManager.addTask(title, description)
                         }
