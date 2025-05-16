@@ -13,6 +13,7 @@ import com.example.fit5046_g4_whatshouldido.ui.screens.Home
 import com.example.fit5046_g4_whatshouldido.ui.screens.OnBoarding
 import com.example.fit5046_g4_whatshouldido.ui.screens.Profile
 import com.example.fit5046_g4_whatshouldido.ui.screens.Report
+import com.example.fit5046_g4_whatshouldido.ui.screens.SavedQuotesScreen
 import com.example.fit5046_g4_whatshouldido.ui.screens.SignIn
 import com.example.fit5046_g4_whatshouldido.ui.screens.SignUp
 import com.example.fit5046_g4_whatshouldido.ui.screens.TaskDetail
@@ -41,5 +42,6 @@ fun NavGraph(
         composable("ai_response"){ AIResponse(navController) }
         composable("profile"){ Profile(navController) }
         composable("change_password"){ ChangePassword(navController) }
+        composable("saved_quotes") { SavedQuotesScreen(navController) }
     }
 }

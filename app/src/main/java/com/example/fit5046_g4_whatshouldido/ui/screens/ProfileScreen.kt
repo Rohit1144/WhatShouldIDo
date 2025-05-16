@@ -51,6 +51,7 @@ import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import kotlinx.coroutines.launch
+import androidx.compose.foundation.clickable
 
 @Composable
 fun Profile(
@@ -169,6 +170,7 @@ fun Profile(
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 8.dp)
+                        .clickable { navController.navigate("saved_quotes") }
                 )
                 IconButton(
                     onClick = {
