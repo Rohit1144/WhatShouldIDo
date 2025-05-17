@@ -38,6 +38,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.RectangleShape
+import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
 import dev.shreyaspatil.ai.client.generativeai.BuildConfig
 import dev.shreyaspatil.ai.client.generativeai.GenerativeModel
 import dev.shreyaspatil.ai.client.generativeai.type.content
@@ -47,31 +48,42 @@ import kotlinx.coroutines.launch
 @Composable
 fun AIResponse(navController: NavController) {
 
-    val words = listOf("Math Assignment", "Take dog for a walk", "Eat lunch")
+    var isLoading by remember { mutableStateOf(true) }
+
     var responseText by remember { mutableStateOf("Waiting for response...") }
     val coroutineScope = rememberCoroutineScope()
+    val taskManager = remember { TaskManager() }
+    var taskList by remember { mutableStateOf(emptyList<Pair<String, String>>()) }
+    var recommendedTaskId by remember { mutableStateOf<String?>(null) }
 
-    // dummy data
-    val aiMessages = listOf(
-        "Based on your tasks list, here's an optimal prioritization",
-        "1. Drink water in the morning",
-        "2. Study FIT5046 as assignment is due",
-        "3. ......",
-        "4. .....",
-        "5. ...",
-        "If you wish to follow the suggestion,\npress Yes, otherwise press No"
-    )
 
     var isYesSelected by remember { mutableStateOf(false) }
     var isNoSelected by remember { mutableStateOf(false)}
 
     LaunchedEffect(Unit) {
         coroutineScope.launch(Dispatchers.IO) {
-            responseText = generateTask(words)
+            try {
+                taskList = taskManager.getPendingTaskList()
+                val words = taskList.map { it.second }
+
+                responseText = if (words.isNotEmpty()) {
+                    val result = generateTask(taskList)
+                    recommendedTaskId = extractTaskId(result, taskList) // Extract the task ID
+                    result
+                } else {
+                    "No pending tasks found."
+                }
+                isLoading = false
+            } catch (e: Exception) {
+                responseText = "Error fetching tasks: ${e.localizedMessage}"
+                isLoading = false
+            }
         }
+
+
     }
     Scaffold(
-        topBar = { TopBar(navController = navController, showProfileIcon = true) },
+        topBar = { TopBar(navController = navController, showProfileIcon = true, showBackButton = true) },
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -99,16 +111,18 @@ fun AIResponse(navController: NavController) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(12.dp)
+                            .padding(8.dp)
                             .clip(RoundedCornerShape(12.dp))
                             .background(Color(0xFFF9F9F9))
-                            .padding(16.dp)
                             .border(1.dp, Color.DarkGray, RoundedCornerShape(15.dp))
-                    ) {
-                        Column {
+                            .padding(16.dp)
 
+                    ) {
+                        Column (
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
                             Box(
-                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 20.dp)
+                                modifier = Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 20.dp)
                             ){
                                 Text(
                                     text = responseText,
@@ -131,8 +145,10 @@ fun AIResponse(navController: NavController) {
                     onClick = {
                         isYesSelected = !isYesSelected
                         // Navigate to home after clicking the sign in button
-                        navController.navigate("task_detail") {
-                            popUpTo("ai_response") { inclusive = true }
+                        recommendedTaskId?.let { taskId ->
+                            navController.navigate("task_detail/$taskId") {
+                                popUpTo("task_detail/$taskId") { inclusive = true }
+                            }
                         }
                     },
                     border = BorderStroke(1.dp, color = if(isYesSelected) Color.Red else Color.DarkGray),
@@ -152,8 +168,20 @@ fun AIResponse(navController: NavController) {
                             Toast.LENGTH_SHORT
                         ).show()
                         coroutineScope.launch(Dispatchers.IO) {
+                            //val result = generateTask(taskList, isDifferent = true)
+                            //responseText = result
+                            // Extract the new recommended task ID
+                            //val newTaskId = extractTaskId(result, taskList)
+                            // Update the state correctly
+                            //if (newTaskId != null && newTaskId != "Unknown") {
+                                //recommendedTaskId = newTaskId
+                                //println("Updated Task ID: $recommendedTaskId")
+                            //} else {
+                                //recommendedTaskId = "Unknown"
+                                //println("Failed to update Task ID")
+                            //}
                             responseText =
-                                generateDifferentResponse(words)
+                                generateDifferentResponse(taskList)
                         }
                     },
                     border = BorderStroke(1.dp, color = if(isNoSelected) Color.Red else Color.DarkGray),
@@ -170,7 +198,7 @@ fun AIResponse(navController: NavController) {
     }
 }
 
-suspend fun generateTask(tasks: List<String>): String {
+suspend fun generateTask(tasks: List<Pair<String, String>>): String {
     return try {
         val apiKey = com.example.fit5046_g4_whatshouldido.BuildConfig.GEMINI_API_KEY
 
@@ -178,32 +206,62 @@ suspend fun generateTask(tasks: List<String>): String {
             modelName = "gemini-2.0-flash",
             apiKey = apiKey
         )
+        val formattedTasks = tasks.joinToString(", ") { it.second }
+
 
         val inputContent = content {
-            text("Can you recommend me which task to do first based on ${tasks.joinToString(", ")} I have")
+            text("From the following list: $formattedTasks, select only one task to start with. " +
+                    "Do not create or invent a new task. Only choose from the given list. " +
+                    "Provide a brief explanation in two sentences and end by asking if the user is satisfied.")
         }
 
+
         val response = generativeModel.generateContent(inputContent)
-        response.text ?: "No response from AI."
+        val cleanedResponse = response.text?.replace(Regex("\\(.*?\\)"), "")?.trim()
+
+        val taskId = extractTaskId(cleanedResponse ?: "No response from AI.", tasks) ?: "Unknown"
+
+        println("Generated Task ID: $taskId")
+
+        "Recommended Task ID: $taskId\n$cleanedResponse"
     } catch (e: Exception) {
         "Error: ${e.localizedMessage}"
     }
 }
+fun extractTaskId(responseText: String, tasks: List<Pair<String, String>>): String? {
+    for ((id, task) in tasks) {
+        if (responseText.contains(task, ignoreCase = true) || responseText.contains(task.split(" ").first(), ignoreCase = true)) {
+            return id
+        }
+    }
+    return "Unknown"
+}
 
-suspend fun generateDifferentResponse(tasks: List<String>): String {
+
+suspend fun generateDifferentResponse(tasks: List<Pair<String, String>>): String {
     return try {
         val apiKey = com.example.fit5046_g4_whatshouldido.BuildConfig.GEMINI_API_KEY
         val generativeModel = GenerativeModel(
             modelName = "gemini-2.0-flash",
             apiKey = apiKey
         )
+        val formattedTasks = tasks.joinToString(", ") { it.second }
 
         val inputContent = content {
-            text("I want a different answer. Can you recommend me which task to do first based on ${tasks.joinToString(", ")} I have")
+            text(
+                "From the following list: $formattedTasks, select only one randomly different task to start with. " +
+                        "Do not create or invent a new task. Only choose from the given list. " +
+                        "Provide a brief explanation in two sentences and end by asking if the user is satisfied.")
         }
 
         val response = generativeModel.generateContent(inputContent)
-        response.text ?: "No response from AI."
+        val cleanedResponse = response.text?.replace(Regex("\\(.*?\\)"), "")?.trim()
+
+        val taskId = extractTaskId(cleanedResponse ?: "No response from AI.", tasks) ?: "Unknown"
+
+        println("Generated Task ID: $taskId")
+
+        "Recommended Task ID: $taskId\n$cleanedResponse"
     } catch (e: Exception) {
         "Error: ${e.localizedMessage}"
     }

@@ -187,6 +187,38 @@ class TaskManager {
         return snapshot.documents.mapNotNull { it.data }
     }
 
+    suspend fun getPendingTaskList(): List<Pair<String, String>> {
+        // Check if the user is logged in
+        if (user == null) return emptyList()
+
+        return try {
+            // Fetch all tasks from the Firestore database
+            val snapshot = db.collection("Users")
+                .document(user.uid)
+                .collection("tasks")
+                .get()
+                .await()
+
+            // Process each document and filter only pending tasks
+            snapshot.documents.mapNotNull { doc ->
+                val title = doc.getString("title") ?: return@mapNotNull null
+                val status = doc.getString("status") ?: return@mapNotNull null
+                val taskId = doc.id
+
+                // Check if the task is pending
+                if (status.equals("pending", ignoreCase = true)) {
+                    // Return a map with the task ID and title
+                    Pair(taskId, title)
+                } else {
+                    null
+                }
+            }
+        } catch (e: Exception) {
+            // Handle any potential errors
+            emptyList()
+        }
+    }
+
     suspend fun getTaskDetail(taskId: String):TaskDetail?{
         if(user == null) return null
 

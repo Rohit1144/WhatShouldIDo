@@ -40,7 +40,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun AskAI(navController: NavController) {
     Scaffold(
-        topBar = { TopBar(navController = navController, showProfileIcon = true) },
+        topBar = { TopBar(navController = navController, showProfileIcon = true, showBackButton = true) },
         bottomBar = { BottomNavBar(navController) }
     ) { paddingValues ->
 
