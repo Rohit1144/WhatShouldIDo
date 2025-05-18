@@ -41,8 +41,8 @@ class TaskManager {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
     val taskDate = LocalDateTime.now().format(formatter)
 
-    suspend fun createExampleTasks(navController: NavController, profession: String) {
-
+//    suspend fun createExampleTasks(navController: NavController, profession: String) {
+    suspend fun createExampleTasks(profession: String) {
         val tasksRef = db.collection("Users").document(user!!.uid).collection("tasks")
 
         // Define example tasks
@@ -84,9 +84,9 @@ class TaskManager {
             tasksRef.document(taskId).set(task).await()
         }
 
-        navController.navigate("home") {
-            popUpTo("on_boarding") { inclusive = true }
-        }
+//        navController.navigate("home") {
+//            popUpTo("on_boarding") { inclusive = true }
+//        }
     }
 
     suspend fun addTask(title: String, description: String) {
