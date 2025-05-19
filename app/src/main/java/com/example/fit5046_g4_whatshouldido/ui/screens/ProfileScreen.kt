@@ -172,27 +172,30 @@ fun Profile(
                         .padding(end = 8.dp)
                         .clickable { navController.navigate("saved_quotes") }
                 )
-                IconButton(
-                    onClick = {
-                        isStarred.value = !isStarred.value
-                        scope.launch {
-                            if (isStarred.value) {
-                                viewModel.saveQuote(quote)
-                            } else {
-                                viewModel.deleteQuote(quote)
+                if(quote.a != "") {
+                    IconButton(
+                        onClick = {
+                            isStarred.value = !isStarred.value
+                            scope.launch {
+                                if (isStarred.value) {
+                                    viewModel.saveQuote(quote)
+                                } else {
+                                    viewModel.deleteQuote(quote)
+                                }
                             }
                         }
-                    }
 
-                ) {
-                    Icon(
-                        imageVector = if (isStarred.value)
-                            Icons.Filled.Star else Icons.Outlined.StarBorder,
-                        contentDescription = null,
-                        tint = if (isStarred.value)
-                            Color(0xFFFFC107) else Color.Gray
-                    )
+                    ) {
+                        Icon(
+                            imageVector = if (isStarred.value)
+                                Icons.Filled.Star else Icons.Outlined.StarBorder,
+                            contentDescription = null,
+                            tint = if (isStarred.value)
+                                Color(0xFFFFC107) else Color.Gray
+                        )
+                    }
                 }
+
             }
             Spacer(Modifier.height(30.dp))
 
