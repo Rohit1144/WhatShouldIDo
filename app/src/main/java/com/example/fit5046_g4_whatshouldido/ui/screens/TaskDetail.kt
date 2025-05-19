@@ -111,12 +111,14 @@ fun TaskDetail(navController: NavController, taskId: String) {
             Spacer(modifier = Modifier.height(30.dp))
 
             OutlinedTextField(
-              value = title,
-              onValueChange = { title = it },
-              label = { Text("Task Title *") },
-              placeholder = { Text("") }, // TODO: Replace this with actual title
-              singleLine = true,
-              modifier = Modifier.fillMaxWidth()
+                value = title,
+                onValueChange = { title = it },
+                label = { Text("Task Title *") },
+                placeholder = { Text("") }, // TODO: Replace this with actual title
+                singleLine = true,
+                readOnly = taskStatus == "DONE",
+                enabled = taskStatus != "DONE",
+                modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(Modifier.height(16.dp))
@@ -129,6 +131,8 @@ fun TaskDetail(navController: NavController, taskId: String) {
                 placeholder = {
                     Text("") // TODO: Replace this with actual description
                 },
+                readOnly = taskStatus == "DONE",
+                enabled = taskStatus != "DONE",
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp),

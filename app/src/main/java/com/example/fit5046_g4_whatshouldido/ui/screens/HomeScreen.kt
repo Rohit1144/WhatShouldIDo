@@ -165,21 +165,6 @@ fun Home(
                                 }
                                 taskList[index] = updatedTask
                             }
-
-
-
-//                            Firebase.firestore.collection("Users")
-//                                .document(user!!.uid)
-//                                .collection("tasks")
-//                                .document(task["id"] as String)
-//                                .update(
-//                                    mapOf(
-//                                        "status" to updatedStatus,
-//                                        "updatedAt" to updatedAt,
-//                                        "completedAt" to completedAt
-//                                    )
-//                                )
-
                         }
                     )
                     Divider(modifier = Modifier.padding(vertical = 4.dp))
@@ -220,7 +205,8 @@ fun TaskItemRow(item: Map<String, Any?>, navController: NavController, onStatusT
     ){
             // Status Toggle
             IconButton(
-                onClick = onStatusToggle
+                onClick = onStatusToggle,
+                enabled = status != "CANCELED"
             ) {
                 Icon(
                     imageVector = if (status == "DONE") Icons.Default.RadioButtonChecked else Icons.Default.RadioButtonUnchecked,
