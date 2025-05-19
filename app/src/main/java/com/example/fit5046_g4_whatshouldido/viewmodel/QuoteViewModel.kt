@@ -15,8 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-//TODO: change the name to quoteviewmodel
-class ProfileViewModel(application: Application) : AndroidViewModel(application) {
+class QuoteViewModel(application: Application) : AndroidViewModel(application) {
 
     private val user = Firebase.auth.currentUser ?: error("No user found")
     private val userId = user.uid

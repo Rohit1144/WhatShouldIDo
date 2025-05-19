@@ -61,7 +61,7 @@ fun MonthlyBarChart(
                 setDrawValueAboveBar(false)
                 extraBottomOffset = 16f
                 extraTopOffset = 16f
-                animateY(4000)
+                animateY(2000)
 
                 // Setting up legend
                 legend.apply {
