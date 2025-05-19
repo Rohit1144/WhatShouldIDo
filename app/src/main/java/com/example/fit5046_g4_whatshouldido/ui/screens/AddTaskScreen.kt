@@ -173,8 +173,7 @@ fun AddTask(navController: NavController) {
                 singleLine = true,
                 readOnly = true,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { showDatePicker = true },
+                    .fillMaxWidth(),
                 trailingIcon = {
                     IconButton (
                         onClick = { showDatePicker = true }

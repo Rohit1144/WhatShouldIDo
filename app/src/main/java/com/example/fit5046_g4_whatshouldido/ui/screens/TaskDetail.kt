@@ -212,8 +212,7 @@ fun TaskDetail(navController: NavController, taskId: String) {
                 readOnly = true,
                 enabled = taskStatus != "DONE" && taskStatus != "CANCELED",
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { showDatePicker = true },
+                    .fillMaxWidth(),
                 trailingIcon = {
                     IconButton (
                         onClick = { showDatePicker = true },
