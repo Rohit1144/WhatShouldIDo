@@ -113,16 +113,16 @@ fun Home(
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = Color.DarkGray,
-                fontFamily = FontFamily.Monospace
+                fontFamily = FontFamily.Default
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(29.dp))
 
             Text(
                 text = "Welcome $name!",
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
                 color = Color.DarkGray,
-                fontFamily = FontFamily.Serif
+                fontFamily = FontFamily.Default
             )
 
             Spacer(modifier = Modifier.height(32.dp))

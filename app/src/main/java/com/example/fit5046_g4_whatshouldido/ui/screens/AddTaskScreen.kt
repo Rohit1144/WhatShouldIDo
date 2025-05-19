@@ -62,7 +62,7 @@ fun AddTask(navController: NavController) {
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color.DarkGray,
-                fontFamily = FontFamily.Monospace
+                fontFamily = FontFamily.Default
             )
 
             Spacer(Modifier.height(30.dp))
