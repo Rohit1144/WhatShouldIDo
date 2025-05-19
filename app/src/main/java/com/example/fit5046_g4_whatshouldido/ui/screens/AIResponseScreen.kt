@@ -180,8 +180,27 @@ fun AIResponse(navController: NavController) {
                                 //recommendedTaskId = "Unknown"
                                 //println("Failed to update Task ID")
                             //}
-                            responseText =
-                                generateDifferentResponse(taskList)
+                            //responseText =
+                              //  generateDifferentResponse(taskList)
+
+                            try {
+                                val result = generateDifferentResponse(taskList)
+                                responseText = result
+
+                                // Extract the new recommended task ID from the result
+                                val newTaskId = extractTaskId(result, taskList)
+
+                                if (newTaskId != null && newTaskId != "Unknown") {
+                                    recommendedTaskId = newTaskId
+                                    println("Updated Task ID: $recommendedTaskId")
+                                } else {
+                                    recommendedTaskId = "Unknown"
+                                    println("Failed to update Task ID")
+                                }
+                            } catch (e: Exception) {
+                                responseText = "Error generating new task: ${e.localizedMessage}"
+                            }
+
                         }
                     },
                     border = BorderStroke(1.dp, color = if(isNoSelected) Color.Red else Color.DarkGray),
@@ -221,9 +240,8 @@ suspend fun generateTask(tasks: List<Pair<String, String>>): String {
 
         val taskId = extractTaskId(cleanedResponse ?: "No response from AI.", tasks) ?: "Unknown"
 
-        println("Generated Task ID: $taskId")
 
-        "Recommended Task ID: $taskId\n$cleanedResponse"
+        "\n$cleanedResponse"
     } catch (e: Exception) {
         "Error: ${e.localizedMessage}"
     }
@@ -259,9 +277,8 @@ suspend fun generateDifferentResponse(tasks: List<Pair<String, String>>): String
 
         val taskId = extractTaskId(cleanedResponse ?: "No response from AI.", tasks) ?: "Unknown"
 
-        println("Generated Task ID: $taskId")
 
-        "Recommended Task ID: $taskId\n$cleanedResponse"
+        "\n$cleanedResponse"
     } catch (e: Exception) {
         "Error: ${e.localizedMessage}"
     }
