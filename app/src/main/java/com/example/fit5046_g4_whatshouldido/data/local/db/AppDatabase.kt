@@ -13,7 +13,7 @@ import com.example.fit5046_g4_whatshouldido.data.local.entity.*
         Task::class,
         Quote::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
