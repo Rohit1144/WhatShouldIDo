@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -93,7 +94,7 @@ fun Profile(
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = Color.DarkGray,
-                fontFamily = FontFamily.Monospace
+                fontFamily = FontFamily.Default
             )
 
             Spacer(modifier = Modifier.height(30.dp))
@@ -163,7 +164,7 @@ fun Profile(
 
                 // Todo: Put a spacer between the quote and author
                 Text(
-                    text = quote.let { "\"${it.q}\"\n– ${it.a}" },
+                    text = if (quote.a != "") "\"${quote.q}\"\n– ${quote.a}" else "\"${quote.q}\"\n",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.DarkGray,
                     textAlign = TextAlign.Start,
@@ -172,27 +173,44 @@ fun Profile(
                         .padding(end = 8.dp)
                         .clickable { navController.navigate("saved_quotes") }
                 )
-                IconButton(
-                    onClick = {
-                        isStarred.value = !isStarred.value
-                        scope.launch {
-                            if (isStarred.value) {
-                                viewModel.saveQuote(quote)
-                            } else {
-                                viewModel.deleteQuote(quote)
+                if(quote.a != "") {
+                    IconButton(
+                        onClick = {
+                            isStarred.value = !isStarred.value
+                            scope.launch {
+                                if (isStarred.value) {
+                                    viewModel.saveQuote(quote)
+                                } else {
+                                    viewModel.deleteQuote(quote)
+                                }
                             }
                         }
-                    }
 
-                ) {
-                    Icon(
-                        imageVector = if (isStarred.value)
-                            Icons.Filled.Star else Icons.Outlined.StarBorder,
-                        contentDescription = null,
-                        tint = if (isStarred.value)
-                            Color(0xFFFFC107) else Color.Gray
-                    )
+                    ) {
+                        Icon(
+                            imageVector = if (isStarred.value)
+                                Icons.Filled.Star else Icons.Outlined.StarBorder,
+                            contentDescription = null,
+                            tint = if (isStarred.value)
+                                Color(0xFFFFC107) else Color.Gray
+                        )
+                    }
                 }
+                if(quote.q == "Could not load quote. Try again later.")
+                {
+                    IconButton(onClick = {
+                        scope.launch {
+                            viewModel.fetchQuote()
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = "Refresh quote",
+                            tint = Color.Gray
+                        )
+                    }
+                }
+
             }
             Spacer(Modifier.height(30.dp))
 

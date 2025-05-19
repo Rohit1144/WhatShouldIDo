@@ -55,7 +55,11 @@ import com.example.fit5046_g4_whatshouldido.Managers.AuthResponse
 import com.example.fit5046_g4_whatshouldido.Managers.AuthenticationManager
 import com.example.fit5046_g4_whatshouldido.R
 import com.example.fit5046_g4_whatshouldido.validations.FormValidation
+import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.Calendar
 
 @SuppressLint("DefaultLocale")
@@ -120,7 +124,7 @@ fun SignUp(navController: NavController) {
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.headlineMedium,
             color = Color.DarkGray,
-            fontFamily = FontFamily.Monospace
+            fontFamily = FontFamily.Default
         )
 
         Spacer(Modifier.height(30.dp))
@@ -259,25 +263,27 @@ fun SignUp(navController: NavController) {
             onClick = {
                 val message = formValidation.validateSignUpForm(email, password, confirmPassword)
                 if(message.isEmpty()) {
-                    // TODO: perform sign-up
                     scope.launch {
                         val response = authenticationManager.createAccountWithEmail(email, password, name, birthDate)
                         when (response) {
                             is AuthResponse.Success -> {
-                                navController.navigate("on_boarding") {
-                                    popUpTo("sign_up") { inclusive = true }
+                                delay(300) // gives Firebase some time to update auth state
+                                withContext(Dispatchers.Main){
+                                    navController.navigate("on_boarding") {
+                                        popUpTo("sign_up") { inclusive = true }
+                                    }
                                 }
                             }
                             is AuthResponse.Error -> {
-                                Toast.makeText(context, response.message, Toast.LENGTH_LONG).show()
+                                withContext(Dispatchers.Main) {
+                                    Toast.makeText(context, response.message, Toast.LENGTH_LONG).show()
+                                }
                             }
                         }
                     }
                 } else {
                     Toast.makeText(context, message, Toast.LENGTH_LONG).show()
                 }
-
-
             },
             modifier = Modifier
                 .fillMaxWidth(),

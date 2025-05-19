@@ -31,18 +31,20 @@ data class MonthlyTaskStatus(
 data class TaskDetail(
     val title:String,
     val description:String,
-    val status:String
+    val status:String,
+    val dueAt:String
 )
 
 class TaskManager {
 
     val user = Firebase.auth.currentUser
     val db = Firebase.firestore
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
     val taskDate = LocalDateTime.now().format(formatter)
+    val sampleDueDateTime = LocalDateTime.now().plusDays(1).format(formatter)
 
-    suspend fun createExampleTasks(navController: NavController, profession: String) {
-
+//    suspend fun createExampleTasks(navController: NavController, profession: String) {
+    suspend fun createExampleTasks(profession: String) {
         val tasksRef = db.collection("Users").document(user!!.uid).collection("tasks")
 
         // Define example tasks
@@ -79,17 +81,18 @@ class TaskManager {
                 "createdAt" to taskDate,
                 "updatedAt" to taskDate,
                 "completedAt" to null,
-                "cancelledAt" to null
+                "cancelledAt" to null,
+                "dueAt" to sampleDueDateTime
             )
             tasksRef.document(taskId).set(task).await()
         }
 
-        navController.navigate("home") {
-            popUpTo("on_boarding") { inclusive = true }
-        }
+//        navController.navigate("home") {
+//            popUpTo("on_boarding") { inclusive = true }
+//        }
     }
 
-    suspend fun addTask(title: String, description: String) {
+    suspend fun addTask(title: String, description: String, dueDateTime: String) {
         if (user != null) {
             val taskId = db.collection("tmp").document().id
 
@@ -101,7 +104,8 @@ class TaskManager {
                 "createdAt" to taskDate,
                 "updatedAt" to taskDate,
                 "completedAt" to null,
-                "cancelledAt" to null
+                "cancelledAt" to null,
+                "dueAt" to dueDateTime
             )
 
             db.collection("Users")
@@ -158,7 +162,7 @@ class TaskManager {
 
     }
 
-    suspend fun updateTaskDetails(title: String, description: String, taskId: String) {
+    suspend fun updateTaskDetails(title: String, description: String, dueDateTime: String, taskId: String) {
 
         db.collection("Users")
             .document(user!!.uid)
@@ -168,7 +172,8 @@ class TaskManager {
                 mapOf(
                     "title" to title,
                     "description" to description,
-                    "updatedAt" to taskDate
+                    "updatedAt" to taskDate,
+                    "dueAt" to dueDateTime
                 )
             )
             .await()
@@ -232,7 +237,8 @@ class TaskManager {
         return TaskDetail (
             title = doc.getString("title") ?: "",
             description = doc.getString("description") ?: "",
-            status = doc.getString("status") ?: ""
+            status = doc.getString("status") ?: "",
+            dueAt = doc.getString("dueAt") ?: ""
         )
 
     }

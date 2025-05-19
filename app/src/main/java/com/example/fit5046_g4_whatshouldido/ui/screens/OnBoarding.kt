@@ -40,6 +40,7 @@ import androidx.compose.ui.text.font.FontWeight
 import com.example.fit5046_g4_whatshouldido.Managers.AuthenticationManager
 import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -75,7 +76,7 @@ fun OnBoarding(navController: NavController) {
             fontWeight = FontWeight.Bold,
             style = MaterialTheme.typography.headlineMedium,
             color = Color.DarkGray,
-            fontFamily = FontFamily.Monospace
+            fontFamily = FontFamily.Default
         )
 
         Spacer(Modifier.height(30.dp))
@@ -227,11 +228,14 @@ fun OnBoarding(navController: NavController) {
             onClick ={
                 scope.launch(Dispatchers.Main) {
                     authenticationManager.markOnboardingComplete(profession, focusTime, startPreference)
-                    taskManager.createExampleTasks(navController, profession)
+//                    taskManager.createExampleTasks(navController, profession)
+                    taskManager.createExampleTasks(profession)
+                    delay(300)
+                    // Navigate to home after clicking the OK button
+                    navController.navigate("home") {
+                        popUpTo("on_boarding") { inclusive = true }
+                    }
                 }
-
-                // Navigate to home after clicking the OK button
-
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(

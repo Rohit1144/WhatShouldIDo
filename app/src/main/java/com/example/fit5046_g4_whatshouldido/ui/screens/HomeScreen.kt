@@ -113,16 +113,16 @@ fun Home(
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = Color.DarkGray,
-                fontFamily = FontFamily.Monospace
+                fontFamily = FontFamily.Default
             )
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(29.dp))
 
             Text(
                 text = "Welcome $name!",
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
                 color = Color.DarkGray,
-                fontFamily = FontFamily.Serif
+                fontFamily = FontFamily.Default
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -165,21 +165,6 @@ fun Home(
                                 }
                                 taskList[index] = updatedTask
                             }
-
-
-
-//                            Firebase.firestore.collection("Users")
-//                                .document(user!!.uid)
-//                                .collection("tasks")
-//                                .document(task["id"] as String)
-//                                .update(
-//                                    mapOf(
-//                                        "status" to updatedStatus,
-//                                        "updatedAt" to updatedAt,
-//                                        "completedAt" to completedAt
-//                                    )
-//                                )
-
                         }
                     )
                     Divider(modifier = Modifier.padding(vertical = 4.dp))
@@ -220,7 +205,8 @@ fun TaskItemRow(item: Map<String, Any?>, navController: NavController, onStatusT
     ){
             // Status Toggle
             IconButton(
-                onClick = onStatusToggle
+                onClick = onStatusToggle,
+                enabled = status != "CANCELED"
             ) {
                 Icon(
                     imageVector = if (status == "DONE") Icons.Default.RadioButtonChecked else Icons.Default.RadioButtonUnchecked,

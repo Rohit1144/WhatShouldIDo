@@ -78,7 +78,7 @@ fun ChangePassword(navController: NavController) {
                 text = "Password Update",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Monospace,
+                fontFamily = FontFamily.Default,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
 
