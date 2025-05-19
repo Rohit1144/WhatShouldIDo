@@ -7,6 +7,8 @@ import com.example.fit5046_g4_whatshouldido.data.local.db.AppDatabase
 import com.example.fit5046_g4_whatshouldido.data.local.entity.Quote
 import com.example.fit5046_g4_whatshouldido.data.repository.QuotesRepository
 import com.example.fit5046_g4_whatshouldido.models.QuoteModel
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +18,12 @@ import kotlinx.coroutines.launch
 //TODO: change the name to quoteviewmodel
 class ProfileViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val repository = QuotesRepository(AppDatabase.getDatabase(application).quoteDao())
+    private val user = Firebase.auth.currentUser ?: error("No user found")
+    private val userId = user.uid
+
+    private val repository = QuotesRepository(
+        AppDatabase.getDatabase(application).quoteDao(), userId
+    )
 
     private val _quote = MutableStateFlow(QuoteModel(q= "Loading inspiration...", a= ""))
     val quote: StateFlow<QuoteModel> = _quote

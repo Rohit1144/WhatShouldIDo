@@ -7,7 +7,7 @@ import com.example.fit5046_g4_whatshouldido.data.network.RetrofitObject
 import com.example.fit5046_g4_whatshouldido.models.QuoteModel
 import kotlinx.coroutines.flow.Flow
 
-class QuotesRepository  (private val dao: QuoteDAO)
+class QuotesRepository  (private val dao: QuoteDAO, private val userId: String)
 {
     suspend fun getNewQuote(): QuoteModel? {
         return try {
@@ -20,12 +20,12 @@ class QuotesRepository  (private val dao: QuoteDAO)
     }
 
     suspend fun saveQuote(quote: QuoteModel) {
-        dao.insert(Quote(text = quote.q, author = quote.a))
+        dao.insert(Quote(text = quote.q, author = quote.a, userId = userId))
     }
 
     suspend fun deleteQuote(quote: QuoteModel) {
-        dao.deleteByTextAndAuthor(text = quote.q, author = quote.a)
+        dao.deleteByTextAndAuthor(text = quote.q, author = quote.a, userId = userId)
     }
 
-    fun observeAllQuotes(): Flow<List<Quote>> = dao.observeAllQuotes()
+    fun observeAllQuotes(): Flow<List<Quote>> = dao.observeAllQuotes(userId)
 }

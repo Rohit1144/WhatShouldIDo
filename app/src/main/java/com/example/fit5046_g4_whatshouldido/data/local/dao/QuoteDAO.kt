@@ -15,12 +15,12 @@ interface QuoteDAO {
     @Delete
     suspend fun delete(quote: Quote)
 
-    @Query("SELECT * FROM quote")
-    suspend fun getQuotes() : List<Quote>
+    @Query("SELECT * FROM quote WHERE userId = :userId")
+    suspend fun getQuotes(userId: String) : List<Quote>
 
-    @Query("DELETE FROM quote WHERE text = :text AND author = :author")
-    suspend fun deleteByTextAndAuthor(text: String, author: String)
+    @Query("DELETE FROM quote WHERE text = :text AND author = :author AND userId = :userId")
+    suspend fun deleteByTextAndAuthor(text: String, author: String, userId: String)
 
-    @Query("SELECT * FROM quote")
-    fun observeAllQuotes() : Flow<List<Quote>>
+    @Query("SELECT * FROM quote WHERE userId = :userId")
+    fun observeAllQuotes(userId: String) : Flow<List<Quote>>
 }
