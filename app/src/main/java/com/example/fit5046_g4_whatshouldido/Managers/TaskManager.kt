@@ -38,7 +38,7 @@ class TaskManager {
 
     val user = Firebase.auth.currentUser
     val db = Firebase.firestore
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
     val taskDate = LocalDateTime.now().format(formatter)
 
 //    suspend fun createExampleTasks(navController: NavController, profession: String) {
@@ -89,7 +89,7 @@ class TaskManager {
 //        }
     }
 
-    suspend fun addTask(title: String, description: String) {
+    suspend fun addTask(title: String, description: String, dueDateTime: String) {
         if (user != null) {
             val taskId = db.collection("tmp").document().id
 
@@ -101,7 +101,8 @@ class TaskManager {
                 "createdAt" to taskDate,
                 "updatedAt" to taskDate,
                 "completedAt" to null,
-                "cancelledAt" to null
+                "cancelledAt" to null,
+                "dueAt" to dueDateTime
             )
 
             db.collection("Users")
