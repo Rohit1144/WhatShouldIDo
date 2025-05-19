@@ -1,5 +1,6 @@
 package com.example.fit5046_g4_whatshouldido.data.repository
 
+import android.util.Log
 import com.example.fit5046_g4_whatshouldido.data.local.dao.QuoteDAO
 import com.example.fit5046_g4_whatshouldido.data.local.entity.Quote
 import com.example.fit5046_g4_whatshouldido.data.network.RetrofitObject
@@ -13,6 +14,7 @@ class QuotesRepository  (private val dao: QuoteDAO)
             val result = RetrofitObject.api.getRandomQuote()
             result.firstOrNull() // returns first quote or null
         } catch (e: Exception) {
+            Log.e("QuotesRepository", "Failed to fetch quote: ${e.message}",e)
             null
         }
     }

@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Text
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -17,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.fit5046_g4_whatshouldido.Managers.AuthenticationManager
@@ -65,6 +67,8 @@ fun SplashScreen(navController: NavHostController) {
             modifier = Modifier.size(400.dp)
         )
         Spacer(Modifier.height(5.dp))
+        Text("What Should I Do?", style= MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Bold)
+        Spacer(Modifier.height(150.dp))
         AnimatedLoadingText()
     }
 }
