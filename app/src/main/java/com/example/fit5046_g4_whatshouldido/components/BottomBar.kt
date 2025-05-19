@@ -1,5 +1,6 @@
 package com.example.loginpagetutorial.components
 
+import com.example.fit5046_g4_whatshouldido.R
 import androidx.compose.ui.graphics.vector.ImageVector
 import Icon_Chart
 import Icon_Home
@@ -19,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 
@@ -36,7 +38,7 @@ fun BottomNavBar(navController: NavController){
     val currentDestination = navBackStackEntry?.destination
 
     BottomNavigation(
-        backgroundColor = Color.LightGray,
+        backgroundColor = colorResource(R.color.manaual_gray),
         contentColor = Color.DarkGray,
         modifier = Modifier.height(65.dp)
     ){
