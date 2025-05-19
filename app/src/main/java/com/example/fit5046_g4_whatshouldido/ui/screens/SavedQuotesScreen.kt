@@ -35,13 +35,13 @@ import androidx.navigation.NavController
 import com.example.fit5046_g4_whatshouldido.R
 import com.example.fit5046_g4_whatshouldido.data.local.entity.Quote
 import com.example.fit5046_g4_whatshouldido.models.QuoteModel
-import com.example.fit5046_g4_whatshouldido.viewmodel.ProfileViewModel
+import com.example.fit5046_g4_whatshouldido.viewmodel.QuoteViewModel
 
 
 @Composable
 fun SavedQuotesScreen(
     navController: NavController,
-    viewModel: ProfileViewModel = viewModel()
+    viewModel: QuoteViewModel = viewModel()
 ) {
     val quotes by viewModel.quotes.collectAsState(emptyList())
 

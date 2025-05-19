@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
@@ -25,28 +24,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.fit5046_g4_whatshouldido.R
-import com.example.fit5046_g4_whatshouldido.viewmodel.ProfileViewModel
+import com.example.fit5046_g4_whatshouldido.viewmodel.QuoteViewModel
 import com.example.loginpagetutorial.components.TopBar
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.runtime.rememberCoroutineScope
@@ -57,7 +50,7 @@ import androidx.compose.foundation.clickable
 @Composable
 fun Profile(
     navController: NavController,
-    viewModel: ProfileViewModel = viewModel()
+    viewModel: QuoteViewModel = viewModel()
 ) {
 
 //    var passwordVisible by remember { mutableStateOf(false) }
