@@ -217,10 +217,16 @@ fun TaskItemRow(item: Map<String, Any?>, navController: NavController, onStatusT
 
                 val seconds = duration.seconds
                 if (seconds > 0) {
-                    val hours = seconds / 3600
+                    val days = seconds / (24 * 3600)
+                    val hours = (seconds % (24 * 3600)) / 3600
                     val minutes = (seconds % 3600) / 60
                     val secs = seconds % 60
-                    timeRemaining.value = String.format("%02d:%02d:%02d", hours, minutes, secs)
+
+                    if (days > 0) {
+                        timeRemaining.value = String.format("%d day%s %02d:%02d:%02d", days, if (days > 1) "s" else "", hours, minutes, secs)
+                    } else {
+                        timeRemaining.value = String.format("%02d:%02d:%02d", hours, minutes, secs)
+                    }
                 } else {
                     timeRemaining.value = "OVERDUE"
                 }
@@ -265,7 +271,7 @@ fun TaskItemRow(item: Map<String, Any?>, navController: NavController, onStatusT
                     color = if(status == "DONE") Color.LightGray else Color.DarkGray,
                 )
 
-                if(due.isNotBlank()) {
+                if(due.isNotBlank() && status == "PENDING") {
                     Text(
                         text = timeRemaining.value,
                         style = MaterialTheme.typography.bodySmall,
