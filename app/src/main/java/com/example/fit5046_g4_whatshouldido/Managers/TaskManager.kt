@@ -41,6 +41,7 @@ class TaskManager {
     val db = Firebase.firestore
     val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
     val taskDate = LocalDateTime.now().format(formatter)
+    val sampleDueDateTime = LocalDateTime.now().plusDays(1).format(formatter)
 
 //    suspend fun createExampleTasks(navController: NavController, profession: String) {
     suspend fun createExampleTasks(profession: String) {
@@ -80,7 +81,8 @@ class TaskManager {
                 "createdAt" to taskDate,
                 "updatedAt" to taskDate,
                 "completedAt" to null,
-                "cancelledAt" to null
+                "cancelledAt" to null,
+                "dueAt" to sampleDueDateTime
             )
             tasksRef.document(taskId).set(task).await()
         }
