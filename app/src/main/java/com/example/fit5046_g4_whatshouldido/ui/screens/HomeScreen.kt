@@ -90,8 +90,12 @@ fun Home(
 
     LaunchedEffect(user) {
         if (user != null) {
-
             val tasks = taskManager.getTaskList()
+                .filter {
+                    val status = it["status"] as? String ?: return@filter false
+                    status.uppercase() != "ARCHIVED"
+                }
+
             taskList.clear()
             taskList.addAll(tasks)
         }
@@ -245,7 +249,7 @@ fun TaskItemRow(item: Map<String, Any?>, navController: NavController, onStatusT
             // Status Toggle
             IconButton(
                 onClick = onStatusToggle,
-                enabled = status != "CANCELED"
+                enabled = status != "CANCELED" && timeRemaining.value != "OVERDUE"
             ) {
                 Icon(
                     imageVector = if (status == "DONE") Icons.Default.RadioButtonChecked else Icons.Default.RadioButtonUnchecked,

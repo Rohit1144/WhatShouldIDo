@@ -211,7 +211,7 @@ class TaskManager {
                 val taskId = doc.id
 
                 // Check if the task is pending
-                if (status.equals("pending", ignoreCase = true)) {
+                if (status.equals("PENDING", ignoreCase = true)) {
                     // Return a map with the task ID and title
                     Pair(taskId, title)
                 } else {
@@ -302,6 +302,22 @@ class TaskManager {
         return(1..12).map { month ->
             val(completed, pending, cancelled) = monthlyMap[month] ?: Triple(0,0,0)
             MonthlyTaskStatus(month, completed, pending, cancelled)
+        }
+    }
+
+    // archive tasks - (when user clicks bin icon archives the tasks not permanently delete it)
+    suspend fun archiveTask(taskId: String) {
+        if (user != null) {
+            db.collection("Users")
+                .document(user.uid)
+                .collection("tasks")
+                .document(taskId)
+                .update(
+                    mapOf(
+                        "status" to "ARCHIVED",
+                    )
+                )
+                .await()
         }
     }
 
