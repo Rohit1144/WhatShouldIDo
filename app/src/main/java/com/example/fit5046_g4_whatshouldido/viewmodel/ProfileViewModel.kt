@@ -40,7 +40,7 @@ class ProfileViewModel(application: Application) : AndroidViewModel(application)
         fetchQuote()
     }
 
-    private fun fetchQuote() {
+    fun fetchQuote() {
         viewModelScope.launch {
             val result = repository.getNewQuote()
             _quote.value = result?: QuoteModel(q= "Could not load quote. Try again later.", a= "")

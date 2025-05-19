@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -192,6 +193,20 @@ fun Profile(
                             contentDescription = null,
                             tint = if (isStarred.value)
                                 Color(0xFFFFC107) else Color.Gray
+                        )
+                    }
+                }
+                if(quote.q == "Could not load quote. Try again later.")
+                {
+                    IconButton(onClick = {
+                        scope.launch {
+                            viewModel.fetchQuote()
+                        }
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.Refresh,
+                            contentDescription = "Refresh quote",
+                            tint = Color.Gray
                         )
                     }
                 }
