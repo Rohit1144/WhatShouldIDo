@@ -154,10 +154,8 @@ fun Profile(
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
-                // Todo: Put a spacer between the quote and author
                 Text(
-                    text = if (quote.a != "") "\"${quote.q}\"\n– ${quote.a}" else "\"${quote.q}\"\n",
+                    text = if (quote.a != "") "\"${quote.q}\"\n\n– ${quote.a}" else "\"${quote.q}\"\n",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.DarkGray,
                     textAlign = TextAlign.Start,
