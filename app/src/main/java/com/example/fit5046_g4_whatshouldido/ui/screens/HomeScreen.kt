@@ -1,5 +1,6 @@
 package com.example.fit5046_g4_whatshouldido.ui.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -50,6 +51,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.core.graphics.toColorInt
 import com.example.fit5046_g4_whatshouldido.Managers.AuthenticationManager
 import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
 import com.example.fit5046_g4_whatshouldido.R
@@ -193,11 +195,42 @@ fun Home(
     }
 }
 
+@SuppressLint("DefaultLocale")
 @Composable
 fun TaskItemRow(item: Map<String, Any?>, navController: NavController, onStatusToggle: () -> Unit) {
 
     val title = item["title"] as? String ?: ""
     val status = item["status"] as? String ?: "PENDING"
+    val due = item["dueAt"] as? String ?: ""
+
+    // Format time to show hh:mm:ss
+    val timeRemaining = remember { mutableStateOf("") }
+
+    LaunchedEffect(key1 = due) {
+        while(true) {
+            try{
+                val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+                val dueDateTime = LocalDateTime.parse(due, formatter)
+
+                val now = LocalDateTime.now()
+                val duration = java.time.Duration.between(now, dueDateTime)
+
+                val seconds = duration.seconds
+                if (seconds > 0) {
+                    val hours = seconds / 3600
+                    val minutes = (seconds % 3600) / 60
+                    val secs = seconds % 60
+                    timeRemaining.value = String.format("%02d:%02d:%02d", hours, minutes, secs)
+                } else {
+                    timeRemaining.value = "OVERDUE"
+                }
+                kotlinx.coroutines.delay(1000)
+            } catch (e: Exception) {
+                timeRemaining.value = "--:--:--"
+                break
+            }
+        }
+    }
 
     Row(
        modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
@@ -218,13 +251,27 @@ fun TaskItemRow(item: Map<String, Any?>, navController: NavController, onStatusT
 
             Spacer(modifier = Modifier.width(8.dp))
 
-            Text(
-                text = title,
-                modifier = Modifier.weight(1f).padding(start = 4.dp).clickable { navController.navigate("task_detail/${item["id"]}") },
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    textDecoration = if(status == "CANCELED") TextDecoration.LineThrough else TextDecoration.None
-                ),
-                color = if(status == "DONE") Color.LightGray else Color.DarkGray,
-            )
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = title,
+                    modifier = Modifier.weight(1f).padding(start = 4.dp).clickable { navController.navigate("task_detail/${item["id"]}") },
+                    style = MaterialTheme.typography.bodyLarge.copy(
+                        textDecoration = if(status == "CANCELED") TextDecoration.LineThrough else TextDecoration.None
+                    ),
+                    color = if(status == "DONE") Color.LightGray else Color.DarkGray,
+                )
+
+                if(due.isNotBlank()) {
+                    Text(
+                        text = timeRemaining.value,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (timeRemaining.value == "OVERDUE") Color.Red else colorResource(R.color.orange)
+                    )
+                }
+            }
     }
 }
