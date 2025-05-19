@@ -164,7 +164,7 @@ fun Profile(
 
                 // Todo: Put a spacer between the quote and author
                 Text(
-                    text = quote.let { "\"${it.q}\"\n– ${it.a}" },
+                    text = if (quote.a != "") "\"${quote.q}\"\n– ${quote.a}" else "\"${quote.q}\"\n",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.DarkGray,
                     textAlign = TextAlign.Start,
