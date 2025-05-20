@@ -21,6 +21,9 @@ interface QuoteDAO {
     @Query("DELETE FROM quote WHERE text = :text AND author = :author AND userId = :userId")
     suspend fun deleteByTextAndAuthor(text: String, author: String, userId: String)
 
+    @Query("DELETE FROM Quote WHERE userId = :userId")
+    suspend fun deleteAllByUserId(userId: String)
+
     @Query("SELECT * FROM quote WHERE userId = :userId")
     fun observeAllQuotes(userId: String) : Flow<List<Quote>>
 }

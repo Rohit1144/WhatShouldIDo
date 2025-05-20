@@ -27,5 +27,9 @@ class QuotesRepository  (private val dao: QuoteDAO, private val userId: String)
         dao.deleteByTextAndAuthor(text = quote.q, author = quote.a, userId = userId)
     }
 
+    suspend fun deleteAllQuotes() {
+        dao.deleteAllByUserId(userId = userId)
+    }
+
     fun observeAllQuotes(): Flow<List<Quote>> = dao.observeAllQuotes(userId)
 }

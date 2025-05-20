@@ -321,6 +321,26 @@ class TaskManager {
         }
     }
 
+    // Delete all tasks - (when user clicks factory reset, deletes all the tasks that they added)
+    // Note: Firebase does not support bulk deletion in single call -> use batch (up to 500 per batch)
+    suspend fun deleteAllTasks() {
+        if (user != null){
+            val taskSnapshot = db.collection("Users")
+                .document(user.uid)
+                .collection("tasks")
+                .get()
+                .await()
+
+            val batch = db.batch()
+
+            for (task in taskSnapshot.documents) {
+                batch.delete(task.reference)
+            }
+
+            batch.commit().await()
+        }
+    }
+
     // For Testing the Monthly Report Chart - Remove this later (needed to populate the data)
     suspend fun seedTestTasksForMonthlyReport() {
         val tasksRef = db.collection("Users").document(user!!.uid).collection("tasks")

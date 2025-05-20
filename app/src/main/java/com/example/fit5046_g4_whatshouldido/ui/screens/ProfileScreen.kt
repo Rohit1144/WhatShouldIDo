@@ -1,4 +1,5 @@
 package com.example.fit5046_g4_whatshouldido.ui.screens
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -46,6 +47,13 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.clickable
+import androidx.compose.material3.TextButton
+import androidx.compose.runtime.remember
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.sp
+import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
 
 @Composable
 fun Profile(
@@ -60,6 +68,8 @@ fun Profile(
     val quote by viewModel.quote.collectAsState()
     val scope = rememberCoroutineScope()
     val isStarred = rememberSaveable { mutableStateOf(false) }
+    val taskManager = remember { TaskManager() }
+    val context = LocalContext.current
 
     Scaffold(
         topBar = { TopBar(navController = navController, showProfileIcon = false, showBackButton = true) },
@@ -249,6 +259,61 @@ fun Profile(
                 )
             ) {
                 Text("Log Out")
+            }
+
+            Spacer(Modifier.height(20.dp))
+
+            TextButton( onClick = {
+                scope.launch {
+                    try {
+                        // Delete all the tasks
+                        taskManager.deleteAllTasks()
+                        // Delete all the saved quotes
+                        viewModel.deleteAllQuotes()
+
+                        Toast.makeText(context, "All your tasks has been deleted. Let's start fresh", Toast.LENGTH_LONG).show()
+                        kotlinx.coroutines.delay(1500)
+
+                        navController.navigate("home") { popUpTo("profile") { inclusive = true } }
+                    } catch ( e:Exception ){
+                        Toast.makeText(context, e.message ?: "Reset Failed", Toast.LENGTH_LONG).show()
+                    }
+                }
+            }) {
+                Text(text = "Factory Reset",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = colorResource(R.color.light_red),
+                    modifier = Modifier.drawBehind() {
+                        val strokeWidthPx = 1.dp.toPx()
+                        val verticalOffset = size.height - 2.sp.toPx()
+                        drawLine(
+                            color = Color.Red,
+                            strokeWidth = strokeWidthPx,
+                            start = Offset(0f, verticalOffset),
+                            end = Offset(size.width, verticalOffset)
+                        )
+                    }
+                )
+            }
+            Spacer(Modifier.height(2.dp))
+
+            TextButton( onClick = {
+                // Delete Account
+            }) {
+                Text(text = "Delete Account",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = colorResource(R.color.light_red),
+                    modifier = Modifier.drawBehind() {
+                        val strokeWidthPx = 1.dp.toPx()
+                        val verticalOffset = size.height - 2.sp.toPx()
+                        drawLine(
+                            color = Color.Red,
+                            strokeWidth = strokeWidthPx,
+                            start = Offset(0f, verticalOffset),
+                            end = Offset(size.width, verticalOffset)
+                        )
+                    }
+                )
             }
         }
     }

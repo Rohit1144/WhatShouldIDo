@@ -57,4 +57,10 @@ class QuoteViewModel(application: Application) : AndroidViewModel(application) {
             repository.deleteQuote(quote)
         }
     }
+
+    fun deleteAllQuotes() {
+        viewModelScope.launch {
+            repository.deleteAllQuotes()
+        }
+    }
 }
