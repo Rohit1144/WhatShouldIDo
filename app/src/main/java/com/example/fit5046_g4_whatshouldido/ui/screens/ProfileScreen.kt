@@ -340,7 +340,6 @@ fun Profile(
     if(openAccountDeleteSheet) {
         DeleteConfirmationBottomSheet(
             onConfirmDelete = { enteredPassword ->
-                Log.d("DEBUG", "Entered password: $enteredPassword")
                 scope.launch {
                     if (enteredPassword.isNullOrBlank()) {
                         Toast.makeText(context, "Please enter your password to confirm", Toast.LENGTH_SHORT).show()

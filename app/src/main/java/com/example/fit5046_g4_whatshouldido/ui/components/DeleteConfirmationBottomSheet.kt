@@ -30,6 +30,8 @@ import com.example.fit5046_g4_whatshouldido.R
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import com.google.firebase.Firebase
+import com.google.firebase.auth.auth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,7 +47,11 @@ fun DeleteConfirmationBottomSheet(
         DeleteType.ACCOUNT -> "Delete Account?" to "Your account and all related data will be permanently removed. This cannot be undone."
     }
 
+
+
     var password by remember { mutableStateOf("") }
+    val user = Firebase.auth.currentUser
+    val isGoogleSignIn = user?.providerData?.any { it.providerId == "google.com" } == true
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -65,7 +71,7 @@ fun DeleteConfirmationBottomSheet(
             Spacer(modifier = Modifier.height(12.dp))
             Text(message)
 
-            if(deleteType == DeleteType.ACCOUNT && showPasswordField) {
+            if(deleteType == DeleteType.ACCOUNT && showPasswordField && !isGoogleSignIn) {
                 Spacer(modifier = Modifier.height(16.dp))
                 OutlinedTextField(
                     value = password,
