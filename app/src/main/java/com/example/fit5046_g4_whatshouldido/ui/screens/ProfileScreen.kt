@@ -338,10 +338,13 @@ fun Profile(
     }
 
     if(openAccountDeleteSheet) {
+
         DeleteConfirmationBottomSheet(
             onConfirmDelete = { enteredPassword ->
                 scope.launch {
-                    if (enteredPassword.isNullOrBlank()) {
+                    val isGoogleSignIn = user?.providerData?.any { it.providerId == "google.com" } == true
+
+                    if ( !isGoogleSignIn && enteredPassword.isNullOrBlank()) {
                         Toast.makeText(context, "Please enter your password to confirm", Toast.LENGTH_SHORT).show()
                         return@launch
                     }
