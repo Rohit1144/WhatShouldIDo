@@ -59,6 +59,7 @@ android {
 }
 
 dependencies {
+    implementation("com.google.mediapipe:tasks-genai:0.10.22")
     implementation("androidx.compose.ui:ui:1.7.0")
     implementation("androidx.compose.material3:material3:1.2.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")

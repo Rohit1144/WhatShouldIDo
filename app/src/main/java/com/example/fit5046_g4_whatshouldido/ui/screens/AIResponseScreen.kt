@@ -38,6 +38,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
+import com.example.fit5046_g4_whatshouldido.LocalLLMModel.GemmaLocalInference
 import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
 import dev.shreyaspatil.ai.client.generativeai.BuildConfig
 import dev.shreyaspatil.ai.client.generativeai.GenerativeModel
@@ -52,6 +54,7 @@ fun AIResponse(navController: NavController) {
 
     var responseText by remember { mutableStateOf("Waiting for response...") }
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
     val taskManager = remember { TaskManager() }
     var taskList by remember { mutableStateOf(emptyList<Pair<String, String>>()) }
     var recommendedTaskId by remember { mutableStateOf<String?>(null) }
@@ -61,6 +64,8 @@ fun AIResponse(navController: NavController) {
     var isNoSelected by remember { mutableStateOf(false)}
 
     LaunchedEffect(Unit) {
+        GemmaLocalInference.initialize(context)
+
         coroutineScope.launch(Dispatchers.IO) {
             try {
                 taskList = taskManager.getPendingTaskList()
@@ -228,15 +233,21 @@ suspend fun generateTask(tasks: List<Pair<String, String>>): String {
         val formattedTasks = tasks.joinToString(", ") { it.second }
 
 
-        val inputContent = content {
-            text("From the following list: $formattedTasks, select only one task to start with. " +
+//        val inputContent = content {
+//            text("From the following list: $formattedTasks, select only one task to start with. " +
+//                    "Do not create or invent a new task. Only choose from the given list. " +
+//                    "Provide a brief explanation in two sentences and end by asking if the user is satisfied.")
+//        }
+
+        val prompt = "From the following list: $formattedTasks, select only one task to start with. " +
                     "Do not create or invent a new task. Only choose from the given list. " +
-                    "Provide a brief explanation in two sentences and end by asking if the user is satisfied.")
-        }
+                    "Provide a brief explanation in two sentences and end by asking if the user is satisfied."
 
 
-        val response = generativeModel.generateContent(inputContent)
-        val cleanedResponse = response.text?.replace(Regex("\\(.*?\\)"), "")?.trim()
+//        val response = generativeModel.generateContent(inputContent)
+        val response = GemmaLocalInference.generate(prompt)
+//        val cleanedResponse = response.text?.replace(Regex("\\(.*?\\)"), "")?.trim()
+        val cleanedResponse = response.replace(Regex("\\(.*?\\)"), "").trim()
 
         val taskId = extractTaskId(cleanedResponse ?: "No response from AI.", tasks) ?: "Unknown"
 
@@ -265,15 +276,20 @@ suspend fun generateDifferentResponse(tasks: List<Pair<String, String>>): String
         )
         val formattedTasks = tasks.joinToString(", ") { it.second }
 
-        val inputContent = content {
-            text(
-                "From the following list: $formattedTasks, select only one randomly different task to start with. " +
+//        val inputContent = content {
+//            text(
+//                "From the following list: $formattedTasks, select only one randomly different task to start with. " +
+//                        "Do not create or invent a new task. Only choose from the given list. " +
+//                        "Provide a brief explanation in two sentences and end by asking if the user is satisfied.")
+//        }
+        val prompt = "From the following list: $formattedTasks, select only one randomly different task to start with. " +
                         "Do not create or invent a new task. Only choose from the given list. " +
-                        "Provide a brief explanation in two sentences and end by asking if the user is satisfied.")
-        }
+                        "Provide a brief explanation in two sentences and end by asking if the user is satisfied."
 
-        val response = generativeModel.generateContent(inputContent)
-        val cleanedResponse = response.text?.replace(Regex("\\(.*?\\)"), "")?.trim()
+//        val response = generativeModel.generateContent(inputContent)
+        val response = GemmaLocalInference.generate(prompt)
+//        val cleanedResponse = response.text?.replace(Regex("\\(.*?\\)"), "")?.trim()
+        val cleanedResponse = response.replace(Regex("\\(.*?\\)"), "").trim()
 
         val taskId = extractTaskId(cleanedResponse ?: "No response from AI.", tasks) ?: "Unknown"
 
