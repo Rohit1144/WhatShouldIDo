@@ -1,4 +1,5 @@
 package com.example.fit5046_g4_whatshouldido.ui.screens
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -54,6 +55,12 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import com.example.fit5046_g4_whatshouldido.Managers.AuthResponse
+import com.example.fit5046_g4_whatshouldido.Managers.AuthenticationManager
+import com.example.fit5046_g4_whatshouldido.ui.components.DeleteConfirmationBottomSheet
+import com.example.fit5046_g4_whatshouldido.ui.components.DeleteType
 
 @Composable
 fun Profile(
@@ -68,8 +75,11 @@ fun Profile(
     val quote by viewModel.quote.collectAsState()
     val scope = rememberCoroutineScope()
     val isStarred = rememberSaveable { mutableStateOf(false) }
-    val taskManager = remember { TaskManager() }
     val context = LocalContext.current
+    val taskManager = remember { TaskManager() }
+    val authenticationManager = remember { AuthenticationManager(context) }
+    var openResetSheet by remember { mutableStateOf(false) }
+    var openAccountDeleteSheet by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = { TopBar(navController = navController, showProfileIcon = false, showBackButton = true) },
@@ -264,21 +274,7 @@ fun Profile(
             Spacer(Modifier.height(20.dp))
 
             TextButton( onClick = {
-                scope.launch {
-                    try {
-                        // Delete all the tasks
-                        taskManager.deleteAllTasks()
-                        // Delete all the saved quotes
-                        viewModel.deleteAllQuotes()
-
-                        Toast.makeText(context, "All your tasks has been deleted. Let's start fresh", Toast.LENGTH_LONG).show()
-                        kotlinx.coroutines.delay(1500)
-
-                        navController.navigate("home") { popUpTo("profile") { inclusive = true } }
-                    } catch ( e:Exception ){
-                        Toast.makeText(context, e.message ?: "Reset Failed", Toast.LENGTH_LONG).show()
-                    }
-                }
+                openResetSheet = true
             }) {
                 Text(text = "Factory Reset",
                     style = MaterialTheme.typography.bodySmall,
@@ -298,7 +294,7 @@ fun Profile(
             Spacer(Modifier.height(2.dp))
 
             TextButton( onClick = {
-                // Delete Account
+                openAccountDeleteSheet = true
             }) {
                 Text(text = "Delete Account",
                     style = MaterialTheme.typography.bodySmall,
@@ -317,4 +313,69 @@ fun Profile(
             }
         }
     }
+    if(openResetSheet) {
+        DeleteConfirmationBottomSheet(
+            onConfirmDelete = {
+                scope.launch {
+                    try {
+                        // Delete all the tasks
+                        taskManager.deleteAllTasks()
+                        // Delete all the saved quotes
+                        viewModel.deleteAllQuotes()
+
+                        Toast.makeText(context, "All your tasks has been deleted. Let's start fresh", Toast.LENGTH_LONG).show()
+                        kotlinx.coroutines.delay(1500)
+
+                        navController.navigate("home") { popUpTo("profile") { inclusive = true } }
+                    } catch ( e:Exception ){
+                        Toast.makeText(context, e.message ?: "Reset Failed", Toast.LENGTH_LONG).show()
+                    }
+                }
+            },
+            onDismiss = { openResetSheet = false },
+            DeleteType.FACTORY_RESET
+        )
+    }
+
+    if(openAccountDeleteSheet) {
+        DeleteConfirmationBottomSheet(
+            onConfirmDelete = { enteredPassword ->
+                Log.d("DEBUG", "Entered password: $enteredPassword")
+                scope.launch {
+                    if (enteredPassword.isNullOrBlank()) {
+                        Toast.makeText(context, "Please enter your password to confirm", Toast.LENGTH_SHORT).show()
+                        return@launch
+                    }
+
+                    try {
+                        val response = authenticationManager.deleteAccount(
+                            deleteTasks = { taskManager.deleteAllTasks() },
+                            deleteQuotes = { viewModel.deleteAllQuotes() },
+                            email = user?.email,
+                            password = enteredPassword
+                        )
+
+                        when (response) {
+                            is AuthResponse.Success -> {
+                                navController.navigate("sign_in") {
+                                    popUpTo(0) { inclusive = true }
+                                }
+                                Toast.makeText(context, "Account deleted successfully", Toast.LENGTH_LONG).show()
+                            }
+                            is AuthResponse.Error -> {
+                                Toast.makeText(context, "Error: ${response.message}", Toast.LENGTH_LONG).show()
+                            }
+                        }
+
+                    } catch( e: Exception ) {
+                        Toast.makeText(context, e.message ?: "Account Delete Failed", Toast.LENGTH_LONG).show()
+                    }
+                }
+            },
+            onDismiss = { openAccountDeleteSheet = false },
+            DeleteType.ACCOUNT,
+            showPasswordField = true
+        )
+    }
 }
+

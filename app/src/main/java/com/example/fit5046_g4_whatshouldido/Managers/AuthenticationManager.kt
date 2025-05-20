@@ -13,11 +13,15 @@ import kotlinx.coroutines.flow.callbackFlow
 import java.security.MessageDigest
 import java.util.UUID
 import com.example.fit5046_g4_whatshouldido.R
+import com.google.android.gms.auth.api.Auth
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.firebase.auth.AuthCredential
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
 
 class AuthenticationManager (val context: Context) {
@@ -180,6 +184,91 @@ class AuthenticationManager (val context: Context) {
         val doc = db.collection("Users").document(user.uid).get().await()
         return doc.getBoolean("isOnboarded") ?: false
     }
+
+    suspend fun deleteAccount(
+        deleteTasks: suspend() -> Unit,
+        deleteQuotes: suspend() -> Unit,
+        email: String? = null,
+        password: String? = null
+    ): AuthResponse {
+        val user = Firebase.auth.currentUser ?: return AuthResponse.Error("No user found")
+        val db = Firebase.firestore
+
+        return try {
+
+            // reauthenticate( required before safe delete - due to long login)
+            val isGoogleUser = user.providerData.any { it.providerId == "google.com" }
+            val isEmailUser = user.providerData.any { it.providerId == "password" }
+
+            when {
+                isGoogleUser -> {
+                    val googleCredential = getGoogleCredentialForReauthentication()
+                        ?: return AuthResponse.Error("Failed to get Google credential")
+
+                    user.reauthenticate(googleCredential).await()
+                }
+
+                isEmailUser && !email.isNullOrBlank() && !password.isNullOrBlank() -> {
+                    val emailCredential = EmailAuthProvider.getCredential(email,password)
+                    try{
+                        user.reauthenticate(emailCredential).await()
+                    } catch( e: Exception) {
+                        return AuthResponse.Error("Incorrect Password")
+                    }
+                }
+
+                else -> return AuthResponse.Error("Unable to reauthenticate. Credentials required")
+            }
+
+            // Delete Firestore data (user's tasks)
+            deleteTasks()
+
+            // Delete Firestore user document
+            db.collection("Users").document(user.uid).delete().await()
+
+            // Delete Local RoomDB saved quotes
+            deleteQuotes()
+
+            delay(1000)
+
+            // Delete Firebase Auth User
+            user.delete().await()
+
+            // Reset the onboard state
+            AuthResponse.Success(isOnboarded = false)
+        } catch(e : Exception) {
+            AuthResponse.Error(e.message ?: "Failed to delete account")
+        }
+    }
+
+    private suspend fun getGoogleCredentialForReauthentication(): AuthCredential? {
+        return try {
+            val googleOption = GetGoogleIdOption.Builder()
+                .setFilterByAuthorizedAccounts(true)
+                .setServerClientId(context.getString(R.string.web_client_id))
+                .build()
+
+            val request = GetCredentialRequest.Builder()
+                .addCredentialOption(googleOption)
+                .build()
+
+            val credentialManager = CredentialManager.create(context)
+            val result = credentialManager.getCredential(context, request)
+
+            val credential = result.credential
+            if (credential is CustomCredential &&
+                credential.type == GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL
+            ) {
+                val googleIdTokenCredential = GoogleIdTokenCredential.createFrom(credential.data)
+                GoogleAuthProvider.getCredential(googleIdTokenCredential.idToken, null)
+            } else {
+                null
+            }
+        } catch (e: Exception) {
+            null
+        }
+    }
+
 }
 
 sealed interface AuthResponse {

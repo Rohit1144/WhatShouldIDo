@@ -26,6 +26,7 @@ import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
 import com.example.fit5046_g4_whatshouldido.ui.components.DeleteConfirmationBottomSheet
+import com.example.fit5046_g4_whatshouldido.ui.components.DeleteType
 import kotlinx.coroutines.launch
 
 @Composable
@@ -126,7 +127,8 @@ fun TopBar(
 
 
             },
-            onDismiss = { openDeleteSheet = false }
+            onDismiss = { openDeleteSheet = false },
+            DeleteType.TASK
         )
     }
 }
