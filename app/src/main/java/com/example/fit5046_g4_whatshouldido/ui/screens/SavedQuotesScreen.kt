@@ -4,8 +4,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -43,25 +45,33 @@ fun SavedQuotesScreen(
     navController: NavController,
     viewModel: QuoteViewModel = viewModel()
 ) {
-    val quotes by viewModel.quotes.collectAsState(emptyList())
+        val quotes by viewModel.quotes.collectAsState(emptyList())
 
-        Column(modifier = Modifier.padding(32.dp)
-            .fillMaxWidth() ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(40.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+
             Text(
                 text = "Saved Quotes",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = Color.DarkGray,
-                fontFamily = FontFamily.Monospace,
-                modifier = Modifier.padding(top = 16.dp)
+                fontFamily = FontFamily.Default,
+                modifier = Modifier.padding(top = 40.dp)
             )
             Spacer(modifier = Modifier.height(32.dp))
+
             LazyColumn  (modifier = Modifier
                 .weight(1f) // ← 这时就能识别了
-                .fillMaxWidth()){
+                .fillMaxWidth()
+            ) {
                 items(quotes) { quote: Quote ->
                     ElevatedCard(
-                        modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(16.dp)
                             .fillMaxWidth(),
                         elevation = CardDefaults.elevatedCardElevation(defaultElevation = 4.dp)
                     ) {
@@ -83,7 +93,9 @@ fun SavedQuotesScreen(
                                     color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
-                            IconButton(onClick = { viewModel.deleteQuote(QuoteModel(quote.text, quote.author))}) {
+                            IconButton(
+                                onClick = { viewModel.deleteQuote(QuoteModel(quote.text, quote.author))}
+                            ) {
                                 Icon(
                                     imageVector = Icons.Default.Delete,
                                     contentDescription = "Delete Quote",
@@ -95,8 +107,8 @@ fun SavedQuotesScreen(
                     }
                 }
             }
-            Spacer(Modifier.height(8.dp))
-            Divider()
+            Spacer(Modifier.height(32.dp))
+
             Button (
                 onClick ={
                     navController.navigate("profile")

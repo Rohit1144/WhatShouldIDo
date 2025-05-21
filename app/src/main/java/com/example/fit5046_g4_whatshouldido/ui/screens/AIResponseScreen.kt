@@ -67,9 +67,8 @@ fun AIResponse(navController: NavController) {
             scope.launch(Dispatchers.IO) {
                 try {
                     taskList = taskManager.getPendingTaskList()
-                    val words = taskList.map { it.second }
 
-                    responseText = if(words.isNotEmpty()) {
+                    responseText = if(taskList.isNotEmpty()) {
                         val result = generateTask(taskList)
                         recommendedTaskId = extractTaskId(result, taskList)
                         result
@@ -166,13 +165,8 @@ fun AIResponse(navController: NavController) {
                             try{
                                 val result = generateDifferentResponse(taskList)
                                 responseText = result
+                                recommendedTaskId = extractTaskId(result, taskList)
 
-                                val newTaskId = extractTaskId(result, taskList)
-                                if(newTaskId != null && newTaskId != "Unknown") {
-                                    recommendedTaskId = newTaskId
-                                } else {
-                                    recommendedTaskId = "Unknown"
-                                }
                             } catch(e: Exception) {
                                 responseText = "Error generating new task: ${e.localizedMessage}"
                             }
@@ -190,49 +184,56 @@ fun AIResponse(navController: NavController) {
 
 fun generateTask(tasks: List<Pair<String, String>>): String {
     return try {
-        val formattedTasks = tasks.joinToString(", ") { it.second }
+        val formattedTasks = tasks.joinToString("\n") { "- ${it.second}" }
 
         val prompt = """
-            From the following list: $formattedTasks, select only one task to start with.
-            Do not create or invent a new task. Only choose from the given list. 
-            Provide a brief explanation in two sentences and end the prompt by asking if the user is satisfied.
+        You are given a list of pending tasks:
+        $formattedTasks
+        
+        Choose ONE task from the list above that the user should start with. 
+        Give a short reason (1–2 sentences) why it's best to do this first. 
+        Then ask: "Are you satisfied with this suggestion?"
         """.trimIndent()
 
         val response = GemmaLocalInference.generate(prompt)
-        val cleanedResponse = response.replace(Regex("\\(.*?\\)"), "").trim()
 
-        "\n$cleanedResponse"
+        return "\n${response.replace(Regex("\\(.*?\\)"), "").trim()}"
     } catch( e: Exception ) {
         "Error: ${e.localizedMessage}"
     }
 }
 
 fun extractTaskId(responseText: String, tasks: List<Pair<String, String>>): String? {
-    for ((id, task) in tasks) {
-        val simplifiedTask = task.lowercase().split(" ").firstOrNull()
+    val cleanResponse = responseText.lowercase()
+
+    for ((id, title) in tasks) {
         if (
-            responseText.contains(task, ignoreCase = true) ||
-            (simplifiedTask != null && responseText.contains(simplifiedTask, ignoreCase = true))
+            cleanResponse.contains(title.lowercase()) ||
+            cleanResponse.contains(title.lowercase().split(" ").firstOrNull() ?: "")
         ) {
             return id
         }
     }
-    return "Unknown"
+
+    return null
 }
 
 
 fun generateDifferentResponse(tasks: List<Pair<String, String>>): String {
     return try {
-        val formattedTasks = tasks.joinToString(", ") { it.second }
+        val formattedTasks = tasks.joinToString("\n") { "- ${it.second}" }
 
         val prompt = """
-            From the following list: $formattedTasks, select only one randomly different task to start with.
-            Do not create or invent a new task. Only choose from the given list. Provide a brief explanation in two sentences and end the prompt by asking if the user is satisfied.
+        You are given a list of pending tasks:
+        $formattedTasks
+
+        Pick a different task than the previous suggestion. 
+        Explain briefly (1–2 sentences) why this task should be done first. 
+        Then ask: "Are you satisfied with this suggestion?"
         """.trimIndent()
 
         val response = GemmaLocalInference.generate(prompt)
-        val cleanedResponse = response.replace(Regex("\\(.*?\\)"), "").trim()
-        "\n$cleanedResponse"
+        return "\n${response.replace(Regex("\\(.*?\\)"), "").trim()}"
 
     } catch( e : Exception) {
         "Error: ${e.localizedMessage}"
