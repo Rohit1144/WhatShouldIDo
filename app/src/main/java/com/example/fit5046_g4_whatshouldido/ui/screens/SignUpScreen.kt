@@ -36,6 +36,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -110,6 +112,9 @@ fun SignUp(navController: NavController) {
     val authenticationManager = remember { AuthenticationManager(context) }
     val formValidation = remember { FormValidation() }
 
+    val emailRequester   = remember { FocusRequester() }
+    val passRequester    = remember { FocusRequester() }
+    val confirmRequester = remember { FocusRequester() }
 
     Column (
         modifier = Modifier.fillMaxSize().padding(40.dp),
@@ -151,7 +156,9 @@ fun SignUp(navController: NavController) {
             label = { Text("Email *") },
             placeholder = { Text("eg. yasper.cordan@sample.com") },
             singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(emailRequester),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             colors = TextFieldDefaults.colors(
                 focusedContainerColor = Color.Transparent,
@@ -169,7 +176,9 @@ fun SignUp(navController: NavController) {
             label = { Text("Password *") },
             placeholder = { Text("should contain at least 6 chars") },
             singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(passRequester),
             visualTransformation =
                 if (passwordVisible) VisualTransformation.None
                 else PasswordVisualTransformation(),
@@ -201,7 +210,9 @@ fun SignUp(navController: NavController) {
             label = { Text("Confirm Password *") },
             placeholder = { Text("enter your password again") },
             singleLine = true,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .focusRequester(confirmRequester),
             visualTransformation =
                 if (confirmPasswordVisible) VisualTransformation.None
                 else PasswordVisualTransformation(),
@@ -281,6 +292,13 @@ fun SignUp(navController: NavController) {
                     }
                 } else {
                     Toast.makeText(context, message, Toast.LENGTH_LONG).show()
+                    scope.launch {
+                        when (message) {
+                            "Please enter a valid email" -> emailRequester.requestFocus()
+                            "Password should be of length 6" -> passRequester.requestFocus()
+                            "Password fields do not match" -> confirmRequester.requestFocus()
+                        }
+                    }
                 }
             },
             modifier = Modifier
