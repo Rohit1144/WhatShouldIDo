@@ -30,6 +30,7 @@ retrofit = "2.9.0"
 roomCompiler = "2.6.1"
 roomRuntime = "2.7.0"
 ksp = "2.0.21-1.0.26"
+tasksGenai = "0.10.22"
 tensorflowLite = "2.3.0"
 identityJvm = "202411.1"
 uiVersion = "1.5.1"
@@ -78,6 +79,7 @@ material3 = { module = "androidx.compose.material3:material3", version.ref = "ma
 mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "mpandroidchart" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
+tasks-genai = { module = "com.google.mediapipe:tasks-genai", version.ref = "tasksGenai" }
 tensorflow-lite = { module = "org.tensorflow:tensorflow-lite", version.ref = "tensorflowLite" }
 identity-jvm = { group = "com.android.identity", name = "identity-jvm", version.ref = "identityJvm" }
 
