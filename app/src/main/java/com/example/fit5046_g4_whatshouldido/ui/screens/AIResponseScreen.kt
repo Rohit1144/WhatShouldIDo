@@ -192,7 +192,7 @@ fun generateTask(tasks: List<Pair<String, String>>): String {
         
         Choose ONE task from the list above that the user should start with. 
         Give a short reason (1–2 sentences) why it's best to do this first. 
-        Then ask: "Are you satisfied with this suggestion?"
+        Then ask: "Are you satisfied with this suggestion? Don't repeat the questions, just ask. And don't answer the user questions yourself"
         """.trimIndent()
 
         val response = GemmaLocalInference.generate(prompt)
@@ -227,9 +227,9 @@ fun generateDifferentResponse(tasks: List<Pair<String, String>>): String {
         You are given a list of pending tasks:
         $formattedTasks
 
-        Pick a different task than the previous suggestion. 
+        Choose another task from $formattedTasks. DO NOT suggest new tasks outside of the pending tasks.
         Explain briefly (1–2 sentences) why this task should be done first. 
-        Then ask: "Are you satisfied with this suggestion?"
+        Then ask: "Are you satisfied with this suggestion?" Don't repeat the questions, just ask. And don't answer the user questions yourself
         """.trimIndent()
 
         val response = GemmaLocalInference.generate(prompt)
