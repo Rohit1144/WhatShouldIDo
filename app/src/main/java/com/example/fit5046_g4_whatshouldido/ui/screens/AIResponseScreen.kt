@@ -61,6 +61,7 @@ fun AIResponse(navController: NavController) {
     var recommendedTaskId by remember { mutableStateOf<String?>(null) }
     var isYesSelected by remember { mutableStateOf(false) }
     var isNoSelected by remember { mutableStateOf(false) }
+    var lastSuggestedTaskTitle by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(isInitialized) {
         if(isInitialized) {
@@ -167,9 +168,11 @@ fun AIResponse(navController: NavController) {
                         Toast.makeText(navController.context, "Oh, generating a new answer...", Toast.LENGTH_SHORT).show()
                         scope.launch(Dispatchers.IO) {
                             try{
-                                val result = generateDifferentResponse(taskList)
+                                val result = generateDifferentResponse(taskList, lastSuggestedTaskTitle)
                                 responseText = result
-                                val newTaskId = extractTaskId(result, taskList)
+                                lastSuggestedTaskTitle = extractMatchedTaskTitle(result, taskList)
+
+                                val newTaskId = extractTaskId(lastSuggestedTaskTitle.toString(), taskList)
                                 if (newTaskId != null && newTaskId != "Unknown") {
                                     recommendedTaskId = newTaskId
                                     println("Updated Task ID: $recommendedTaskId")
@@ -193,6 +196,11 @@ fun AIResponse(navController: NavController) {
     }
 }
 
+fun extractMatchedTaskTitle(response: String, tasks: List<Pair<String, String>>): String? {
+    return tasks.firstOrNull { (_, title) ->
+        response.contains(title, ignoreCase = true)
+    }?.second
+}
 fun generateTask(tasks: List<Pair<String, String>>): String {
 
         //val formattedTasks = tasks.joinToString("\n") { "- ${it.second}" }
@@ -218,20 +226,7 @@ fun generateTask(tasks: List<Pair<String, String>>): String {
 
 }
 
-fun extractTaskIdd(responseText: String, tasks: List<Pair<String, String>>): String? {
-    val cleanResponse = responseText.lowercase()
 
-    for ((id, title) in tasks) {
-        if (
-            cleanResponse.contains(title.lowercase()) ||
-            cleanResponse.contains(title.lowercase().split(" ").firstOrNull() ?: "")
-        ) {
-            return id
-        }
-    }
-
-    return null
-}
 fun extractTaskId(responseText: String, tasks: List<Pair<String, String>>): String? {
     for ((id, task) in tasks) {
         if (responseText.contains(task, ignoreCase = true) || responseText.contains(task.split(" ").first(), ignoreCase = true)) {
@@ -243,7 +238,7 @@ fun extractTaskId(responseText: String, tasks: List<Pair<String, String>>): Stri
 
 
 
-fun generateDifferentResponse(tasks: List<Pair<String, String>>): String {
+fun generateDifferentResponse(tasks: List<Pair<String, String>>,lastTask: String?): String {
 
         //val formattedTasks = tasks.joinToString("\n") { "- ${it.second}" }
         val formattedTasks = tasks.joinToString(", ") { it.second }
@@ -255,18 +250,17 @@ fun generateDifferentResponse(tasks: List<Pair<String, String>>): String {
             "From the following list: $formattedTasks, select only one different  task and print only the task you chose. " +
                     "Do not create or invent a new task."
 
-    val prompt =
-        """
-    You are given the following list of tasks: $formattedTasks
+    val prompt = """
+        From the following list of tasks: $formattedTasks
 
-    Rules:
-    - You must choose ONE and ONLY ONE different task from the list.
-    - You must print ONLY the selected task.
-    - Do not include any numbers, explanations, reasoning, or markdown.
-    - Do not repeat the full list.
-    - Your response must be the task name EXACTLY as shown in the list.
+        Pick ONE task that is DIFFERENT from "${lastTask ?: ""}".
+        - First, print the task name.
+        - Then explain in 1–2 sentences why it is a good choice.
+        - Do NOT invent new tasks.
+        - Only choose tasks from the list.
+        - Keep it concise and clear.
 
-    Selected Task:
+        Response:
     """.trimIndent()
     val response = GemmaLocalInference.generate(prompt)
 
@@ -280,9 +274,9 @@ fun generateDifferentResponse(tasks: List<Pair<String, String>>): String {
             //return "\n$taskId\n${response.replace(Regex("\\(.*?\\)"), "").trim()}"
         println(cleanedResponse)
 
-    return selectedTask
+    return "$cleanedResponse"
+
 
 }
-
 
 
