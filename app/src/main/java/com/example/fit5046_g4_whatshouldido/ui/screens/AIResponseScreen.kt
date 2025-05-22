@@ -67,8 +67,10 @@ fun AIResponse(navController: NavController) {
             scope.launch(Dispatchers.IO) {
                 try {
                     taskList = taskManager.getPendingTaskList()
+                    val words = taskList.map { it.second }
+                    println(taskList)
 
-                    responseText = if(taskList.isNotEmpty()) {
+                    responseText = if(words.isNotEmpty()) {
                         val result = generateTask(taskList)
                         recommendedTaskId = extractTaskId(result, taskList)
                         result
@@ -107,7 +109,9 @@ fun AIResponse(navController: NavController) {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            LazyColumn(modifier = Modifier.weight(1f).fillMaxWidth()) {
+            LazyColumn(modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()) {
                 item {
                     Box(
                         modifier = Modifier
@@ -165,7 +169,14 @@ fun AIResponse(navController: NavController) {
                             try{
                                 val result = generateDifferentResponse(taskList)
                                 responseText = result
-                                recommendedTaskId = extractTaskId(result, taskList)
+                                val newTaskId = extractTaskId(result, taskList)
+                                if (newTaskId != null && newTaskId != "Unknown") {
+                                    recommendedTaskId = newTaskId
+                                    println("Updated Task ID: $recommendedTaskId")
+                                } else {
+                                    recommendedTaskId = "Unknown"
+                                    println("Failed to update Task ID")
+                                }
 
                             } catch(e: Exception) {
                                 responseText = "Error generating new task: ${e.localizedMessage}"
@@ -183,27 +194,31 @@ fun AIResponse(navController: NavController) {
 }
 
 fun generateTask(tasks: List<Pair<String, String>>): String {
-    return try {
-        val formattedTasks = tasks.joinToString("\n") { "- ${it.second}" }
 
-        val prompt = """
-        You are given a list of pending tasks:
-        $formattedTasks
-        
-        Choose ONE task from the list above that the user should start with. 
-        Give a short reason (1–2 sentences) why it's best to do this first. 
-        Then ask: "Are you satisfied with this suggestion? Don't repeat the questions, just ask. And don't answer the user questions yourself"
-        """.trimIndent()
+        //val formattedTasks = tasks.joinToString("\n") { "- ${it.second}" }
+        val formattedTasks = tasks.joinToString(", ") { it.second }
+        println(formattedTasks)
+        println(tasks)
+        val prompt =
+        "From the following list: $formattedTasks, select only one  task and print it. " +
+                        "Do not create or invent a new task." +
+                        "Provide a brief explanation in two sentences and end by asking if the user is satisfied."
+
 
         val response = GemmaLocalInference.generate(prompt)
+        val cleanedResponse = response.replace(Regex("\\(.*?\\)"), "").trim()
 
-        return "\n${response.replace(Regex("\\(.*?\\)"), "").trim()}"
-    } catch( e: Exception ) {
-        "Error: ${e.localizedMessage}"
-    }
+    val taskId = extractTaskId(response ?: "No response from AI.", tasks) ?: "Unknown"
+
+        println("Generated Task ID: $taskId")
+
+        "Recommended Task ID: $taskId\n$cleanedResponse"
+        println(cleanedResponse)
+        return "$cleanedResponse"
+
 }
 
-fun extractTaskId(responseText: String, tasks: List<Pair<String, String>>): String? {
+fun extractTaskIdd(responseText: String, tasks: List<Pair<String, String>>): String? {
     val cleanResponse = responseText.lowercase()
 
     for ((id, title) in tasks) {
@@ -217,25 +232,57 @@ fun extractTaskId(responseText: String, tasks: List<Pair<String, String>>): Stri
 
     return null
 }
+fun extractTaskId(responseText: String, tasks: List<Pair<String, String>>): String? {
+    for ((id, task) in tasks) {
+        if (responseText.contains(task, ignoreCase = true) || responseText.contains(task.split(" ").first(), ignoreCase = true)) {
+            return id
+        }
+    }
+    return "Unknown"
+}
+
 
 
 fun generateDifferentResponse(tasks: List<Pair<String, String>>): String {
-    return try {
-        val formattedTasks = tasks.joinToString("\n") { "- ${it.second}" }
 
-        val prompt = """
-        You are given a list of pending tasks:
-        $formattedTasks
+        //val formattedTasks = tasks.joinToString("\n") { "- ${it.second}" }
+        val formattedTasks = tasks.joinToString(", ") { it.second }
+        println(formattedTasks)
+        println(tasks)
 
-        Choose another task from $formattedTasks. DO NOT suggest new tasks outside of the pending tasks.
-        Explain briefly (1–2 sentences) why this task should be done first. 
-        Then ask: "Are you satisfied with this suggestion?" Don't repeat the questions, just ask. And don't answer the user questions yourself
-        """.trimIndent()
 
-        val response = GemmaLocalInference.generate(prompt)
-        return "\n${response.replace(Regex("\\(.*?\\)"), "").trim()}"
+        val promptt =
+            "From the following list: $formattedTasks, select only one different  task and print only the task you chose. " +
+                    "Do not create or invent a new task."
 
-    } catch( e : Exception) {
-        "Error: ${e.localizedMessage}"
-    }
+    val prompt =
+        """
+    You are given the following list of tasks: $formattedTasks
+
+    Rules:
+    - You must choose ONE and ONLY ONE different task from the list.
+    - You must print ONLY the selected task.
+    - Do not include any numbers, explanations, reasoning, or markdown.
+    - Do not repeat the full list.
+    - Your response must be the task name EXACTLY as shown in the list.
+
+    Selected Task:
+    """.trimIndent()
+    val response = GemmaLocalInference.generate(prompt)
+
+    val cleanedResponse = response?.replace(Regex("\\(.*?\\)"), "")?.trim() ?: ""
+    val selectedTask = tasks.firstOrNull { (_, title) ->
+        cleanedResponse.contains(title, ignoreCase = true)
+    }?.second ?: "UNKNOWN"
+
+    val taskId = tasks.firstOrNull { it.second.equals(selectedTask, ignoreCase = true) }?.first ?: "Unknown"
+        println("Generated Task ID: $taskId")
+            //return "\n$taskId\n${response.replace(Regex("\\(.*?\\)"), "").trim()}"
+        println(cleanedResponse)
+
+    return selectedTask
+
 }
+
+
+
