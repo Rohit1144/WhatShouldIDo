@@ -110,7 +110,6 @@ fun TopBar(
                 try{
                     if(taskId != null) {
                         coroutineScope.launch {
-//                            taskManager.deleteTask(taskId)
                             taskManager.archiveTask(taskId)
                             kotlinx.coroutines.delay(3000)
                         }

@@ -202,8 +202,6 @@ fun extractMatchedTaskTitle(response: String, tasks: List<Pair<String, String>>)
     }?.second
 }
 fun generateTask(tasks: List<Pair<String, String>>): String {
-
-        //val formattedTasks = tasks.joinToString("\n") { "- ${it.second}" }
         val formattedTasks = tasks.joinToString(", ") { it.second }
         println(formattedTasks)
         println(tasks)
@@ -239,8 +237,6 @@ fun extractTaskId(responseText: String, tasks: List<Pair<String, String>>): Stri
 
 
 fun generateDifferentResponse(tasks: List<Pair<String, String>>,lastTask: String?): String {
-
-        //val formattedTasks = tasks.joinToString("\n") { "- ${it.second}" }
         val formattedTasks = tasks.joinToString(", ") { it.second }
         println(formattedTasks)
         println(tasks)
@@ -271,7 +267,6 @@ fun generateDifferentResponse(tasks: List<Pair<String, String>>,lastTask: String
 
     val taskId = tasks.firstOrNull { it.second.equals(selectedTask, ignoreCase = true) }?.first ?: "Unknown"
         println("Generated Task ID: $taskId")
-            //return "\n$taskId\n${response.replace(Regex("\\(.*?\\)"), "").trim()}"
         println(cleanedResponse)
 
     return "$cleanedResponse"

@@ -77,13 +77,6 @@ fun SignIn(navController: NavController) {
             modifier = Modifier.size(170.dp)
         )
 
-//        Text(
-//            text = "What Should I Do?",
-//            fontWeight = FontWeight.Bold,
-//            style = MaterialTheme.typography.bodyMedium,
-//            color = colorResource(R.color.mid_gray)
-//        )
-
         Spacer(Modifier.height(5.dp))
 
         Column{

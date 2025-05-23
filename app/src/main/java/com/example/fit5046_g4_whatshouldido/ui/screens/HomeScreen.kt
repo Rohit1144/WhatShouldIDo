@@ -65,11 +65,6 @@ import okhttp3.internal.concurrent.Task
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-//data class TaskItem (
-//    val title: String,
-//    val status: TaskStatus
-//)
-
 @Composable
 fun Home(
     navController: NavController
@@ -92,8 +87,6 @@ fun Home(
         if (user != null) {
             val tasks = taskManager.getTaskList()
                 .filter {
-//                    val status = it["status"] as? String ?: return@filter false
-//                    status.uppercase() != "ARCHIVED"
                     val isArchived = it["isArchived"] as? Boolean ?: false
                     !isArchived
                 }
@@ -147,20 +140,8 @@ fun Home(
                         onStatusToggle = {
                             val updatedStatus = if (task["status"] != "DONE") "DONE" else "PENDING"
                             val taskId = task["id"] as String
-
-//                            val updatedAt = System.currentTimeMillis()
-
                             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
                             val updatedAt = LocalDateTime.now().format(formatter)
-//
-//                            val completedAt = if (updatedStatus == "DONE") updatedAt else null
-//
-//                            val updatedTask = task.toMutableMap().apply {
-//                                this["status"] = updatedStatus
-//                                this["updatedAt"] = updatedAt
-//                                this["completedAt"] = updatedAt
-//                            }
-//                            taskList[index] = updatedTask
 
                             scope.launch {
                                 taskManager.updateTaskStatusToDone(updatedStatus, taskId, updatedAt) // Due to data discrepancy, needs to pass it as an argument

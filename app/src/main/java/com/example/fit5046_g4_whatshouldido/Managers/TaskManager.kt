@@ -43,7 +43,6 @@ class TaskManager {
     val taskDate = LocalDateTime.now().format(formatter)
     val sampleDueDateTime = LocalDateTime.now().plusDays(1).format(formatter)
 
-//    suspend fun createExampleTasks(navController: NavController, profession: String) {
     suspend fun createExampleTasks(profession: String) {
         val tasksRef = db.collection("Users").document(user!!.uid).collection("tasks")
 
@@ -87,10 +86,6 @@ class TaskManager {
             )
             tasksRef.document(taskId).set(task).await()
         }
-
-//        navController.navigate("home") {
-//            popUpTo("on_boarding") { inclusive = true }
-//        }
     }
 
     suspend fun addTask(title: String, description: String, dueDateTime: String) {
@@ -119,15 +114,6 @@ class TaskManager {
 
         }
     }
-
-//    suspend fun deleteTask(taskId: String) {
-//        db.collection("Users")
-//            .document(user!!.uid)
-//            .collection("tasks")
-//            .document(taskId)
-//            .delete()
-//            .await()
-//    }
 
     suspend fun updateTaskStatusToCancel(toggleCancel: String, taskId: String) {
 

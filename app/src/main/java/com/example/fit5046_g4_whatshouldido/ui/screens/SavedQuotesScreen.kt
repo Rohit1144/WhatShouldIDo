@@ -66,7 +66,7 @@ fun SavedQuotesScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             LazyColumn  (modifier = Modifier
-                .weight(1f) // ← 这时就能识别了
+                .weight(1f)
                 .fillMaxWidth()
             ) {
                 items(quotes) { quote: Quote ->

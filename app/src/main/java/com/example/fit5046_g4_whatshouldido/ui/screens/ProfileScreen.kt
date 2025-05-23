@@ -72,7 +72,6 @@ fun Profile(
     viewModel: QuoteViewModel = viewModel()
 ) {
 
-//    var passwordVisible by remember { mutableStateOf(false) }
     val user = Firebase.auth.currentUser
     val email = user?.email ?: ""
     val isGoogleSignIn = user?.providerData?.any { it.providerId == "google.com" } == true
@@ -134,43 +133,6 @@ fun Profile(
                 )
             )
 
-//            // Password Field
-//            if(!isGoogleSignIn) {
-//                Spacer(Modifier.height(30.dp))
-//                OutlinedTextField(
-//                    value = userPassword,
-//                    onValueChange = {},
-//                    label = { Text("Password") },
-//                    readOnly = true,
-//                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-//                    trailingIcon = {
-//
-//                        IconButton(
-//                            onClick = {passwordVisible = !passwordVisible}
-//                        ) {
-//                            Icon(
-//                                painter = painterResource(if(passwordVisible) R.drawable.eye_slash else R.drawable.eye),
-//                                contentDescription = if(passwordVisible) "Hide password" else "Show password",
-//                                modifier = Modifier.size(20.dp)
-//                            )
-//                        }
-//
-//
-//                    },
-//                    leadingIcon = {
-//                        Icon(imageVector = Icons.Default.Lock, contentDescription = "Password")
-//                    },
-//                    modifier = Modifier.fillMaxWidth(),
-//                    colors = TextFieldDefaults.colors(
-//                        focusedContainerColor = Color.Transparent,
-//                        unfocusedContainerColor = Color.Transparent,
-//                        disabledContainerColor = Color.Transparent,
-//                        errorContainerColor = Color.Transparent
-//                    )
-//                )
-//            }
-
-            // Retrofit API.
             Spacer(Modifier.height(30.dp))
             Row (
                 modifier = Modifier
@@ -178,16 +140,6 @@ fun Profile(
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-//                Text(
-//                    text = if (quote.a != "") "\"${quote.q}\"\n\n– ${quote.a}" else "\"${quote.q}\"\n",
-//                    style = MaterialTheme.typography.bodySmall,
-//                    color = Color.DarkGray,
-//                    textAlign = TextAlign.Start,
-//                    modifier = Modifier
-//                        .weight(1f)
-//                        .padding(end = 8.dp)
-//                        .clickable { navController.navigate("saved_quotes") }
-//                )
                 Column(
                     modifier = Modifier
                         .weight(1f)

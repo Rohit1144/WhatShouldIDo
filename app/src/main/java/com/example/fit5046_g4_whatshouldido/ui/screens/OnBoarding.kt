@@ -228,7 +228,6 @@ fun OnBoarding(navController: NavController) {
             onClick ={
                 scope.launch(Dispatchers.Main) {
                     authenticationManager.markOnboardingComplete(profession, focusTime, startPreference)
-//                    taskManager.createExampleTasks(navController, profession)
                     taskManager.createExampleTasks(profession)
                     delay(300)
                     // Navigate to home after clicking the OK button

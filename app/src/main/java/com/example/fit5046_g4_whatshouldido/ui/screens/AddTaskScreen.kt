@@ -196,7 +196,6 @@ fun AddTask(navController: NavController) {
 
             Button(
                 onClick = {
-//                    if(title.isNotEmpty() && description.isNotEmpty()){
                     if(title.isNotEmpty() && dueDateTime.isNotEmpty()){
                         scope.launch {
                             taskManager.addTask(title, description, dueDateTime)
