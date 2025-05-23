@@ -262,7 +262,7 @@ fun TaskItemRow(item: Map<String, Any?>, navController: NavController, onStatusT
                     Text(
                         text = timeRemaining.value,
                         style = MaterialTheme.typography.bodySmall,
-                        color = if (timeRemaining.value == "OVERDUE") Color.Red else colorResource(R.color.orange)
+                        color = if (timeRemaining.value == "OVERDUE") colorResource(R.color.red) else colorResource(R.color.orange)
                     )
                 }
             }
