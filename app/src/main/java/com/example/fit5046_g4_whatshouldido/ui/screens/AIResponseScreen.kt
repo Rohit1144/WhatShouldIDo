@@ -60,7 +60,10 @@ fun AIResponse(navController: NavController) {
     var taskList by remember { mutableStateOf(emptyList<Pair<String, String>>()) }
     var recommendedTaskId by remember { mutableStateOf<String?>(null) }
     var lastSuggestedTaskTitle by remember { mutableStateOf<String?>(null) }
-
+    /**
+     * LaunchedEffect triggers task fetching and AI suggestion generation
+     * once the Gemma model is initialized.
+     */
     LaunchedEffect(isInitialized) {
         if (isInitialized) {
             scope.launch(Dispatchers.IO) {
@@ -69,7 +72,7 @@ fun AIResponse(navController: NavController) {
                     val words = taskList.map { it.second }
 
                     responseText = if (words.isNotEmpty()) {
-                        val result = generateTask(taskList)
+                        val result = generateDifferentResponse(taskList,lastSuggestedTaskTitle)
                         recommendedTaskId = extractTaskId(result, taskList)
                         result
                     } else {
@@ -146,6 +149,16 @@ fun AIResponse(navController: NavController) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            Box(){
+                Text(text = "Are you satisfied?",
+                    fontSize = 16.sp,
+                    color = colorResource(R.color.black),
+                    modifier = Modifier.padding(vertical = 4.dp)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -169,17 +182,18 @@ fun AIResponse(navController: NavController) {
                         Toast.makeText(
                             navController.context,
                             "Oh, generating a new answer...",
-                            Toast.LENGTH_SHORT
+                            Toast.LENGTH_LONG
                         ).show()
                         scope.launch(Dispatchers.IO) {
                             try {
+                                lastSuggestedTaskTitle = extractMatchedTaskTitle(responseText, taskList)
+
                                 val result =
                                     generateDifferentResponse(taskList, lastSuggestedTaskTitle)
                                 responseText = result
-                                lastSuggestedTaskTitle = extractMatchedTaskTitle(result, taskList)
 
                                 val newTaskId =
-                                    extractTaskId(lastSuggestedTaskTitle.toString(), taskList)
+                                    extractTaskId(result, taskList)
                                 recommendedTaskId =
                                     if (newTaskId != null && newTaskId != "Unknown") {
                                         newTaskId
@@ -201,31 +215,18 @@ fun AIResponse(navController: NavController) {
         }
     }
 }
-
+/**
+ * Finds the title of the task that matches the AI response text.
+ */
 fun extractMatchedTaskTitle(response: String, tasks: List<Pair<String, String>>): String? {
     return tasks.firstOrNull { (_, title) ->
         response.contains(title, ignoreCase = true)
     }?.second
 }
 
-fun generateTask(tasks: List<Pair<String, String>>): String {
-    val formattedTasks = tasks.joinToString(", ") { it.second }
-    val prompt =
-        "From the following list: $formattedTasks, select only one  task and print it. " +
-                "Do not create or invent a new task." +
-                "Provide a brief explanation in two sentences and end by asking if the user is satisfied."
-
-
-    val response = GemmaLocalInference.generate(prompt)
-    val cleanedResponse = response.replace(Regex("\\(.*?\\)"), "").trim()
-
-    val taskId = extractTaskId(response, tasks) ?: "Unknown"
-
-    "Recommended Task ID: $taskId\n$cleanedResponse"
-    return cleanedResponse
-
-}
-
+/**
+ * Returns the task ID from the response, if the response matches a task title.
+ */
 fun extractTaskId(responseText: String, tasks: List<Pair<String, String>>): String? {
     for ((id, task) in tasks) {
         if (responseText.contains(task, ignoreCase = true) || responseText.contains(
@@ -237,8 +238,10 @@ fun extractTaskId(responseText: String, tasks: List<Pair<String, String>>): Stri
     }
     return "Unknown"
 }
-
-
+/**
+ * Generates a new AI suggestion that is different from the previous one.
+ * It uses the Gemini Nano model locally via GemmaLocalInference.
+ */
 fun generateDifferentResponse(tasks: List<Pair<String, String>>, lastTask: String?): String {
     val formattedTasks = tasks.joinToString(", ") { it.second }
 
