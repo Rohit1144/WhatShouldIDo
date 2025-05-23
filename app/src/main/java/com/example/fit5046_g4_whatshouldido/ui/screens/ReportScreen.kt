@@ -51,7 +51,6 @@ fun Report(navController: NavController) {
         try {
             taskSummary = taskManager.getTaskSummary()
             monthlyReport = taskManager.getMonthlyTaskStatus()
-//            taskManager.seedTestTasksForMonthlyReport()
         } catch (e: Exception) {
             Log.e("ReportScreen", "Failed to load task summary", e)
         }
