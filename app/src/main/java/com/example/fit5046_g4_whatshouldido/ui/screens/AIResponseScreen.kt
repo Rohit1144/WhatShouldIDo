@@ -23,28 +23,26 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.loginpagetutorial.components.TopBar
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.fit5046_g4_whatshouldido.LocalLLMModel.GemmaLocalInference
 import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
 import com.example.fit5046_g4_whatshouldido.R
 import com.example.fit5046_g4_whatshouldido.viewmodel.AiViewModel
+import com.example.loginpagetutorial.components.TopBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -61,8 +59,6 @@ fun AIResponse(navController: NavController) {
     var responseText by remember { mutableStateOf("Waiting for response...") }
     var taskList by remember { mutableStateOf(emptyList<Pair<String, String>>()) }
     var recommendedTaskId by remember { mutableStateOf<String?>(null) }
-    var isYesSelected by remember { mutableStateOf(false) }
-    var isNoSelected by remember { mutableStateOf(false) }
     var lastSuggestedTaskTitle by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(isInitialized) {
@@ -71,7 +67,6 @@ fun AIResponse(navController: NavController) {
                 try {
                     taskList = taskManager.getPendingTaskList()
                     val words = taskList.map { it.second }
-                    println(taskList)
 
                     responseText = if(words.isNotEmpty()) {
                         val result = generateTask(taskList)
@@ -173,12 +168,10 @@ fun AIResponse(navController: NavController) {
                                 lastSuggestedTaskTitle = extractMatchedTaskTitle(result, taskList)
 
                                 val newTaskId = extractTaskId(lastSuggestedTaskTitle.toString(), taskList)
-                                if (newTaskId != null && newTaskId != "Unknown") {
-                                    recommendedTaskId = newTaskId
-                                    println("Updated Task ID: $recommendedTaskId")
+                                recommendedTaskId = if (newTaskId != null && newTaskId != "Unknown") {
+                                    newTaskId
                                 } else {
-                                    recommendedTaskId = "Unknown"
-                                    println("Failed to update Task ID")
+                                    "Unknown"
                                 }
 
                             } catch(e: Exception) {
@@ -203,8 +196,6 @@ fun extractMatchedTaskTitle(response: String, tasks: List<Pair<String, String>>)
 }
 fun generateTask(tasks: List<Pair<String, String>>): String {
         val formattedTasks = tasks.joinToString(", ") { it.second }
-        println(formattedTasks)
-        println(tasks)
         val prompt =
         "From the following list: $formattedTasks, select only one  task and print it. " +
                         "Do not create or invent a new task." +
@@ -214,13 +205,10 @@ fun generateTask(tasks: List<Pair<String, String>>): String {
         val response = GemmaLocalInference.generate(prompt)
         val cleanedResponse = response.replace(Regex("\\(.*?\\)"), "").trim()
 
-    val taskId = extractTaskId(response ?: "No response from AI.", tasks) ?: "Unknown"
-
-        println("Generated Task ID: $taskId")
+        val taskId = extractTaskId(response, tasks) ?: "Unknown"
 
         "Recommended Task ID: $taskId\n$cleanedResponse"
-        println(cleanedResponse)
-        return "$cleanedResponse"
+        return cleanedResponse
 
 }
 
@@ -238,13 +226,6 @@ fun extractTaskId(responseText: String, tasks: List<Pair<String, String>>): Stri
 
 fun generateDifferentResponse(tasks: List<Pair<String, String>>,lastTask: String?): String {
         val formattedTasks = tasks.joinToString(", ") { it.second }
-        println(formattedTasks)
-        println(tasks)
-
-
-        val promptt =
-            "From the following list: $formattedTasks, select only one different  task and print only the task you chose. " +
-                    "Do not create or invent a new task."
 
     val prompt = """
         From the following list of tasks: $formattedTasks
@@ -260,16 +241,9 @@ fun generateDifferentResponse(tasks: List<Pair<String, String>>,lastTask: String
     """.trimIndent()
     val response = GemmaLocalInference.generate(prompt)
 
-    val cleanedResponse = response?.replace(Regex("\\(.*?\\)"), "")?.trim() ?: ""
-    val selectedTask = tasks.firstOrNull { (_, title) ->
-        cleanedResponse.contains(title, ignoreCase = true)
-    }?.second ?: "UNKNOWN"
+    val cleanedResponse = response.replace(Regex("\\(.*?\\)"), "").trim()
 
-    val taskId = tasks.firstOrNull { it.second.equals(selectedTask, ignoreCase = true) }?.first ?: "Unknown"
-        println("Generated Task ID: $taskId")
-        println(cleanedResponse)
-
-    return "$cleanedResponse"
+    return cleanedResponse
 
 
 }
