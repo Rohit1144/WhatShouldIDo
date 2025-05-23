@@ -92,8 +92,10 @@ fun Home(
         if (user != null) {
             val tasks = taskManager.getTaskList()
                 .filter {
-                    val status = it["status"] as? String ?: return@filter false
-                    status.uppercase() != "ARCHIVED"
+//                    val status = it["status"] as? String ?: return@filter false
+//                    status.uppercase() != "ARCHIVED"
+                    val isArchived = it["isArchived"] as? Boolean ?: false
+                    !isArchived
                 }
 
             taskList.clear()

@@ -78,6 +78,7 @@ class TaskManager {
                 "title" to title,
                 "description" to "",
                 "status" to "PENDING",
+                "isArchived" to false,
                 "createdAt" to taskDate,
                 "updatedAt" to taskDate,
                 "completedAt" to null,
@@ -101,6 +102,7 @@ class TaskManager {
                 "title" to title,
                 "description" to description,
                 "status" to "PENDING",
+                "isArchived" to false,
                 "createdAt" to taskDate,
                 "updatedAt" to taskDate,
                 "completedAt" to null,
@@ -118,14 +120,14 @@ class TaskManager {
         }
     }
 
-    suspend fun deleteTask(taskId: String) {
-        db.collection("Users")
-            .document(user!!.uid)
-            .collection("tasks")
-            .document(taskId)
-            .delete()
-            .await()
-    }
+//    suspend fun deleteTask(taskId: String) {
+//        db.collection("Users")
+//            .document(user!!.uid)
+//            .collection("tasks")
+//            .document(taskId)
+//            .delete()
+//            .await()
+//    }
 
     suspend fun updateTaskStatusToCancel(toggleCancel: String, taskId: String) {
 
@@ -314,7 +316,7 @@ class TaskManager {
                 .document(taskId)
                 .update(
                     mapOf(
-                        "status" to "ARCHIVED",
+                        "isArchived" to true
                     )
                 )
                 .await()
@@ -368,6 +370,7 @@ class TaskManager {
                 "title" to title,
                 "description" to "Test seed",
                 "status" to status,
+                "isArchived" to false,
                 "createdAt" to createdAt,
                 "updatedAt" to createdAt,
                 "completedAt" to if (status == "DONE") createdAt else null,
