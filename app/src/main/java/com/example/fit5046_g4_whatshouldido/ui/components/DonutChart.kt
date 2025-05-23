@@ -50,7 +50,7 @@ fun DonutChart(
                 legend.isEnabled = false
                 setDrawEntryLabels(false)
 
-                setCenterText("${percentage.toInt()}%")
+                centerText = "${percentage.toInt()}%"
                 setCenterTextSize(14f)
 
                 animateY(2000)

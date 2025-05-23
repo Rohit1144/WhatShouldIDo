@@ -268,7 +268,7 @@ fun Profile(
                     text = "Factory Reset",
                     style = MaterialTheme.typography.bodySmall,
                     color = colorResource(R.color.light_red),
-                    modifier = Modifier.drawBehind() {
+                    modifier = Modifier.drawBehind {
                         val strokeWidthPx = 1.dp.toPx()
                         val verticalOffset = size.height - 2.sp.toPx()
                         drawLine(
@@ -289,7 +289,7 @@ fun Profile(
                     text = "Delete Account",
                     style = MaterialTheme.typography.bodySmall,
                     color = colorResource(R.color.light_red),
-                    modifier = Modifier.drawBehind() {
+                    modifier = Modifier.drawBehind {
                         val strokeWidthPx = 1.dp.toPx()
                         val verticalOffset = size.height - 2.sp.toPx()
                         drawLine(
