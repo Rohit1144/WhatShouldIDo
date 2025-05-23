@@ -160,13 +160,13 @@ fun Profile(
                         Icon(
                             imageVector = Icons.Default.Info,
                             contentDescription = null,
-                            tint = Color.Gray,
+                            tint = colorResource(R.color.gray),
                             modifier = Modifier.size(14.dp)
                         )
                         Text(
                             text = "Tap to view saved quotes",
                             style = MaterialTheme.typography.labelSmall,
-                            color = Color.Gray,
+                            color = colorResource(R.color.gray),
                             fontSize = 10.sp,
                             modifier = Modifier.padding(start = 4.dp)
                         )
@@ -190,7 +190,7 @@ fun Profile(
                                 Icons.Filled.Star else Icons.Outlined.StarBorder,
                             contentDescription = null,
                             tint = if (isStarred.value)
-                                Color(0xFFFFC107) else Color.Gray
+                                Color(0xFFFFC107) else colorResource(R.color.gray)
                         )
                     }
                 }
@@ -204,7 +204,7 @@ fun Profile(
                         Icon(
                             imageVector = Icons.Default.Refresh,
                             contentDescription = "Refresh quote",
-                            tint = Color.Gray
+                            tint = colorResource(R.color.gray)
                         )
                     }
                 }

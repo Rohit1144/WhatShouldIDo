@@ -40,7 +40,9 @@ import com.example.fit5046_g4_whatshouldido.ui.components.DonutChart
 import com.example.fit5046_g4_whatshouldido.ui.components.MonthlyBarChart
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.colorResource
 import com.example.fit5046_g4_whatshouldido.Managers.MonthlyTaskStatus
+import com.example.fit5046_g4_whatshouldido.R
 
 @Composable
 fun Report(navController: NavController) {
@@ -128,17 +130,17 @@ fun Report(navController: NavController) {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                     DonutChart(label = "Completed", percentage = summary.percentageOfCompleted() , colorHex = "#7FE1AD")
                                     Spacer(Modifier.height(4.dp))
-                                    Text("Completed", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                                    Text("Completed", style = MaterialTheme.typography.bodySmall, color = colorResource(R.color.gray))
                                 }
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                     DonutChart(label = "Pending", percentage = summary.percentageOfPending(), colorHex = "#F85F6A")
                                     Spacer(Modifier.height(4.dp))
-                                    Text("Pending", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                                    Text("Pending", style = MaterialTheme.typography.bodySmall, color = colorResource(R.color.gray))
                                 }
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                     DonutChart(label = "Cancelled", percentage = summary.percentageOfCancelled(), colorHex = "#5F6AF8")
                                     Spacer(Modifier.height(4.dp))
-                                    Text("Cancelled", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                                    Text("Cancelled", style = MaterialTheme.typography.bodySmall, color = colorResource(R.color.gray))
                                 }
                             }
                         }

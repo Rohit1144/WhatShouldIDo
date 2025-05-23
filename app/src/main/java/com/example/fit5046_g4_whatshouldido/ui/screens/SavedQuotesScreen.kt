@@ -99,7 +99,7 @@ fun SavedQuotesScreen(
                                 Icon(
                                     imageVector = Icons.Default.Delete,
                                     contentDescription = "Delete Quote",
-                                    tint = Color.Gray
+                                    tint = colorResource(R.color.gray)
                                 )
                             }
                         }
