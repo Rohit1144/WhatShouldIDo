@@ -35,8 +35,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.fit5046_g4_whatshouldido.Managers.AuthenticationManager
-import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
+import com.example.fit5046_g4_whatshouldido.managers.AuthenticationManager
+import com.example.fit5046_g4_whatshouldido.managers.TaskManager
 import com.example.fit5046_g4_whatshouldido.R
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay

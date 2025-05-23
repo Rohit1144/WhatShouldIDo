@@ -39,7 +39,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
+import com.example.fit5046_g4_whatshouldido.managers.TaskManager
 import com.example.fit5046_g4_whatshouldido.R
 import com.example.fit5046_g4_whatshouldido.components.TopBar
 import kotlinx.coroutines.launch

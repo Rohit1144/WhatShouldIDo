@@ -1,4 +1,4 @@
-package com.example.fit5046_g4_whatshouldido.Managers
+package com.example.fit5046_g4_whatshouldido.managers
 
 import android.content.Context
 import androidx.credentials.CredentialManager
