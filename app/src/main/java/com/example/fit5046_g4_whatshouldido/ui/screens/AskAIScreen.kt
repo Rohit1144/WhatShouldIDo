@@ -27,19 +27,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.fit5046_g4_whatshouldido.R
-import com.example.loginpagetutorial.components.BottomNavBar
-import com.example.loginpagetutorial.components.TopBar
+import com.example.fit5046_g4_whatshouldido.components.BottomNavBar
+import com.example.fit5046_g4_whatshouldido.components.TopBar
 
 
 @Composable
 fun AskAI(navController: NavController) {
     Scaffold(
-        topBar = { TopBar(navController = navController, showProfileIcon = true, showBackButton = true) },
+        topBar = {
+            TopBar(
+                navController = navController,
+                showProfileIcon = true,
+                showBackButton = true
+            )
+        },
         bottomBar = { BottomNavBar(navController) }
     ) { paddingValues ->
 
         Column(
-            modifier = Modifier.fillMaxSize().padding(paddingValues),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {

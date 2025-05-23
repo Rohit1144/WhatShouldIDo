@@ -1,4 +1,5 @@
 package com.example.fit5046_g4_whatshouldido.ui.screens
+
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -56,7 +57,7 @@ import com.example.fit5046_g4_whatshouldido.R
 import com.example.fit5046_g4_whatshouldido.ui.components.DeleteConfirmationBottomSheet
 import com.example.fit5046_g4_whatshouldido.ui.components.DeleteType
 import com.example.fit5046_g4_whatshouldido.viewmodel.QuoteViewModel
-import com.example.loginpagetutorial.components.TopBar
+import com.example.fit5046_g4_whatshouldido.components.TopBar
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
@@ -80,7 +81,13 @@ fun Profile(
     var openAccountDeleteSheet by remember { mutableStateOf(false) }
 
     Scaffold(
-        topBar = { TopBar(navController = navController, showProfileIcon = false, showBackButton = true) },
+        topBar = {
+            TopBar(
+                navController = navController,
+                showProfileIcon = false,
+                showBackButton = true
+            )
+        },
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -129,7 +136,7 @@ fun Profile(
             )
 
             Spacer(Modifier.height(30.dp))
-            Row (
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
@@ -167,7 +174,7 @@ fun Profile(
                         )
                     }
                 }
-                if(quote.a != "") {
+                if (quote.a != "") {
                     IconButton(
                         onClick = {
                             isStarred.value = !isStarred.value
@@ -189,8 +196,7 @@ fun Profile(
                         )
                     }
                 }
-                if(quote.q == "Could not load quote. Try again later.")
-                {
+                if (quote.q == "Could not load quote. Try again later.") {
                     IconButton(onClick = {
                         scope.launch {
                             viewModel.fetchQuote()
@@ -208,9 +214,9 @@ fun Profile(
             Spacer(Modifier.height(30.dp))
 
             // Update Profile Button based on the method of login
-            if(!isGoogleSignIn) {
-                Button (
-                    onClick ={
+            if (!isGoogleSignIn) {
+                Button(
+                    onClick = {
                         // Navigate to home after clicking the sign in button
                         navController.navigate("change_password") {
                             popUpTo("profile") { inclusive = true }
@@ -236,8 +242,8 @@ fun Profile(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Logout Button
-            Button (
-                onClick ={
+            Button(
+                onClick = {
                     Firebase.auth.signOut()
                     // Navigate to home after clicking the logout button
                     navController.navigate("sign_in") {
@@ -255,10 +261,11 @@ fun Profile(
 
             Spacer(Modifier.height(20.dp))
 
-            TextButton( onClick = {
+            TextButton(onClick = {
                 openResetSheet = true
             }) {
-                Text(text = "Factory Reset",
+                Text(
+                    text = "Factory Reset",
                     style = MaterialTheme.typography.bodySmall,
                     color = colorResource(R.color.light_red),
                     modifier = Modifier.drawBehind() {
@@ -275,10 +282,11 @@ fun Profile(
             }
             Spacer(Modifier.height(2.dp))
 
-            TextButton( onClick = {
+            TextButton(onClick = {
                 openAccountDeleteSheet = true
             }) {
-                Text(text = "Delete Account",
+                Text(
+                    text = "Delete Account",
                     style = MaterialTheme.typography.bodySmall,
                     color = colorResource(R.color.light_red),
                     modifier = Modifier.drawBehind() {
@@ -295,7 +303,7 @@ fun Profile(
             }
         }
     }
-    if(openResetSheet) {
+    if (openResetSheet) {
         DeleteConfirmationBottomSheet(
             onConfirmDelete = {
                 scope.launch {
@@ -305,12 +313,17 @@ fun Profile(
                         // Delete all the saved quotes
                         viewModel.deleteAllQuotes()
 
-                        Toast.makeText(context, "All your tasks has been deleted. Let's start fresh", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            context,
+                            "All your tasks has been deleted. Let's start fresh",
+                            Toast.LENGTH_LONG
+                        ).show()
                         kotlinx.coroutines.delay(1500)
 
                         navController.navigate("home") { popUpTo("profile") { inclusive = true } }
-                    } catch ( e:Exception ){
-                        Toast.makeText(context, e.message ?: "Reset Failed", Toast.LENGTH_LONG).show()
+                    } catch (e: Exception) {
+                        Toast.makeText(context, e.message ?: "Reset Failed", Toast.LENGTH_LONG)
+                            .show()
                     }
                 }
             },
@@ -319,15 +332,20 @@ fun Profile(
         )
     }
 
-    if(openAccountDeleteSheet) {
+    if (openAccountDeleteSheet) {
 
         DeleteConfirmationBottomSheet(
             onConfirmDelete = { enteredPassword ->
                 scope.launch {
-                    val isGoogleSignIn = user?.providerData?.any { it.providerId == "google.com" } == true
+                    val isGoogleSignIn =
+                        user?.providerData?.any { it.providerId == "google.com" } == true
 
-                    if ( !isGoogleSignIn && enteredPassword.isNullOrBlank()) {
-                        Toast.makeText(context, "Please enter your password to confirm", Toast.LENGTH_SHORT).show()
+                    if (!isGoogleSignIn && enteredPassword.isNullOrBlank()) {
+                        Toast.makeText(
+                            context,
+                            "Please enter your password to confirm",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         return@launch
                     }
 
@@ -344,15 +362,28 @@ fun Profile(
                                 navController.navigate("sign_in") {
                                     popUpTo(0) { inclusive = true }
                                 }
-                                Toast.makeText(context, "Account deleted successfully", Toast.LENGTH_LONG).show()
+                                Toast.makeText(
+                                    context,
+                                    "Account deleted successfully",
+                                    Toast.LENGTH_LONG
+                                ).show()
                             }
+
                             is AuthResponse.Error -> {
-                                Toast.makeText(context, "Error: ${response.message}", Toast.LENGTH_LONG).show()
+                                Toast.makeText(
+                                    context,
+                                    "Error: ${response.message}",
+                                    Toast.LENGTH_LONG
+                                ).show()
                             }
                         }
 
-                    } catch( e: Exception ) {
-                        Toast.makeText(context, e.message ?: "Account Delete Failed", Toast.LENGTH_LONG).show()
+                    } catch (e: Exception) {
+                        Toast.makeText(
+                            context,
+                            e.message ?: "Account Delete Failed",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 }
             },

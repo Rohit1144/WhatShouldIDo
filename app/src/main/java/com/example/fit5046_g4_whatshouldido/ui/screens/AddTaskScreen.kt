@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
 import com.example.fit5046_g4_whatshouldido.R
-import com.example.loginpagetutorial.components.TopBar
+import com.example.fit5046_g4_whatshouldido.components.TopBar
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZoneId
@@ -73,7 +73,12 @@ fun AddTask(navController: NavController) {
                         val date = Instant.ofEpochMilli(millis)
                             .atZone(ZoneId.systemDefault())
                             .toLocalDate()
-                        dueDate = String.format("%02d/%02d/%04d", date.dayOfMonth, date.monthValue, date.year)
+                        dueDate = String.format(
+                            "%02d/%02d/%04d",
+                            date.dayOfMonth,
+                            date.monthValue,
+                            date.year
+                        )
 
                         showTimePicker = true
                     }
@@ -91,7 +96,7 @@ fun AddTask(navController: NavController) {
         }
     }
 
-    if(showTimePicker) {
+    if (showTimePicker) {
         val calendar = Calendar.getInstance()
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
@@ -115,13 +120,22 @@ fun AddTask(navController: NavController) {
     val taskManager = remember { TaskManager() }
 
     Scaffold(
-        topBar = { TopBar(navController = navController, showProfileIcon = false, showBackButton = true) },
+        topBar = {
+            TopBar(
+                navController = navController,
+                showProfileIcon = false,
+                showBackButton = true
+            )
+        },
     ) { paddingValues ->
 
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
-            modifier = Modifier.padding(40.dp).fillMaxSize().padding(paddingValues)
+            modifier = Modifier
+                .padding(40.dp)
+                .fillMaxSize()
+                .padding(paddingValues)
         ) {
 
             Text(
@@ -171,9 +185,9 @@ fun AddTask(navController: NavController) {
                 modifier = Modifier
                     .fillMaxWidth(),
                 trailingIcon = {
-                    IconButton (
+                    IconButton(
                         onClick = { showDatePicker = true }
-                    )  {
+                    ) {
                         Icon(
                             imageVector = Icons.Default.DateRange,
                             contentDescription = "Select date"
@@ -192,7 +206,7 @@ fun AddTask(navController: NavController) {
 
             Button(
                 onClick = {
-                    if(title.isNotEmpty() && dueDateTime.isNotEmpty()){
+                    if (title.isNotEmpty() && dueDateTime.isNotEmpty()) {
                         scope.launch {
                             taskManager.addTask(title, description, dueDateTime)
                         }
@@ -201,7 +215,11 @@ fun AddTask(navController: NavController) {
                             popUpTo("add_task") { inclusive = true }
                         }
                     } else {
-                        Toast.makeText(context, "* Required fields have to be filled", Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            context,
+                            "* Required fields have to be filled",
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),

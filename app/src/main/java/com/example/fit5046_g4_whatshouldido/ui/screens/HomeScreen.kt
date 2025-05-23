@@ -45,8 +45,8 @@ import androidx.navigation.NavController
 import com.example.fit5046_g4_whatshouldido.Managers.AuthenticationManager
 import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
 import com.example.fit5046_g4_whatshouldido.R
-import com.example.loginpagetutorial.components.BottomNavBar
-import com.example.loginpagetutorial.components.TopBar
+import com.example.fit5046_g4_whatshouldido.components.BottomNavBar
+import com.example.fit5046_g4_whatshouldido.components.TopBar
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import kotlinx.coroutines.launch
@@ -118,8 +118,10 @@ fun Home(
 
             // Implement Lazy Column for infinite scroll
             LazyColumn(
-                modifier = Modifier.weight(1f).fillMaxWidth()
-            ){
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            ) {
                 itemsIndexed(taskList) { index, task ->
                     // TaskItem Composable
                     TaskItemRow(
@@ -132,13 +134,18 @@ fun Home(
                             val updatedAt = LocalDateTime.now().format(formatter)
 
                             scope.launch {
-                                taskManager.updateTaskStatusToDone(updatedStatus, taskId, updatedAt) // Due to data discrepancy, needs to pass it as an argument
+                                taskManager.updateTaskStatusToDone(
+                                    updatedStatus,
+                                    taskId,
+                                    updatedAt
+                                ) // Due to data discrepancy, needs to pass it as an argument
 
                                 // Update local state for better UX
                                 val updatedTask = task.toMutableMap().apply {
                                     this["status"] = updatedStatus
                                     this["updatedAt"] = updatedAt
-                                    this["completedAt"] = if(updatedStatus == "DONE") updatedAt else null
+                                    this["completedAt"] =
+                                        if (updatedStatus == "DONE") updatedAt else null
                                 }
                                 taskList[index] = updatedTask
                             }
@@ -151,14 +158,16 @@ fun Home(
             Spacer(modifier = Modifier.height(16.dp))
 
             // Add Task Button
-            Button (
-                onClick ={
+            Button(
+                onClick = {
                     // Navigate to home after clicking the Add Task button
                     navController.navigate("add_task") {
                         popUpTo("home") { inclusive = true }
                     }
                 },
-                modifier = Modifier.fillMaxWidth().padding(bottom = 12.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 12.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = colorResource(R.color.light_red),
                     disabledContainerColor = colorResource(R.color.light_red)
@@ -182,8 +191,8 @@ fun TaskItemRow(item: Map<String, Any?>, navController: NavController, onStatusT
     val timeRemaining = remember { mutableStateOf("") }
 
     LaunchedEffect(key1 = due) {
-        while(true) {
-            try{
+        while (true) {
+            try {
                 val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
                 val dueDateTime = LocalDateTime.parse(due, formatter)
 
@@ -198,7 +207,14 @@ fun TaskItemRow(item: Map<String, Any?>, navController: NavController, onStatusT
                     val secs = seconds % 60
 
                     if (days > 0) {
-                        timeRemaining.value = String.format("%d day%s %02d:%02d:%02d", days, if (days > 1) "s" else "", hours, minutes, secs)
+                        timeRemaining.value = String.format(
+                            "%d day%s %02d:%02d:%02d",
+                            days,
+                            if (days > 1) "s" else "",
+                            hours,
+                            minutes,
+                            secs
+                        )
                     } else {
                         timeRemaining.value = String.format("%02d:%02d:%02d", hours, minutes, secs)
                     }
@@ -214,45 +230,52 @@ fun TaskItemRow(item: Map<String, Any?>, navController: NavController, onStatusT
     }
 
     Row(
-       modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp),
-       verticalAlignment = Alignment.CenterVertically
-    ){
-            // Status Toggle
-            IconButton(
-                onClick = onStatusToggle,
-                enabled = status != "CANCELED" && timeRemaining.value != "OVERDUE"
-            ) {
-                Icon(
-                    imageVector = if (status == "DONE") Icons.Default.RadioButtonChecked else Icons.Default.RadioButtonUnchecked,
-                    contentDescription = "Toggle Status",
-                    tint = if(status == "DONE") colorResource(R.color.blue) else colorResource(R.color.dark_gray),
-                    modifier = Modifier.size(20.dp)
-                )
-            }
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        // Status Toggle
+        IconButton(
+            onClick = onStatusToggle,
+            enabled = status != "CANCELED" && timeRemaining.value != "OVERDUE"
+        ) {
+            Icon(
+                imageVector = if (status == "DONE") Icons.Default.RadioButtonChecked else Icons.Default.RadioButtonUnchecked,
+                contentDescription = "Toggle Status",
+                tint = if (status == "DONE") colorResource(R.color.blue) else colorResource(R.color.dark_gray),
+                modifier = Modifier.size(20.dp)
+            )
+        }
 
-            Spacer(modifier = Modifier.width(8.dp))
+        Spacer(modifier = Modifier.width(8.dp))
 
-            Row(
-                modifier = Modifier.weight(1f),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = title,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(start = 4.dp)
+                    .clickable { navController.navigate("task_detail/${item["id"]}") },
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    textDecoration = if (status == "CANCELED") TextDecoration.LineThrough else TextDecoration.None
+                ),
+                color = if (status == "DONE") colorResource(R.color.light_gray) else colorResource(R.color.dark_gray),
+            )
+
+            if (due.isNotBlank() && status == "PENDING") {
                 Text(
-                    text = title,
-                    modifier = Modifier.weight(1f).padding(start = 4.dp).clickable { navController.navigate("task_detail/${item["id"]}") },
-                    style = MaterialTheme.typography.bodyLarge.copy(
-                        textDecoration = if(status == "CANCELED") TextDecoration.LineThrough else TextDecoration.None
-                    ),
-                    color = if(status == "DONE") colorResource(R.color.light_gray) else colorResource(R.color.dark_gray),
-                )
-
-                if(due.isNotBlank() && status == "PENDING") {
-                    Text(
-                        text = timeRemaining.value,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = if (timeRemaining.value == "OVERDUE") colorResource(R.color.red) else colorResource(R.color.orange)
+                    text = timeRemaining.value,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (timeRemaining.value == "OVERDUE") colorResource(R.color.red) else colorResource(
+                        R.color.orange
                     )
-                }
+                )
             }
+        }
     }
 }

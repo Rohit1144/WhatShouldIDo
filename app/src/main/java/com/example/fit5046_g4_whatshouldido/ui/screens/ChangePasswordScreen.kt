@@ -41,7 +41,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.fit5046_g4_whatshouldido.R
-import com.example.loginpagetutorial.components.TopBar
+import com.example.fit5046_g4_whatshouldido.components.TopBar
 import com.google.firebase.Firebase
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.auth
@@ -52,16 +52,22 @@ fun ChangePassword(navController: NavController) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val user = Firebase.auth.currentUser
-    var currentPassword by remember{ mutableStateOf("") }
+    var currentPassword by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var currentPasswordVisible by remember { mutableStateOf(false) }
     var newPasswordVisible by remember { mutableStateOf(false) }
-    var newConfirmPasswordVisible by remember { mutableStateOf(false)}
+    var newConfirmPasswordVisible by remember { mutableStateOf(false) }
 
 
     Scaffold(
-        topBar = { TopBar(navController = navController, showProfileIcon = false, showBackButton = false) },
+        topBar = {
+            TopBar(
+                navController = navController,
+                showProfileIcon = false,
+                showBackButton = false
+            )
+        },
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -78,7 +84,7 @@ fun ChangePassword(navController: NavController) {
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.Default,
                 modifier = Modifier.align(Alignment.CenterHorizontally)
-                )
+            )
 
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -146,7 +152,10 @@ fun ChangePassword(navController: NavController) {
                 onValueChange = { confirmPassword = it },
                 label = { Text("Confirm New Password", color = colorResource(R.color.dark_gray)) },
                 leadingIcon = {
-                    Icon(imageVector = Icons.Default.Lock, contentDescription = "Confirm New Password")
+                    Icon(
+                        imageVector = Icons.Default.Lock,
+                        contentDescription = "Confirm New Password"
+                    )
                 },
                 singleLine = true,
                 visualTransformation = if (newConfirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
@@ -169,45 +178,69 @@ fun ChangePassword(navController: NavController) {
             Spacer(modifier = Modifier.height(30.dp))
 
             // Buttons: Update & Cancel
-            Row (
+            Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                Button (
-                    onClick ={
-                        if(user != null) {
+                Button(
+                    onClick = {
+                        if (user != null) {
 
-                            if(newPassword != confirmPassword) {
-                                Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
+                            if (newPassword != confirmPassword) {
+                                Toast.makeText(
+                                    context,
+                                    "Passwords do not match",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                                 return@Button
                             }
 
-                            if(newPassword == currentPassword) {
-                                Toast.makeText(context, "New password cannot be same as current password", Toast.LENGTH_SHORT).show()
+                            if (newPassword == currentPassword) {
+                                Toast.makeText(
+                                    context,
+                                    "New password cannot be same as current password",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                                 return@Button
                             }
 
                             // Retrieve user
-                            val credential = EmailAuthProvider.getCredential(user.email!!, currentPassword)
+                            val credential =
+                                EmailAuthProvider.getCredential(user.email!!, currentPassword)
                             scope.launch {
-                                user.reauthenticate(credential).addOnCompleteListener{ authResult ->
-                                    if(authResult.isSuccessful) {
-                                        // update password
-                                        user.updatePassword(newPassword)
-                                            .addOnCompleteListener { updateTask ->
-                                                if(updateTask.isSuccessful) {
-                                                    Toast.makeText(context, "Password updated successfully", Toast.LENGTH_SHORT).show()
-                                                    navController.navigate("profile") {
-                                                        popUpTo("change_password") { inclusive = true }
+                                user.reauthenticate(credential)
+                                    .addOnCompleteListener { authResult ->
+                                        if (authResult.isSuccessful) {
+                                            // update password
+                                            user.updatePassword(newPassword)
+                                                .addOnCompleteListener { updateTask ->
+                                                    if (updateTask.isSuccessful) {
+                                                        Toast.makeText(
+                                                            context,
+                                                            "Password updated successfully",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
+                                                        navController.navigate("profile") {
+                                                            popUpTo("change_password") {
+                                                                inclusive = true
+                                                            }
+                                                        }
+                                                    } else {
+                                                        Toast.makeText(
+                                                            context,
+                                                            "ERROR: Failed to update password",
+                                                            Toast.LENGTH_SHORT
+                                                        ).show()
                                                     }
-                                                } else {
-                                                    Toast.makeText(context, "ERROR: Failed to update password", Toast.LENGTH_SHORT).show()
                                                 }
-                                            }
-                                    } else {
-                                        Toast.makeText(context, "Current password is incorrect", Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            Toast.makeText(
+                                                context,
+                                                "Current password is incorrect",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        }
                                     }
-                                }
                             }
                         }
                     },
@@ -219,7 +252,7 @@ fun ChangePassword(navController: NavController) {
                     Text("Update")
                 }
                 Button(
-                    onClick ={
+                    onClick = {
                         // Navigate to home after clicking the sign in button
                         navController.navigate("profile") {
                             popUpTo("change_password") { inclusive = true }

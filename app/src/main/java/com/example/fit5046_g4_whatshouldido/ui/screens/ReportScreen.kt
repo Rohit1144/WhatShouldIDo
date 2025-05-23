@@ -37,8 +37,8 @@ import com.example.fit5046_g4_whatshouldido.Managers.TaskSummary
 import com.example.fit5046_g4_whatshouldido.R
 import com.example.fit5046_g4_whatshouldido.ui.components.DonutChart
 import com.example.fit5046_g4_whatshouldido.ui.components.MonthlyBarChart
-import com.example.loginpagetutorial.components.BottomNavBar
-import com.example.loginpagetutorial.components.TopBar
+import com.example.fit5046_g4_whatshouldido.components.BottomNavBar
+import com.example.fit5046_g4_whatshouldido.components.TopBar
 
 @Composable
 fun Report(navController: NavController) {
@@ -82,14 +82,16 @@ fun Report(navController: NavController) {
 
             // Implement Lazy Column for infinite scroll
             LazyColumn(
-                modifier = Modifier.weight(1f).fillMaxWidth()
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
 
             ) {
                 item {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
-                    ){
+                    ) {
                         Column(horizontalAlignment = Alignment.End) {
                             Text(
                                 text = "Overall",
@@ -110,9 +112,11 @@ fun Report(navController: NavController) {
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
-                    if(taskSummary == null) {
+                    if (taskSummary == null) {
                         Box(
-                            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 16.dp),
                             contentAlignment = Alignment.Center
                         ) {
                             CircularProgressIndicator()
@@ -121,22 +125,46 @@ fun Report(navController: NavController) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceEvenly
-                        ){
+                        ) {
                             taskSummary?.let { summary ->
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    DonutChart(label = "Completed", percentage = summary.percentageOfCompleted() , colorHex = "#7FE1AD")
+                                    DonutChart(
+                                        label = "Completed",
+                                        percentage = summary.percentageOfCompleted(),
+                                        colorHex = "#7FE1AD"
+                                    )
                                     Spacer(Modifier.height(4.dp))
-                                    Text("Completed", style = MaterialTheme.typography.bodySmall, color = colorResource(R.color.gray))
+                                    Text(
+                                        "Completed",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = colorResource(R.color.gray)
+                                    )
                                 }
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    DonutChart(label = "Pending", percentage = summary.percentageOfPending(), colorHex = "#F85F6A")
+                                    DonutChart(
+                                        label = "Pending",
+                                        percentage = summary.percentageOfPending(),
+                                        colorHex = "#F85F6A"
+                                    )
                                     Spacer(Modifier.height(4.dp))
-                                    Text("Pending", style = MaterialTheme.typography.bodySmall, color = colorResource(R.color.gray))
+                                    Text(
+                                        "Pending",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = colorResource(R.color.gray)
+                                    )
                                 }
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                    DonutChart(label = "Cancelled", percentage = summary.percentageOfCancelled(), colorHex = "#5F6AF8")
+                                    DonutChart(
+                                        label = "Cancelled",
+                                        percentage = summary.percentageOfCancelled(),
+                                        colorHex = "#5F6AF8"
+                                    )
                                     Spacer(Modifier.height(4.dp))
-                                    Text("Cancelled", style = MaterialTheme.typography.bodySmall, color = colorResource(R.color.gray))
+                                    Text(
+                                        "Cancelled",
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = colorResource(R.color.gray)
+                                    )
                                 }
                             }
                         }
@@ -146,7 +174,7 @@ fun Report(navController: NavController) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
-                    ){
+                    ) {
                         Column(horizontalAlignment = Alignment.End) {
                             Text(
                                 text = "Monthly Report",

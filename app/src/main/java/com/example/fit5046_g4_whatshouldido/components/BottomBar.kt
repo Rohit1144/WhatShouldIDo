@@ -1,4 +1,4 @@
-package com.example.loginpagetutorial.components
+package com.example.fit5046_g4_whatshouldido.components
 
 import Icon_Chart
 import Icon_Home
@@ -27,11 +27,11 @@ data class BottomNavItem(val route: String, val icon: ImageVector, val label: St
 private val bottomNavItems = listOf(
     BottomNavItem("ask_ai", Icon_Sparkle, "Ask AI"),
     BottomNavItem("home", Icon_Home, "Home"),
-    BottomNavItem("report", Icon_Chart,"Report")
+    BottomNavItem("report", Icon_Chart, "Report")
 )
 
 @Composable
-fun BottomNavBar(navController: NavController){
+fun BottomNavBar(navController: NavController) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
@@ -39,7 +39,7 @@ fun BottomNavBar(navController: NavController){
         backgroundColor = colorResource(R.color.manaual_gray),
         contentColor = colorResource(R.color.dark_gray),
         modifier = Modifier.height(65.dp)
-    ){
+    ) {
         bottomNavItems.forEach { item ->
             val isSelected = currentDestination?.route == item.route
 
@@ -49,11 +49,18 @@ fun BottomNavBar(navController: NavController){
                         Icon(
                             imageVector = item.icon,
                             contentDescription = item.label,
-                            tint = if(isSelected) colorResource(R.color.light_red) else colorResource(R.color.dark_gray),
+                            tint = if (isSelected) colorResource(R.color.light_red) else colorResource(
+                                R.color.dark_gray
+                            ),
                             modifier = Modifier.padding(top = 10.dp)
                         )
                         Spacer(modifier = Modifier.height(4.dp))
-                        Text( text = item.label, color = if(isSelected) colorResource(R.color.light_red) else colorResource(R.color.dark_gray))
+                        Text(
+                            text = item.label,
+                            color = if (isSelected) colorResource(R.color.light_red) else colorResource(
+                                R.color.dark_gray
+                            )
+                        )
                     }
                 },
                 selected = isSelected,

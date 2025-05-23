@@ -42,7 +42,7 @@ import com.example.fit5046_g4_whatshouldido.LocalLLMModel.GemmaLocalInference
 import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
 import com.example.fit5046_g4_whatshouldido.R
 import com.example.fit5046_g4_whatshouldido.viewmodel.AiViewModel
-import com.example.loginpagetutorial.components.TopBar
+import com.example.fit5046_g4_whatshouldido.components.TopBar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -226,7 +226,6 @@ fun generateTask(tasks: List<Pair<String, String>>): String {
 
 }
 
-
 fun extractTaskId(responseText: String, tasks: List<Pair<String, String>>): String? {
     for ((id, task) in tasks) {
         if (responseText.contains(task, ignoreCase = true) || responseText.contains(
@@ -260,8 +259,6 @@ fun generateDifferentResponse(tasks: List<Pair<String, String>>, lastTask: Strin
     val cleanedResponse = response.replace(Regex("\\(.*?\\)"), "").trim()
 
     return cleanedResponse
-
-
 }
 
 

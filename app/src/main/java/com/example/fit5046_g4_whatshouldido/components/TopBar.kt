@@ -1,4 +1,4 @@
-package com.example.loginpagetutorial.components
+package com.example.fit5046_g4_whatshouldido.components
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.padding
@@ -27,6 +27,7 @@ import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
 import com.example.fit5046_g4_whatshouldido.R
 import com.example.fit5046_g4_whatshouldido.ui.components.DeleteConfirmationBottomSheet
 import com.example.fit5046_g4_whatshouldido.ui.components.DeleteType
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -36,9 +37,11 @@ fun TopBar(
     showProfileIcon: Boolean = false,
     showBinIcon: Boolean = false,
     taskId: String? = null,
-    onBackClick: (() -> Unit)? = { navController?.navigate("home") {
-        popUpTo("add_task") { inclusive = true }
-    } },
+    onBackClick: (() -> Unit)? = {
+        navController?.navigate("home") {
+            popUpTo("add_task") { inclusive = true }
+        }
+    },
     onProfileClick: (() -> Unit)? = { navController?.navigate("profile") }
 ) {
     var isBackSelected by remember { mutableStateOf(false) }
@@ -47,8 +50,10 @@ fun TopBar(
     var openDeleteSheet by remember { mutableStateOf(false) } // To open bottom sheet for removing tasks
 
     TopAppBar(
-        modifier = Modifier.statusBarsPadding().padding(top = 10.dp),
-        title = { Text(text ="") },
+        modifier = Modifier
+            .statusBarsPadding()
+            .padding(top = 10.dp),
+        title = { Text(text = "") },
         backgroundColor = colorResource(R.color.transparent),
         elevation = 0.dp, // no shadow
         navigationIcon = {
@@ -56,40 +61,46 @@ fun TopBar(
                 IconButton(onClick = {
                     isBackSelected = !isBackSelected
                     onBackClick?.invoke()
-                    }
+                }
                 ) {
                     Icon(
                         imageVector = Icons.Default.ArrowBackIosNew,
                         contentDescription = "Back",
                         modifier = Modifier.size(35.dp),
-                        tint = if(isBackSelected) colorResource(R.color.light_red) else colorResource(R.color.light_gray),
+                        tint = if (isBackSelected) colorResource(R.color.light_red) else colorResource(
+                            R.color.light_gray
+                        ),
                     )
                 }
             }
         },
         actions = {
             if (showProfileIcon) {
-                IconButton(onClick = {
-                    isProfileSelected = !isProfileSelected
-                    onProfileClick?.invoke()
+                IconButton(
+                    onClick = {
+                        isProfileSelected = !isProfileSelected
+                        onProfileClick?.invoke()
                     },
                     modifier = Modifier.padding(end = 20.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Default.AccountCircle,
-                        contentDescription =  "Profile",
+                        contentDescription = "Profile",
                         modifier = Modifier.size(50.dp),
-                        tint = if(isProfileSelected) colorResource(R.color.light_red) else colorResource(R.color.light_gray),
+                        tint = if (isProfileSelected) colorResource(R.color.light_red) else colorResource(
+                            R.color.light_gray
+                        ),
                     )
                 }
             } else if (showBinIcon) {
-                IconButton(onClick = {
-                    isBinSelected = !isBinSelected
-                    // Opens deletion bottom sheet to ask if the user wants to really delete it or not
-                    openDeleteSheet = true
+                IconButton(
+                    onClick = {
+                        isBinSelected = !isBinSelected
+                        // Opens deletion bottom sheet to ask if the user wants to really delete it or not
+                        openDeleteSheet = true
                     },
                     modifier = Modifier.padding(end = 20.dp)
-                ){
+                ) {
                     Icon(
                         imageVector = Icons.Default.Delete,
                         contentDescription = "Remove",
@@ -101,17 +112,17 @@ fun TopBar(
         }
     )
     // Opens up bottom sheet for deletion asking user again to delete the task or not
-    if(openDeleteSheet) {
+    if (openDeleteSheet) {
         val coroutineScope = rememberCoroutineScope()
         val taskManager = remember { TaskManager() }
         val context = LocalContext.current
         DeleteConfirmationBottomSheet(
             onConfirmDelete = {
-                try{
-                    if(taskId != null) {
+                try {
+                    if (taskId != null) {
                         coroutineScope.launch {
                             taskManager.archiveTask(taskId)
-                            kotlinx.coroutines.delay(3000)
+                            delay(3000)
                         }
                     }
 
