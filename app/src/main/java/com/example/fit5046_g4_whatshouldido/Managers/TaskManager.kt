@@ -38,9 +38,9 @@ class TaskManager {
 
     val user = Firebase.auth.currentUser
     val db = Firebase.firestore
-    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
-    val taskDate = LocalDateTime.now().format(formatter)
-    val sampleDueDateTime = LocalDateTime.now().plusDays(1).format(formatter)
+    val formatter: DateTimeFormatter? = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+    val taskDate: String? = LocalDateTime.now().format(formatter)
+    val sampleDueDateTime: String? = LocalDateTime.now().plusDays(1).format(formatter)
 
     suspend fun createExampleTasks(profession: String) {
         val tasksRef = db.collection("Users").document(user!!.uid).collection("tasks")
