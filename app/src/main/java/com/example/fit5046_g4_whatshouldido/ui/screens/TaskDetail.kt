@@ -61,8 +61,8 @@ fun TaskDetail(navController: NavController, taskId: String) {
     val user = Firebase.auth.currentUser
     val context = LocalContext.current
     var title by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("")}
-    var taskStatus by remember { mutableStateOf("")}
+    var description by remember { mutableStateOf("") }
+    var taskStatus by remember { mutableStateOf("") }
     val datePickerState = rememberDatePickerState()
     var showDatePicker by remember { mutableStateOf(false) }
     var dueDate by remember { mutableStateOf("") }
@@ -82,7 +82,12 @@ fun TaskDetail(navController: NavController, taskId: String) {
                         val date = Instant.ofEpochMilli(millis)
                             .atZone(ZoneId.systemDefault())
                             .toLocalDate()
-                        dueDate = String.format("%02d/%02d/%04d", date.dayOfMonth, date.monthValue, date.year)
+                        dueDate = String.format(
+                            "%02d/%02d/%04d",
+                            date.dayOfMonth,
+                            date.monthValue,
+                            date.year
+                        )
 
                         showTimePicker = true
                     }
@@ -100,7 +105,7 @@ fun TaskDetail(navController: NavController, taskId: String) {
         }
     }
 
-    if(showTimePicker) {
+    if (showTimePicker) {
         val calendar = Calendar.getInstance()
         val hour = calendar.get(Calendar.HOUR_OF_DAY)
         val minute = calendar.get(Calendar.MINUTE)
@@ -157,7 +162,10 @@ fun TaskDetail(navController: NavController, taskId: String) {
         topBar = { TopBar(navController = navController, showBinIcon = true, taskId = taskId) }
     ) { paddingValues ->
         Column(
-            modifier = Modifier.fillMaxSize().padding(paddingValues).padding(40.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(40.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         )
@@ -213,10 +221,10 @@ fun TaskDetail(navController: NavController, taskId: String) {
                 modifier = Modifier
                     .fillMaxWidth(),
                 trailingIcon = {
-                    IconButton (
+                    IconButton(
                         onClick = { showDatePicker = true },
                         enabled = taskStatus != "DONE" && taskStatus != "CANCELED"
-                    )  {
+                    ) {
                         Icon(
                             imageVector = Icons.Default.DateRange,
                             contentDescription = "Select date"
@@ -231,7 +239,7 @@ fun TaskDetail(navController: NavController, taskId: String) {
                 )
             )
 
-            if(taskStatus != "DONE") {
+            if (taskStatus != "DONE") {
                 Spacer(Modifier.height(12.dp))
 
                 TextButton(
@@ -246,10 +254,10 @@ fun TaskDetail(navController: NavController, taskId: String) {
                     }
                 ) {
                     Text(
-                        text = if(taskStatus != "CANCELED") "Cancel Task" else "Uncancel Task",
+                        text = if (taskStatus != "CANCELED") "Cancel Task" else "Uncancel Task",
                         style = MaterialTheme.typography.bodyMedium,
                         color = colorResource(R.color.light_red),
-                        modifier = Modifier.drawBehind{
+                        modifier = Modifier.drawBehind {
                             val strokeWidthPx = 1.dp.toPx()
                             val verticalOffset = size.height - 2.sp.toPx()
                             drawLine(
@@ -267,26 +275,27 @@ fun TaskDetail(navController: NavController, taskId: String) {
 
             Spacer(Modifier.height(50.dp))
 
-            val hasChanged = title != originalTitle || description != originalDescription || dueDateTime != originalDueDateTime
+            val hasChanged =
+                title != originalTitle || description != originalDescription || dueDateTime != originalDueDateTime
 
-                Button (
-                    onClick ={
-                        // update Task Detail
-                        scope.launch {
-                            taskManager.updateTaskDetails(title, description, dueDateTime, taskId)
-                        }
-                        navController.navigate("home")
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = colorResource(R.color.light_red),
-                        disabledContainerColor = colorResource(R.color.light_red)
-                    )
-                ) {
-                    Text("OK")
-                }
+            Button(
+                onClick = {
+                    // update Task Detail
+                    scope.launch {
+                        taskManager.updateTaskDetails(title, description, dueDateTime, taskId)
+                    }
+                    navController.navigate("home")
+                },
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = colorResource(R.color.light_red),
+                    disabledContainerColor = colorResource(R.color.light_red)
+                )
+            ) {
+                Text("OK")
+            }
 
-                Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
 
             Button(
                 onClick = {
@@ -301,7 +310,9 @@ fun TaskDetail(navController: NavController, taskId: String) {
                 colors = ButtonDefaults.buttonColors(
                     containerColor = colorResource(R.color.transparent),
                     disabledContainerColor = colorResource(R.color.transparent),
-                    contentColor = if (hasChanged) colorResource(R.color.dark_gray) else colorResource(R.color.light_gray) // Optional styling
+                    contentColor = if (hasChanged) colorResource(R.color.dark_gray) else colorResource(
+                        R.color.light_gray
+                    ) // Optional styling
                 )
             ) {
                 Text("Discard")
