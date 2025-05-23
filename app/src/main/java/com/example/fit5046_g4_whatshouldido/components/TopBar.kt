@@ -64,7 +64,7 @@ fun TopBar(
                         imageVector = Icons.Default.ArrowBackIosNew,
                         contentDescription = "Back",
                         modifier = Modifier.size(35.dp),
-                        tint = if(isBackSelected) colorResource(R.color.light_red) else Color.LightGray,
+                        tint = if(isBackSelected) colorResource(R.color.light_red) else colorResource(R.color.light_gray),
                     )
                 }
             }
@@ -81,7 +81,7 @@ fun TopBar(
                         imageVector = Icons.Default.AccountCircle,
                         contentDescription =  "Profile",
                         modifier = Modifier.size(50.dp),
-                        tint = if(isProfileSelected) colorResource(R.color.light_red) else Color.LightGray,
+                        tint = if(isProfileSelected) colorResource(R.color.light_red) else colorResource(R.color.light_gray),
                     )
                 }
             } else if (showBinIcon) {

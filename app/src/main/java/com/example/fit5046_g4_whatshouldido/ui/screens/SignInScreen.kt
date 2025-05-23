@@ -207,7 +207,7 @@ fun SignIn(navController: NavController) {
             },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.LightGray,
+                containerColor = colorResource(R.color.light_gray),
                 disabledContainerColor = colorResource(R.color.mid_gray)
             )
         ){

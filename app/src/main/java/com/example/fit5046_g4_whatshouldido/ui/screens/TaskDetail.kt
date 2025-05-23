@@ -302,7 +302,7 @@ fun TaskDetail(navController: NavController, taskId: String) {
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
                     disabledContainerColor = Color.Transparent,
-                    contentColor = if (hasChanged) colorResource(R.color.dark_gray) else Color.LightGray // Optional styling
+                    contentColor = if (hasChanged) colorResource(R.color.dark_gray) else colorResource(R.color.light_gray) // Optional styling
                 )
             ) {
                 Text("Discard")

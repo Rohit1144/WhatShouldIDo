@@ -255,7 +255,7 @@ fun TaskItemRow(item: Map<String, Any?>, navController: NavController, onStatusT
                     style = MaterialTheme.typography.bodyLarge.copy(
                         textDecoration = if(status == "CANCELED") TextDecoration.LineThrough else TextDecoration.None
                     ),
-                    color = if(status == "DONE") Color.LightGray else colorResource(R.color.dark_gray),
+                    color = if(status == "DONE") colorResource(R.color.light_gray) else colorResource(R.color.dark_gray),
                 )
 
                 if(due.isNotBlank() && status == "PENDING") {
