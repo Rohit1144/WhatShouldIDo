@@ -346,35 +346,68 @@ class TaskManager {
     // For Testing the Monthly Report Chart - Remove this later (needed to populate the data)
     suspend fun seedTestTasksForMonthlyReport() {
         val tasksRef = db.collection("Users").document(user!!.uid).collection("tasks")
-        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
 
-        val testTasks = listOf(
-            Triple("2025-01-10 09:00:00", "DONE", "Task 1"),
-            Triple("2025-01-15 09:00:00", "PENDING", "Task 2"),
-            Triple("2025-02-05 10:00:00", "CANCELED", "Task 3"),
-            Triple("2025-02-20 14:00:00", "DONE", "Task 4"),
-            Triple("2025-03-01 08:00:00", "PENDING", "Task 5"),
-            Triple("2025-03-15 16:00:00", "DONE", "Task 6"),
-            Triple("2025-03-22 12:00:00", "CANCELED", "Task 7"),
-            Triple("2025-04-10 13:00:00", "DONE", "Task 8"),
-            Triple("2025-05-10 13:00:00", "DONE", "Task 9"),
-            Triple("2025-06-10 13:00:00", "PENDING", "Task 10"),
-            Triple("2025-07-10 13:00:00", "DONE", "Task 11"),
-            Triple("2025-08-10 13:00:00", "PENDING", "Task 12")
+        data class TaskData<A, B, C, D, E>(
+            val first: A,
+            val second: B,
+            val third: C,
+            val fourth: D,
+            val fifth: E
         )
 
-        for ((createdAt, status, title) in testTasks) {
+        val testTasks = listOf(
+            TaskData("03/01/2025 09:00", "03/01/2025 11:00", "PENDING", "Pick up parcel", "From the post office. Check the address on the message"),
+            TaskData("05/01/2025 10:00", "05/01/2025 12:00", "DONE", "Submit assignment", "Upload to Moodle before noon."),
+            TaskData("08/01/2025 08:00", "08/01/2025 09:00", "CANCELED", "Doctor appointment", "Cancelled due to schedule conflict."),
+            TaskData("12/01/2025 14:00", "12/01/2025 15:00", "DONE", "Team meeting", "Monthly progress sync-up."),
+            TaskData("15/01/2025 10:00", "15/01/2025 11:30", "PENDING", "Buy groceries", "Get eggs, milk, bread."),
+            TaskData("18/01/2025 13:00", "18/01/2025 14:00", "PENDING", "Call bank", "Inquire about credit card fees."),
+            TaskData("20/01/2025 09:30", "20/01/2025 10:30", "DONE", "Morning jog", "Run 5km at the park."),
+            TaskData("22/01/2025 16:00", "22/01/2025 17:00", "CANCELED", "Dentist visit", "Rescheduled to next month."),
+            TaskData("25/01/2025 07:30", "25/01/2025 08:30", "DONE", "Yoga session", "Stretch and meditate."),
+            TaskData("28/01/2025 11:00", "28/01/2025 12:00", "PENDING", "Finish book", "Read last 3 chapters."),
+            TaskData("30/01/2025 15:00", "30/01/2025 16:00", "PENDING", "Clean kitchen", "Organize pantry and fridge."),
+            TaskData("02/02/2025 09:00", "02/02/2025 10:00", "DONE", "Renew license", "Bring old documents."),
+            TaskData("04/02/2025 10:00", "04/02/2025 11:00", "PENDING", "Return library books", "Due today."),
+            TaskData("06/02/2025 08:00", "06/02/2025 09:30", "DONE", "Morning workout", "Push-pull routine."),
+            TaskData("08/02/2025 17:00", "08/02/2025 18:00", "PENDING", "Cook dinner", "Try new pasta recipe."),
+            TaskData("10/02/2025 13:00", "10/02/2025 14:00", "PENDING", "Fix bike", "Chain is loose."),
+            TaskData("12/02/2025 14:30", "12/02/2025 15:30", "DONE", "Plan trip", "Book accommodation."),
+            TaskData("14/02/2025 11:00", "14/02/2025 12:00", "CANCELED", "Video call with John", "Meeting canceled."),
+            TaskData("16/02/2025 09:00", "16/02/2025 10:00", "PENDING", "Clean desk", "Organize documents."),
+            TaskData("18/02/2025 10:00", "18/02/2025 11:00", "DONE", "Walk dog", "Go to the beach."),
+            TaskData("20/02/2025 16:00", "20/02/2025 17:00", "PENDING", "Grocery restock", "Buy fruits and veggies."),
+            TaskData("22/02/2025 07:30", "22/02/2025 08:30", "PENDING", "Water plants", "Don’t forget balcony."),
+            TaskData("24/02/2025 13:00", "24/02/2025 14:00", "DONE", "Client email", "Reply with proposal."),
+            TaskData("26/02/2025 14:30", "26/02/2025 15:30", "CANCELED", "Vet appointment", "Pet got better."),
+            TaskData("28/02/2025 15:00", "28/02/2025 16:00", "PENDING", "Wash car", "Interior + exterior."),
+            TaskData("02/03/2025 10:00", "02/03/2025 11:00", "DONE", "Pay bills", "Gas and internet."),
+            TaskData("04/03/2025 12:00", "04/03/2025 13:00", "PENDING", "Organize files", "Sort downloads folder."),
+            TaskData("06/03/2025 11:30", "06/03/2025 12:30", "DONE", "Bake cake", "Birthday surprise."),
+            TaskData("08/03/2025 09:30", "08/03/2025 10:30", "CANCELED", "Workshop registration", "Event postponed."),
+            TaskData("10/03/2025 14:00", "10/03/2025 15:00", "PENDING", "Weekly reflection", "Journal and plan next week.")
+        )
+
+        for ((createdAtStr, dueAtStr, status, title, description) in testTasks) {
+            val createdAt = LocalDateTime.parse(createdAtStr, formatter)
+            val dueAt = LocalDateTime.parse(dueAtStr, formatter)
+
+            val createdAtFormatted = formatter.format(createdAt)
+            val dueAtFormatted = formatter.format(dueAt)
+
             val taskId = db.collection("tmp").document().id
             val task = mapOf(
                 "id" to taskId,
                 "title" to title,
-                "description" to "Test seed",
+                "description" to description,
                 "status" to status,
                 "isArchived" to false,
-                "createdAt" to createdAt,
-                "updatedAt" to createdAt,
-                "completedAt" to if (status == "DONE") createdAt else null,
-                "cancelledAt" to if (status == "CANCELED") createdAt else null
+                "createdAt" to createdAtFormatted,
+                "updatedAt" to createdAtFormatted,
+                "completedAt" to if (status == "DONE") createdAtFormatted else null,
+                "cancelledAt" to if (status == "CANCELED") createdAtFormatted else null,
+                "dueAt" to dueAtFormatted
             )
 
             tasksRef.document(taskId).set(task).await()
