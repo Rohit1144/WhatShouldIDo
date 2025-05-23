@@ -62,20 +62,20 @@ fun AIResponse(navController: NavController) {
     var lastSuggestedTaskTitle by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(isInitialized) {
-        if(isInitialized) {
+        if (isInitialized) {
             scope.launch(Dispatchers.IO) {
                 try {
                     taskList = taskManager.getPendingTaskList()
                     val words = taskList.map { it.second }
 
-                    responseText = if(words.isNotEmpty()) {
+                    responseText = if (words.isNotEmpty()) {
                         val result = generateTask(taskList)
                         recommendedTaskId = extractTaskId(result, taskList)
                         result
                     } else {
                         "No pending tasks found"
                     }
-                } catch (e : Exception) {
+                } catch (e: Exception) {
                     responseText = "Error fetching tasks: ${e.localizedMessage}"
                 } finally {
                     isLoading = false
@@ -107,9 +107,11 @@ fun AIResponse(navController: NavController) {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            LazyColumn(modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()) {
+            LazyColumn(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+            ) {
                 item {
                     Box(
                         modifier = Modifier
@@ -117,7 +119,11 @@ fun AIResponse(navController: NavController) {
                             .padding(8.dp)
                             .clip(RoundedCornerShape(12.dp))
                             .background(colorResource(R.color.background_gray))
-                            .border(1.dp, colorResource(R.color.dark_gray), RoundedCornerShape(15.dp))
+                            .border(
+                                1.dp,
+                                colorResource(R.color.dark_gray),
+                                RoundedCornerShape(15.dp)
+                            )
                             .padding(16.dp)
                     ) {
                         Column(modifier = Modifier.fillMaxWidth()) {
@@ -146,7 +152,7 @@ fun AIResponse(navController: NavController) {
             ) {
                 Button(
                     onClick = {
-                        recommendedTaskId?.let {taskId ->
+                        recommendedTaskId?.let { taskId ->
                             navController.navigate("task_detail/$taskId") {
                                 popUpTo("task_detail/$taskId") { inclusive = true }
                             }
@@ -160,21 +166,28 @@ fun AIResponse(navController: NavController) {
 
                 Button(
                     onClick = {
-                        Toast.makeText(navController.context, "Oh, generating a new answer...", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            navController.context,
+                            "Oh, generating a new answer...",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         scope.launch(Dispatchers.IO) {
-                            try{
-                                val result = generateDifferentResponse(taskList, lastSuggestedTaskTitle)
+                            try {
+                                val result =
+                                    generateDifferentResponse(taskList, lastSuggestedTaskTitle)
                                 responseText = result
                                 lastSuggestedTaskTitle = extractMatchedTaskTitle(result, taskList)
 
-                                val newTaskId = extractTaskId(lastSuggestedTaskTitle.toString(), taskList)
-                                recommendedTaskId = if (newTaskId != null && newTaskId != "Unknown") {
-                                    newTaskId
-                                } else {
-                                    "Unknown"
-                                }
+                                val newTaskId =
+                                    extractTaskId(lastSuggestedTaskTitle.toString(), taskList)
+                                recommendedTaskId =
+                                    if (newTaskId != null && newTaskId != "Unknown") {
+                                        newTaskId
+                                    } else {
+                                        "Unknown"
+                                    }
 
-                            } catch(e: Exception) {
+                            } catch (e: Exception) {
                                 responseText = "Error generating new task: ${e.localizedMessage}"
                             }
                         }
@@ -194,28 +207,32 @@ fun extractMatchedTaskTitle(response: String, tasks: List<Pair<String, String>>)
         response.contains(title, ignoreCase = true)
     }?.second
 }
+
 fun generateTask(tasks: List<Pair<String, String>>): String {
-        val formattedTasks = tasks.joinToString(", ") { it.second }
-        val prompt =
+    val formattedTasks = tasks.joinToString(", ") { it.second }
+    val prompt =
         "From the following list: $formattedTasks, select only one  task and print it. " +
-                        "Do not create or invent a new task." +
-                        "Provide a brief explanation in two sentences and end by asking if the user is satisfied."
+                "Do not create or invent a new task." +
+                "Provide a brief explanation in two sentences and end by asking if the user is satisfied."
 
 
-        val response = GemmaLocalInference.generate(prompt)
-        val cleanedResponse = response.replace(Regex("\\(.*?\\)"), "").trim()
+    val response = GemmaLocalInference.generate(prompt)
+    val cleanedResponse = response.replace(Regex("\\(.*?\\)"), "").trim()
 
-        val taskId = extractTaskId(response, tasks) ?: "Unknown"
+    val taskId = extractTaskId(response, tasks) ?: "Unknown"
 
-        "Recommended Task ID: $taskId\n$cleanedResponse"
-        return cleanedResponse
+    "Recommended Task ID: $taskId\n$cleanedResponse"
+    return cleanedResponse
 
 }
 
 
 fun extractTaskId(responseText: String, tasks: List<Pair<String, String>>): String? {
     for ((id, task) in tasks) {
-        if (responseText.contains(task, ignoreCase = true) || responseText.contains(task.split(" ").first(), ignoreCase = true)) {
+        if (responseText.contains(task, ignoreCase = true) || responseText.contains(
+                task.split(" ").first(), ignoreCase = true
+            )
+        ) {
             return id
         }
     }
@@ -223,9 +240,8 @@ fun extractTaskId(responseText: String, tasks: List<Pair<String, String>>): Stri
 }
 
 
-
-fun generateDifferentResponse(tasks: List<Pair<String, String>>,lastTask: String?): String {
-        val formattedTasks = tasks.joinToString(", ") { it.second }
+fun generateDifferentResponse(tasks: List<Pair<String, String>>, lastTask: String?): String {
+    val formattedTasks = tasks.joinToString(", ") { it.second }
 
     val prompt = """
         From the following list of tasks: $formattedTasks
