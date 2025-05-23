@@ -96,7 +96,7 @@ fun Report(navController: NavController) {
                     ){
                         Column(horizontalAlignment = Alignment.End) {
                             Text(
-                                text = "Task State",
+                                text = "Overall",
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 color = colorResource(R.color.dark_gray),
