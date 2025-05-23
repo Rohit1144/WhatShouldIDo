@@ -151,22 +151,20 @@ fun AIResponse(navController: NavController) {
             ) {
                 Button(
                     onClick = {
-                        isYesSelected = !isYesSelected
                         recommendedTaskId?.let {taskId ->
                             navController.navigate("task_detail/$taskId") {
                                 popUpTo("task_detail/$taskId") { inclusive = true }
                             }
                         }
                     },
-                    border = BorderStroke(1.dp, if(isYesSelected) colorResource(R.color.red) else colorResource(R.color.dark_gray)),
+                    border = BorderStroke(1.dp, colorResource(R.color.dark_gray)),
                     colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.transparent))
                 ) {
-                    Text("Yes", color = if(isYesSelected) colorResource(R.color.red) else colorResource(R.color.dark_gray))
+                    Text("Yes", color = colorResource(R.color.dark_gray))
                 }
 
                 Button(
                     onClick = {
-                        isNoSelected = !isNoSelected
                         Toast.makeText(navController.context, "Oh, generating a new answer...", Toast.LENGTH_SHORT).show()
                         scope.launch(Dispatchers.IO) {
                             try{
@@ -188,10 +186,10 @@ fun AIResponse(navController: NavController) {
                             }
                         }
                     },
-                    border = BorderStroke(1.dp, if(isNoSelected) colorResource(R.color.red) else colorResource(R.color.dark_gray)),
+                    border = BorderStroke(1.dp, colorResource(R.color.dark_gray)),
                     colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.transparent))
                 ) {
-                    Text("No", color = if(isNoSelected) colorResource(R.color.red) else colorResource(R.color.dark_gray))
+                    Text("No", color = colorResource(R.color.dark_gray))
                 }
             }
         }
