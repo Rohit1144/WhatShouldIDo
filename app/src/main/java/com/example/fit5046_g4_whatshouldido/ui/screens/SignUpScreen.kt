@@ -51,8 +51,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.fit5046_g4_whatshouldido.managers.AuthResponse
-import com.example.fit5046_g4_whatshouldido.managers.AuthenticationManager
+import com.example.fit5046_g4_whatshouldido.Managers.AuthResponse
+import com.example.fit5046_g4_whatshouldido.Managers.AuthenticationManager
 import com.example.fit5046_g4_whatshouldido.R
 import com.example.fit5046_g4_whatshouldido.validations.FormValidation
 import kotlinx.coroutines.Dispatchers

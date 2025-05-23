@@ -31,9 +31,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.fit5046_g4_whatshouldido.managers.MonthlyTaskStatus
-import com.example.fit5046_g4_whatshouldido.managers.TaskManager
-import com.example.fit5046_g4_whatshouldido.managers.TaskSummary
+import com.example.fit5046_g4_whatshouldido.Managers.MonthlyTaskStatus
+import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
+import com.example.fit5046_g4_whatshouldido.Managers.TaskSummary
 import com.example.fit5046_g4_whatshouldido.R
 import com.example.fit5046_g4_whatshouldido.ui.components.DonutChart
 import com.example.fit5046_g4_whatshouldido.ui.components.MonthlyBarChart

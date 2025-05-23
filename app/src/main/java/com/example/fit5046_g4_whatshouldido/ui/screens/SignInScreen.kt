@@ -44,8 +44,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.sp
-import com.example.fit5046_g4_whatshouldido.managers.AuthResponse
-import com.example.fit5046_g4_whatshouldido.managers.AuthenticationManager
+import com.example.fit5046_g4_whatshouldido.Managers.AuthResponse
+import com.example.fit5046_g4_whatshouldido.Managers.AuthenticationManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
