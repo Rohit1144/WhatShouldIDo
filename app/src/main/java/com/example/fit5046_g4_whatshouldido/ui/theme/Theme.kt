@@ -1,6 +1,5 @@
 package com.example.fit5046_g4_whatshouldido.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

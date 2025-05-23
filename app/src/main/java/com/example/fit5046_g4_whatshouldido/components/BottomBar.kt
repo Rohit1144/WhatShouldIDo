@@ -1,7 +1,5 @@
 package com.example.loginpagetutorial.components
 
-import com.example.fit5046_g4_whatshouldido.R
-import androidx.compose.ui.graphics.vector.ImageVector
 import Icon_Chart
 import Icon_Home
 import Icon_Sparkle
@@ -14,15 +12,15 @@ import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.navigation.NavController
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.toColorInt
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.fit5046_g4_whatshouldido.R
 
 data class BottomNavItem(val route: String, val icon: ImageVector, val label: String)
 

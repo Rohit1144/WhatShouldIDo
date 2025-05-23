@@ -4,25 +4,20 @@ import android.content.Context
 import androidx.credentials.CredentialManager
 import androidx.credentials.CustomCredential
 import androidx.credentials.GetCredentialRequest
-import com.android.identity.documenttype.DocumentAttributeType
-import com.google.android.libraries.identity.googleid.GetGoogleIdOption
-import com.google.firebase.Firebase
-import com.google.firebase.auth.auth
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
-import java.security.MessageDigest
-import java.util.UUID
 import com.example.fit5046_g4_whatshouldido.R
-import com.google.android.gms.auth.api.Auth
+import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.google.firebase.Firebase
 import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.auth.auth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
-import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.tasks.await
+import java.security.MessageDigest
+import java.util.UUID
 
 class AuthenticationManager (val context: Context) {
     private val auth = Firebase.auth

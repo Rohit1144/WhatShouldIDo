@@ -19,11 +19,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
 import com.example.fit5046_g4_whatshouldido.R

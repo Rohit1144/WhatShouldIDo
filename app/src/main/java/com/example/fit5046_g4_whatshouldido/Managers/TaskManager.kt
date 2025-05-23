@@ -1,7 +1,6 @@
 package com.example.fit5046_g4_whatshouldido.Managers
 
 import android.util.Log
-import androidx.navigation.NavController
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore

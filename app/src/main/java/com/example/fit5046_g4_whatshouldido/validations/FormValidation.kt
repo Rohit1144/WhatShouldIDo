@@ -1,9 +1,5 @@
 package com.example.fit5046_g4_whatshouldido.validations
 
-import android.content.Context
-import android.widget.Toast
-import com.google.ai.client.generativeai.type.Content
-
 class FormValidation {
     fun validateSignUpForm(email:String, password:String, confirmPassword:String) : String {
 

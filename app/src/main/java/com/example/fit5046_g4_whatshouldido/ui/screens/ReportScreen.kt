@@ -1,7 +1,6 @@
 package com.example.fit5046_g4_whatshouldido.ui.screens
 
 import android.util.Log
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -21,28 +19,26 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.fit5046_g4_whatshouldido.Managers.MonthlyTaskStatus
 import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
 import com.example.fit5046_g4_whatshouldido.Managers.TaskSummary
-import com.example.loginpagetutorial.components.BottomNavBar
-import com.example.loginpagetutorial.components.TopBar
+import com.example.fit5046_g4_whatshouldido.R
 import com.example.fit5046_g4_whatshouldido.ui.components.DonutChart
 import com.example.fit5046_g4_whatshouldido.ui.components.MonthlyBarChart
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.colorResource
-import com.example.fit5046_g4_whatshouldido.Managers.MonthlyTaskStatus
-import com.example.fit5046_g4_whatshouldido.R
+import com.example.loginpagetutorial.components.BottomNavBar
+import com.example.loginpagetutorial.components.TopBar
 
 @Composable
 fun Report(navController: NavController) {
