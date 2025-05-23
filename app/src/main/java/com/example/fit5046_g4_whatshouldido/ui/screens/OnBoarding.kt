@@ -104,10 +104,10 @@ fun OnBoarding(navController: NavController) {
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent,
-                    errorContainerColor = Color.Transparent
+                    focusedContainerColor = colorResource(R.color.transparent),
+                    unfocusedContainerColor = colorResource(R.color.transparent),
+                    disabledContainerColor = colorResource(R.color.transparent),
+                    errorContainerColor = colorResource(R.color.transparent)
                 ),
                 textStyle = MaterialTheme.typography.bodySmall
             )
@@ -151,10 +151,10 @@ fun OnBoarding(navController: NavController) {
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent,
-                    errorContainerColor = Color.Transparent
+                    focusedContainerColor = colorResource(R.color.transparent),
+                    unfocusedContainerColor = colorResource(R.color.transparent),
+                    disabledContainerColor = colorResource(R.color.transparent),
+                    errorContainerColor = colorResource(R.color.transparent)
                 ),
                 textStyle = MaterialTheme.typography.bodySmall
             )
@@ -197,10 +197,10 @@ fun OnBoarding(navController: NavController) {
                 },
                 modifier = Modifier.fillMaxWidth(),
                 colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent,
-                    errorContainerColor = Color.Transparent
+                    focusedContainerColor = colorResource(R.color.transparent),
+                    unfocusedContainerColor = colorResource(R.color.transparent),
+                    disabledContainerColor = colorResource(R.color.transparent),
+                    errorContainerColor = colorResource(R.color.transparent)
                 ),
                 textStyle = MaterialTheme.typography.bodySmall
             )

@@ -51,7 +51,7 @@ fun TopBar(
     TopAppBar(
         modifier = Modifier.statusBarsPadding().padding(top = 10.dp),
         title = { Text(text ="") },
-        backgroundColor = Color.Transparent,
+        backgroundColor = colorResource(R.color.transparent),
         elevation = 0.dp, // no shadow
         navigationIcon = {
             if (showBackButton) {

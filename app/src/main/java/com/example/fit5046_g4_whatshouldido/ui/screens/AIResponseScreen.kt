@@ -159,7 +159,7 @@ fun AIResponse(navController: NavController) {
                         }
                     },
                     border = BorderStroke(1.dp, if(isYesSelected) Color.Red else colorResource(R.color.dark_gray)),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
+                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.transparent))
                 ) {
                     Text("Yes", color = if(isYesSelected) Color.Red else colorResource(R.color.dark_gray))
                 }
@@ -189,7 +189,7 @@ fun AIResponse(navController: NavController) {
                         }
                     },
                     border = BorderStroke(1.dp, if(isNoSelected) Color.Red else colorResource(R.color.dark_gray)),
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
+                    colors = ButtonDefaults.buttonColors(containerColor = colorResource(R.color.transparent))
                 ) {
                     Text("No", color = if(isNoSelected) Color.Red else colorResource(R.color.dark_gray))
                 }

@@ -225,10 +225,10 @@ fun TaskDetail(navController: NavController, taskId: String) {
                     }
                 },
                 colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent,
-                    errorContainerColor = Color.Transparent
+                    focusedContainerColor = colorResource(R.color.transparent),
+                    unfocusedContainerColor = colorResource(R.color.transparent),
+                    disabledContainerColor = colorResource(R.color.transparent),
+                    errorContainerColor = colorResource(R.color.transparent)
                 )
             )
 
@@ -300,8 +300,8 @@ fun TaskDetail(navController: NavController, taskId: String) {
                 enabled = hasChanged, // Enable only when fields have changed
                 border = BorderStroke(1.dp, color = colorResource(R.color.dark_gray)),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    disabledContainerColor = Color.Transparent,
+                    containerColor = colorResource(R.color.transparent),
+                    disabledContainerColor = colorResource(R.color.transparent),
                     contentColor = if (hasChanged) colorResource(R.color.dark_gray) else colorResource(R.color.light_gray) // Optional styling
                 )
             ) {

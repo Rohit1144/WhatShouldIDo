@@ -141,10 +141,10 @@ fun SignUp(navController: NavController) {
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
-                errorContainerColor = Color.Transparent
+                focusedContainerColor = colorResource(R.color.transparent),
+                unfocusedContainerColor = colorResource(R.color.transparent),
+                disabledContainerColor = colorResource(R.color.transparent),
+                errorContainerColor = colorResource(R.color.transparent)
             )
         )
 
@@ -161,10 +161,10 @@ fun SignUp(navController: NavController) {
                 .focusRequester(emailRequester),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
-                errorContainerColor = Color.Transparent
+                focusedContainerColor = colorResource(R.color.transparent),
+                unfocusedContainerColor = colorResource(R.color.transparent),
+                disabledContainerColor = colorResource(R.color.transparent),
+                errorContainerColor = colorResource(R.color.transparent)
             )
         )
 
@@ -195,10 +195,10 @@ fun SignUp(navController: NavController) {
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
-                errorContainerColor = Color.Transparent
+                focusedContainerColor = colorResource(R.color.transparent),
+                unfocusedContainerColor = colorResource(R.color.transparent),
+                disabledContainerColor = colorResource(R.color.transparent),
+                errorContainerColor = colorResource(R.color.transparent)
             )
         )
 
@@ -229,10 +229,10 @@ fun SignUp(navController: NavController) {
             },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
-                errorContainerColor = Color.Transparent
+                focusedContainerColor = colorResource(R.color.transparent),
+                unfocusedContainerColor = colorResource(R.color.transparent),
+                disabledContainerColor = colorResource(R.color.transparent),
+                errorContainerColor = colorResource(R.color.transparent)
             )
         )
 
@@ -259,10 +259,10 @@ fun SignUp(navController: NavController) {
                 }
             },
             colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
-                errorContainerColor = Color.Transparent
+                focusedContainerColor = colorResource(R.color.transparent),
+                unfocusedContainerColor = colorResource(R.color.transparent),
+                disabledContainerColor = colorResource(R.color.transparent),
+                errorContainerColor = colorResource(R.color.transparent)
             )
         )
 

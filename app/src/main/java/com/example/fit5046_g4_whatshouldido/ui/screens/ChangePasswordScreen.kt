@@ -229,8 +229,8 @@ fun ChangePassword(navController: NavController) {
                     },
                     border = BorderStroke(1.dp, color = colorResource(R.color.dark_gray)),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                        disabledContainerColor = Color.Transparent
+                        containerColor = colorResource(R.color.transparent),
+                        disabledContainerColor = colorResource(R.color.transparent)
                     )
                 ) {
                     Text("Cancel", color = colorResource(R.color.dark_gray))
