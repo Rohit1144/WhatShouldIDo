@@ -21,10 +21,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
+import com.example.fit5046_g4_whatshouldido.R
 import com.example.fit5046_g4_whatshouldido.ui.components.DeleteConfirmationBottomSheet
 import com.example.fit5046_g4_whatshouldido.ui.components.DeleteType
 import kotlinx.coroutines.launch
@@ -62,7 +64,7 @@ fun TopBar(
                         imageVector = Icons.Default.ArrowBackIosNew,
                         contentDescription = "Back",
                         modifier = Modifier.size(35.dp),
-                        tint = if(isBackSelected) Color("#F85F6A".toColorInt()) else Color.LightGray,
+                        tint = if(isBackSelected) colorResource(R.color.light_red) else Color.LightGray,
                     )
                 }
             }
@@ -79,7 +81,7 @@ fun TopBar(
                         imageVector = Icons.Default.AccountCircle,
                         contentDescription =  "Profile",
                         modifier = Modifier.size(50.dp),
-                        tint = if(isProfileSelected) Color("#F85F6A".toColorInt()) else Color.LightGray,
+                        tint = if(isProfileSelected) colorResource(R.color.light_red) else Color.LightGray,
                     )
                 }
             } else if (showBinIcon) {
@@ -94,7 +96,7 @@ fun TopBar(
                         imageVector = Icons.Default.Delete,
                         contentDescription = "Remove",
                         modifier = Modifier.size(30.dp),
-                        tint = Color("#F85F6A".toColorInt()),
+                        tint = colorResource(R.color.light_red),
                     )
                 }
             }
