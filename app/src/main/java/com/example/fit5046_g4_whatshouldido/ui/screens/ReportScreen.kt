@@ -93,7 +93,7 @@ fun Report(navController: NavController) {
                     ) {
                         Column(horizontalAlignment = Alignment.End) {
                             Text(
-                                text = "Overall",
+                                text = "Overall Stats",
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 color = colorResource(R.color.dark_gray),
@@ -103,7 +103,7 @@ fun Report(navController: NavController) {
                                 color = colorResource(R.color.dark_gray),
                                 thickness = 2.dp,
                                 modifier = Modifier
-                                    .width(100.dp)
+                                    .width(85.dp)
                                     .padding(top = 4.dp)
                                     .align(Alignment.End)
                             )
