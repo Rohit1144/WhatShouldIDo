@@ -86,7 +86,7 @@ fun AskAI(navController: NavController) {
             ) {
                 Text(
                     text = "What Should I Do?",
-                    color = Color.White,
+                    color = colorResource(R.color.white),
                     fontSize = 20.sp,
                     style = MaterialTheme.typography.bodyLarge
                 )
