@@ -237,7 +237,7 @@ fun TaskItemRow(item: Map<String, Any?>, navController: NavController, onStatusT
                 Icon(
                     imageVector = if (status == "DONE") Icons.Default.RadioButtonChecked else Icons.Default.RadioButtonUnchecked,
                     contentDescription = "Toggle Status",
-                    tint = if(status == "DONE") Color.Blue else Color.DarkGray,
+                    tint = if(status == "DONE") colorResource(R.color.blue) else Color.DarkGray,
                     modifier = Modifier.size(20.dp)
                 )
             }
