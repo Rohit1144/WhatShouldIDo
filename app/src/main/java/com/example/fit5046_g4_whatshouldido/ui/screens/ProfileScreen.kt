@@ -48,6 +48,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import kotlinx.coroutines.launch
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.drawBehind
@@ -174,16 +178,48 @@ fun Profile(
                     .padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = if (quote.a != "") "\"${quote.q}\"\n\n– ${quote.a}" else "\"${quote.q}\"\n",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.DarkGray,
-                    textAlign = TextAlign.Start,
+//                Text(
+//                    text = if (quote.a != "") "\"${quote.q}\"\n\n– ${quote.a}" else "\"${quote.q}\"\n",
+//                    style = MaterialTheme.typography.bodySmall,
+//                    color = Color.DarkGray,
+//                    textAlign = TextAlign.Start,
+//                    modifier = Modifier
+//                        .weight(1f)
+//                        .padding(end = 8.dp)
+//                        .clickable { navController.navigate("saved_quotes") }
+//                )
+                Column(
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 8.dp)
                         .clickable { navController.navigate("saved_quotes") }
-                )
+                ) {
+                    Text(
+                        text = if (quote.a != "") "\"${quote.q}\"\n\n– ${quote.a}" else "\"${quote.q}\"\n",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.DarkGray,
+                        textAlign = TextAlign.Start
+                    )
+                    Spacer(Modifier.height(5.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.padding(top = 2.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Info,
+                            contentDescription = null,
+                            tint = Color.Gray,
+                            modifier = Modifier.size(14.dp)
+                        )
+                        Text(
+                            text = "Tap to view saved quotes",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = Color.Gray,
+                            fontSize = 10.sp,
+                            modifier = Modifier.padding(start = 4.dp)
+                        )
+                    }
+                }
                 if(quote.a != "") {
                     IconButton(
                         onClick = {
@@ -196,7 +232,6 @@ fun Profile(
                                 }
                             }
                         }
-
                     ) {
                         Icon(
                             imageVector = if (isStarred.value)
