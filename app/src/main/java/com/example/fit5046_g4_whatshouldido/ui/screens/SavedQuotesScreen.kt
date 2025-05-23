@@ -59,7 +59,7 @@ fun SavedQuotesScreen(
                 text = "Saved Quotes",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                color = Color.DarkGray,
+                color = colorResource(R.color.dark_gray),
                 fontFamily = FontFamily.Default,
                 modifier = Modifier.padding(top = 40.dp)
             )

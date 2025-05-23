@@ -33,7 +33,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.sp
+import com.example.fit5046_g4_whatshouldido.R
 
 
 
@@ -54,7 +56,7 @@ fun AskAI(navController: NavController) {
                 text = "Ask AI",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                color = Color.DarkGray,
+                color = colorResource(R.color.dark_gray),
                 fontFamily = FontFamily.Default
             )
             Spacer(modifier = Modifier.height(50.dp))

@@ -109,7 +109,7 @@ fun Profile(
                 text = "Profile",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                color = Color.DarkGray,
+                color = colorResource(R.color.dark_gray),
                 fontFamily = FontFamily.Default
             )
 
@@ -149,7 +149,7 @@ fun Profile(
                     Text(
                         text = if (quote.a != "") "\"${quote.q}\"\n\n– ${quote.a}" else "\"${quote.q}\"\n",
                         style = MaterialTheme.typography.bodySmall,
-                        color = Color.DarkGray,
+                        color = colorResource(R.color.dark_gray),
                         textAlign = TextAlign.Start
                     )
                     Spacer(Modifier.height(5.dp))

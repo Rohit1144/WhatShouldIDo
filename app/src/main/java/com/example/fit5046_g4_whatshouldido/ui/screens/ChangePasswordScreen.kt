@@ -90,7 +90,7 @@ fun ChangePassword(navController: NavController) {
             OutlinedTextField(
                 value = currentPassword,
                 onValueChange = { currentPassword = it },
-                label = { Text("Current Password", color = Color.DarkGray) },
+                label = { Text("Current Password", color = colorResource(R.color.dark_gray)) },
                 leadingIcon = {
                     Icon(imageVector = Icons.Default.Lock, contentDescription = "Current Password")
                 },
@@ -118,7 +118,7 @@ fun ChangePassword(navController: NavController) {
             OutlinedTextField(
                 value = newPassword,
                 onValueChange = { newPassword = it },
-                label = { Text("New Password", color = Color.DarkGray) },
+                label = { Text("New Password", color = colorResource(R.color.dark_gray)) },
                 leadingIcon = {
                     Icon(imageVector = Icons.Default.Lock, contentDescription = "New Password")
                 },
@@ -146,7 +146,7 @@ fun ChangePassword(navController: NavController) {
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
-                label = { Text("Confirm New Password", color = Color.DarkGray) },
+                label = { Text("Confirm New Password", color = colorResource(R.color.dark_gray)) },
                 leadingIcon = {
                     Icon(imageVector = Icons.Default.Lock, contentDescription = "Confirm New Password")
                 },
@@ -227,13 +227,13 @@ fun ChangePassword(navController: NavController) {
                             popUpTo("change_password") { inclusive = true }
                         }
                     },
-                    border = BorderStroke(1.dp, color = Color.DarkGray),
+                    border = BorderStroke(1.dp, color = colorResource(R.color.dark_gray)),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent,
                         disabledContainerColor = Color.Transparent
                     )
                 ) {
-                    Text("Cancel", color = Color.DarkGray)
+                    Text("Cancel", color = colorResource(R.color.dark_gray))
                 }
             }
         }

@@ -113,7 +113,7 @@ fun Home(
                 text = "Home",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                color = Color.DarkGray,
+                color = colorResource(R.color.dark_gray),
                 fontFamily = FontFamily.Default
             )
             Spacer(modifier = Modifier.height(29.dp))
@@ -122,7 +122,7 @@ fun Home(
                 text = "Welcome $name!",
                 style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Bold,
-                color = Color.DarkGray,
+                color = colorResource(R.color.dark_gray),
                 fontFamily = FontFamily.Default
             )
 
@@ -237,7 +237,7 @@ fun TaskItemRow(item: Map<String, Any?>, navController: NavController, onStatusT
                 Icon(
                     imageVector = if (status == "DONE") Icons.Default.RadioButtonChecked else Icons.Default.RadioButtonUnchecked,
                     contentDescription = "Toggle Status",
-                    tint = if(status == "DONE") colorResource(R.color.blue) else Color.DarkGray,
+                    tint = if(status == "DONE") colorResource(R.color.blue) else colorResource(R.color.dark_gray),
                     modifier = Modifier.size(20.dp)
                 )
             }
@@ -255,7 +255,7 @@ fun TaskItemRow(item: Map<String, Any?>, navController: NavController, onStatusT
                     style = MaterialTheme.typography.bodyLarge.copy(
                         textDecoration = if(status == "CANCELED") TextDecoration.LineThrough else TextDecoration.None
                     ),
-                    color = if(status == "DONE") Color.LightGray else Color.DarkGray,
+                    color = if(status == "DONE") Color.LightGray else colorResource(R.color.dark_gray),
                 )
 
                 if(due.isNotBlank() && status == "PENDING") {

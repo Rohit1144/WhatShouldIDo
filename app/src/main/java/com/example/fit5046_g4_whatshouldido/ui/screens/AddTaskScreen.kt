@@ -132,7 +132,7 @@ fun AddTask(navController: NavController) {
                 text = "Add Task",
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.headlineMedium,
-                color = Color.DarkGray,
+                color = colorResource(R.color.dark_gray),
                 fontFamily = FontFamily.Default
             )
 

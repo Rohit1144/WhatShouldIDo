@@ -167,7 +167,7 @@ fun TaskDetail(navController: NavController, taskId: String) {
                 text = "Task Detail",
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.headlineMedium,
-                color = Color.DarkGray,
+                color = colorResource(R.color.dark_gray),
                 fontFamily = FontFamily.Default
             )
             Spacer(modifier = Modifier.height(30.dp))
@@ -298,11 +298,11 @@ fun TaskDetail(navController: NavController, taskId: String) {
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = hasChanged, // Enable only when fields have changed
-                border = BorderStroke(1.dp, color = Color.DarkGray),
+                border = BorderStroke(1.dp, color = colorResource(R.color.dark_gray)),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
                     disabledContainerColor = Color.Transparent,
-                    contentColor = if (hasChanged) Color.DarkGray else Color.LightGray // Optional styling
+                    contentColor = if (hasChanged) colorResource(R.color.dark_gray) else Color.LightGray // Optional styling
                 )
             ) {
                 Text("Discard")

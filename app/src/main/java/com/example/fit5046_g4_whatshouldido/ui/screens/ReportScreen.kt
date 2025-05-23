@@ -79,7 +79,7 @@ fun Report(navController: NavController) {
                 text = "Report Analysis",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                color = Color.DarkGray,
+                color = colorResource(R.color.dark_gray),
                 fontFamily = FontFamily.Default
             )
             Spacer(modifier = Modifier.height(32.dp))
@@ -99,11 +99,11 @@ fun Report(navController: NavController) {
                                 text = "Task State",
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.SemiBold,
-                                color = Color.DarkGray,
+                                color = colorResource(R.color.dark_gray),
                                 textAlign = TextAlign.Right
                             )
                             Divider(
-                                color = Color.DarkGray,
+                                color = colorResource(R.color.dark_gray),
                                 thickness = 2.dp,
                                 modifier = Modifier
                                     .width(100.dp)
@@ -156,11 +156,11 @@ fun Report(navController: NavController) {
                                 text = "Monthly Report",
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.SemiBold,
-                                color = Color.DarkGray,
+                                color = colorResource(R.color.dark_gray),
                                 textAlign = TextAlign.Right
                             )
                             Divider(
-                                color = Color.DarkGray,
+                                color = colorResource(R.color.dark_gray),
                                 thickness = 2.dp,
                                 modifier = Modifier
                                     .width(100.dp)

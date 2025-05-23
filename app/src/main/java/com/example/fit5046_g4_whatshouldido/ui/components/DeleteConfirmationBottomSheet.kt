@@ -99,13 +99,13 @@ fun DeleteConfirmationBottomSheet(
 
                 Button(
                     onClick = onDismiss,
-                    border = BorderStroke(1.dp, color = Color.DarkGray),
+                    border = BorderStroke(1.dp, color = colorResource(R.color.dark_gray)),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.Transparent,
                         disabledContainerColor = Color.Transparent
                     )
                 ) {
-                    Text("Cancel", color = Color.DarkGray)
+                    Text("Cancel", color = colorResource(R.color.dark_gray))
                 }
             }
         }

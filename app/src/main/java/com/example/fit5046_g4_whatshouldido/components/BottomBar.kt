@@ -39,7 +39,7 @@ fun BottomNavBar(navController: NavController){
 
     BottomNavigation(
         backgroundColor = colorResource(R.color.manaual_gray),
-        contentColor = Color.DarkGray,
+        contentColor = colorResource(R.color.dark_gray),
         modifier = Modifier.height(65.dp)
     ){
         bottomNavItems.forEach { item ->
@@ -51,11 +51,11 @@ fun BottomNavBar(navController: NavController){
                         Icon(
                             imageVector = item.icon,
                             contentDescription = item.label,
-                            tint = if(isSelected) colorResource(R.color.light_red) else Color.DarkGray,
+                            tint = if(isSelected) colorResource(R.color.light_red) else colorResource(R.color.dark_gray),
                             modifier = Modifier.padding(top = 10.dp)
                         )
                         Spacer(modifier = Modifier.height(4.dp))
-                        Text( text = item.label, color = if(isSelected) colorResource(R.color.light_red) else Color.DarkGray)
+                        Text( text = item.label, color = if(isSelected) colorResource(R.color.light_red) else colorResource(R.color.dark_gray))
                     }
                 },
                 selected = isSelected,

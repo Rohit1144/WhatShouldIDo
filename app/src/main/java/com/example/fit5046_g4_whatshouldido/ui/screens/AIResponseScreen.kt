@@ -106,7 +106,7 @@ fun AIResponse(navController: NavController) {
                 text = "AI Response",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                color = Color.DarkGray,
+                color = colorResource(R.color.dark_gray),
                 fontFamily = FontFamily.Default
             )
 
@@ -122,7 +122,7 @@ fun AIResponse(navController: NavController) {
                             .padding(8.dp)
                             .clip(RoundedCornerShape(12.dp))
                             .background(Color(0xFFF9F9F9))
-                            .border(1.dp, Color.DarkGray, RoundedCornerShape(15.dp))
+                            .border(1.dp, colorResource(R.color.dark_gray), RoundedCornerShape(15.dp))
                             .padding(16.dp)
                     ) {
                         Column(modifier = Modifier.fillMaxWidth()) {
@@ -158,10 +158,10 @@ fun AIResponse(navController: NavController) {
                             }
                         }
                     },
-                    border = BorderStroke(1.dp, if(isYesSelected) Color.Red else Color.DarkGray),
+                    border = BorderStroke(1.dp, if(isYesSelected) Color.Red else colorResource(R.color.dark_gray)),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
                 ) {
-                    Text("Yes", color = if(isYesSelected) Color.Red else Color.DarkGray)
+                    Text("Yes", color = if(isYesSelected) Color.Red else colorResource(R.color.dark_gray))
                 }
 
                 Button(
@@ -188,10 +188,10 @@ fun AIResponse(navController: NavController) {
                             }
                         }
                     },
-                    border = BorderStroke(1.dp, if(isNoSelected) Color.Red else Color.DarkGray),
+                    border = BorderStroke(1.dp, if(isNoSelected) Color.Red else colorResource(R.color.dark_gray)),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent)
                 ) {
-                    Text("No", color = if(isNoSelected) Color.Red else Color.DarkGray)
+                    Text("No", color = if(isNoSelected) Color.Red else colorResource(R.color.dark_gray))
                 }
             }
         }
