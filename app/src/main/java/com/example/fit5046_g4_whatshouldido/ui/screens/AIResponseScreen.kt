@@ -121,7 +121,7 @@ fun AIResponse(navController: NavController) {
                             .fillMaxWidth()
                             .padding(8.dp)
                             .clip(RoundedCornerShape(12.dp))
-                            .background(Color(0xFFF9F9F9))
+                            .background(colorResource(R.color.background_gray))
                             .border(1.dp, colorResource(R.color.dark_gray), RoundedCornerShape(15.dp))
                             .padding(16.dp)
                     ) {
