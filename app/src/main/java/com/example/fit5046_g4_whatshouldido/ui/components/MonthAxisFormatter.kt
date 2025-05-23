@@ -7,7 +7,7 @@ class MonthAxisFormatter : ValueFormatter() {
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
 
     override fun getFormattedValue(value: Float): String {
-        val index = value.toInt().coerceIn(0, months.size - 1)
+        val index = (value+0.5).toInt().coerceIn(0, months.size - 1)
         return months[index]
     }
 }
