@@ -190,7 +190,7 @@ fun Profile(
                                 Icons.Filled.Star else Icons.Outlined.StarBorder,
                             contentDescription = null,
                             tint = if (isStarred.value)
-                                Color(0xFFFFC107) else colorResource(R.color.gray)
+                                colorResource(R.color.mustard_yellow) else colorResource(R.color.gray)
                         )
                     }
                 }
