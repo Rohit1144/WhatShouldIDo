@@ -39,9 +39,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.fit5046_g4_whatshouldido.LocalLLMModel.GemmaLocalInference
 import com.example.fit5046_g4_whatshouldido.Managers.TaskManager
+import com.example.fit5046_g4_whatshouldido.R
 import com.example.fit5046_g4_whatshouldido.viewmodel.AiViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -132,7 +134,7 @@ fun AIResponse(navController: NavController) {
                                 Text(
                                     text = responseText,
                                     fontSize = 16.sp,
-                                    color = Color.Black,
+                                    color = colorResource(R.color.black),
                                     modifier = Modifier.padding(vertical = 4.dp)
                                 )
                             }
