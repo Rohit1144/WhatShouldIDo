@@ -75,7 +75,7 @@ fun Home(
         if (user != null) {
             val tasks = taskManager.getTaskList()
                 .filter {
-                    val isArchived = it["isArchived"] as? Boolean ?: false
+                    val isArchived = it["isArchived"] as? Boolean == true
                     !isArchived
                 }
 

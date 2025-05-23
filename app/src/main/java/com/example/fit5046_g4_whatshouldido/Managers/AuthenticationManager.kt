@@ -58,7 +58,7 @@ class AuthenticationManager (val context: Context) {
                 .get()
                 .await()
 
-            val isOnboarded = doc.getBoolean("isOnboarded") ?: false
+            val isOnboarded = doc.getBoolean("isOnboarded") == true
             AuthResponse.Success(isOnboarded)
         } catch (e: Exception) {
             AuthResponse.Error(e.message ?: "Login failed")
@@ -110,7 +110,7 @@ class AuthenticationManager (val context: Context) {
                     val userRef = db.collection("Users").document(user.uid)
                     val userDoc = userRef.get().await()
 
-                    val isOnboarded = userDoc.getBoolean("isOnboarded") ?: false
+                    val isOnboarded = userDoc.getBoolean("isOnboarded") == true
 
                     if (!userDoc.exists()) {
                         val userData = hashMapOf(
@@ -177,7 +177,7 @@ class AuthenticationManager (val context: Context) {
         val db = Firebase.firestore
 
         val doc = db.collection("Users").document(user.uid).get().await()
-        return doc.getBoolean("isOnboarded") ?: false
+        return doc.getBoolean("isOnboarded") == true
     }
 
     suspend fun deleteAccount(
