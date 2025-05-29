@@ -3,10 +3,10 @@
 ### Group & Members
 - Group 4 from FIT5046 – Monash University
 - Project for **Assessment 3 & 4: Android App Proposal & Development**
-- Hyung Yeon Ji (34650431)
-- Rohit Chowdary Kanagala (34669167)
-- Yiheng Cai (34531181)
-- Kyriaki Darioti (34339736)
+- Hyung Yeon Ji (34650431) - yjh.yen90@gmail.com / yhyu0001@student.monash.edu
+- Rohit Chowdary Kanagala (34669167) - rohitchowdary1144@gmail.com / rkan0046@student.monash.edu
+- Yiheng Cai (34531181) - kyrda@yahoo.gr / kdar0010@student.monash.edu
+- Kyriaki Darioti (34339736) - aussieyeehern@gmail.com / ycai0085@student.moansh.edu
 
 ---
 
@@ -29,31 +29,45 @@ Refer to https://drive.google.com/drive/folders/1SXxe_7o91yQ9zX8VB3Y5OlVajYjKYbM
 
 - **Secure Authentication**
     - Google sign-in via Firebase Authentication
+    - Email/Password sign-in via Firebase Authentication
+    - Secure update password via Firebase Authentication
 
 - **Task Management**
-    - Add, edit, delete, complete, or cancel tasks (CRUD functionality)
+    - Add, edit, delete (archive), complete, or cancel tasks (CRUD functionality)
     - Tasks stored securely using Firestore
+    - Real time due date
 
 - **AI-Powered Recommendations**
-    - **Reactive**: Users can ask, *"What should I do now?"*, and receive intelligent suggestions
-    - **Proactive**: Notifications based on habits, time of day, or location (upcoming)
+    - **Reactive**: Users can ask, *"What should I do now?"*, and receive intelligent recommendation of task to finish
 
 - **Progress Reporting**
-    - Visualize completed, overdue, and cancelled tasks using charts and graphs
+    - Visualize overall completed, pending, and cancelled tasks using donut charts
+    - Monthly report of stack bar graph visualizing completed, pending, and cancelled tasks
 
 - **User Onboarding**
     - Questionnaire during first-time setup for personalized task suggestions
+
+- **Session Persistent**
+    - Allows user to log back in without having to log in again each session
+
+- **Random Inspiration Quotes**
+    - Inspirational Quotes from public API (Zen Quotes) via Retrofit
+    - Save favorite quotes via Room DB
+
+- **Data Management**
+    - Factory Reset to permanently delete tasks and quotes data
+    - User delete to permanently delete account data
 
 ---
 
 ### Tech Stack
 
-| Area               | Technology                           |
-|--------------------|--------------------------------------|
-| Language & UI      | Kotlin + Jetpack Compose             |
-| Backend Services   | Google Firebase, Room DB (Auth & DB) |
-| AI Integration     | TensorFlow Lite + Gemini Nano        |
-| Visualization      | Compose Charts / TBD                 |
+| Area             | Technology                           |
+|------------------|--------------------------------------|
+| Language & UI    | Kotlin + Jetpack Compose             |
+| Backend Services | Google Firebase, Room DB (Auth & DB) |
+| AI Integration   | Locally stored Gemma 2B 4int         |
+| Report Analysis  | MPAndroidChart - Donut / Bar         |
 
 ---
 
@@ -142,6 +156,33 @@ This approach simulates GitHub's team-protected workflow without requiring a pai
 - "end: [section name] - [additional comments]" (when finished with the section)
 
 ---
+
+### Configuration and Setup Guide to Test Locally
+0. Pixel 7 Pro (internal storage 6GB) recommended
+
+1. Google Auth Sign in
+- Download google-services.json : https://drive.google.com/file/d/1yoVVEhhTGY4LZIVSSrTgqN-UILhCRmWi/view?usp=sharing
+- Inside Emulator Settings > Passwords, passkeys and account > Add Google Account
+- Store provided google-services.json below app/ directory
+
+2. Gemma AI Model 
+- Download Gemma 2B int4 : https://drive.google.com/file/d/1T5N4wVRK6S_DEtirn2CdnTxSUy35ZoKN/view?usp=sharing
+- Mac: use brew to install ADB
+  - `brew install android-platform-tools`
+- Windows: 
+  - Search "Environment Variables" in Windows search bar
+  - Select "Edit system environment variables"
+  - Click "Environment Variables" button
+  - In "System Variables" section, locate "Path" Variable > "Edit"
+  - Click "New" > add the path to the directory for the Platform Tools
+- Mac (Terminal) & Windows (PowerShell): Use the following command to push the provided Gemma 2B int4 model
+  - `adb push "<local path where AI model is stored>\gemma-2b-it-cpu-int4.bin" /sdcard/Android/data/com.example.fit5046_g4_whatshouldido/files/gemma-2b-it-cpu-int4.bin`
+  - Note: Please make sure it is pushed to the following path `/sdcard/Android/data/com.example.fit5046_g4_whatshouldido/files/gemma-2b-it-cpu-int4.bin`
+  - To check if it is pushed use the following command:
+    - `adb shell ls /sdcard/Android/data/com.example.fit5046_g4_whatshouldido/files/`
+- Please note to check log cat (filter out with 'Gemma') to make sure the model is initialised before testing the AI feature.
+  - `Gemma model is initialized`
+  - if it shows `model init failed` message on log cat, please use the above command provided on Terminal or Powershell to see if the model exist in the path (`/sdcard/Android/data/com.example.fit5046_g4_whatshouldido/files/gemma-2b-it-cpu-int4.bin`) properly.
 
 ### License
 
